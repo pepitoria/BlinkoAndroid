@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "BlinkoApp"
 include(":app")
- 
+include(":domain")
