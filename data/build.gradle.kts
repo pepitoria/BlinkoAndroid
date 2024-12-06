@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-  namespace = "com.github.pepitoria.blinkoapp.domain"
+  namespace = "com.github.pepitoria.blinkoapp.data"
   compileSdk = libs.versions.compileSdk.get().toInt()
 
   defaultConfig {
