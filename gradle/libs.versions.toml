@@ -3,7 +3,7 @@ agp = "8.7.3"
 targetSdk = "35"
 compileSdk = "35"
 minSdk = "25"
-kotlin-compiler-extension = "1.5.3"
+kotlin-compiler-extension = "1.5.1"
 
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
