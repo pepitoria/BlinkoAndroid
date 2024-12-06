@@ -3,9 +3,10 @@ agp = "8.7.3"
 targetSdk = "35"
 compileSdk = "35"
 minSdk = "25"
-kotlin-compiler-extension = "1.5.3"
 
-kotlin = "1.9.10"
+kotlin = "2.0.0"
+ksp="2.0.0-1.0.21"
+
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -37,6 +38,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
-jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
