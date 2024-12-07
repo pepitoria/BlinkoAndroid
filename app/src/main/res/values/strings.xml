@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">BlinkoApp</string>
+  <string name="app_name">BlinkoApp</string>
+  <string name="share_with_blinko">Share with Blinko</string>
+
 </resources>
