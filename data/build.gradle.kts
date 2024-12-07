@@ -29,6 +29,9 @@ android {
   kotlinOptions {
     jvmTarget = libs.versions.jvmTarget.get()
   }
+  buildFeatures {
+    buildConfig = true
+  }
 }
 
 dependencies {
@@ -41,6 +44,14 @@ dependencies {
   implementation(libs.hilt.android)
   implementation(libs.androidx.hilt.navigation.compose)
   ksp(libs.hilt.compiler)
+
+  // Retrofit
+  implementation(libs.retrofit2.retrofit)
+  implementation(libs.retrofit2.converter.gson)
+
+  // okhttp
+  implementation(libs.okhttp3.okhttp)
+  implementation(libs.okhttp3.logging.interceptor)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
