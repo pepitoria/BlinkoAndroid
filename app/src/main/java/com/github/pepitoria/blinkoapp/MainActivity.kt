@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.pepitoria.blinkoapp.ui.login.LoginWidget
+import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
 import com.github.pepitoria.blinkoapp.ui.login.WebLoginWidget
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +36,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    LoginWidget()
-                    WebLoginWidget()
+//                    WebLoginWidget()
+                  TokenLoginWidget()
                 }
             }
         }

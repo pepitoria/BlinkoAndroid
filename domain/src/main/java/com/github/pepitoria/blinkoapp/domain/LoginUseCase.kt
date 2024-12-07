@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.domain
 
 import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
-import com.github.pepitoria.blinkoapp.data.repository.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(

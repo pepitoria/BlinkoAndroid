@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.data.repository
+package com.github.pepitoria.blinkoapp.data.repository.auth
 
 import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
 import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse

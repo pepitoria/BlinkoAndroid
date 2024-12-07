@@ -27,7 +27,7 @@ object RetrofitModule {
   fun getRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-//      .baseUrl(BuildConfig.ENDPOINT)
+      .baseUrl("http://example.com")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
