@@ -28,8 +28,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ShareWithBlinkoActivity : ComponentActivity() {
 
-//  @Inject
-//  lateinit var viewModel: ShareWithBlinkoViewModel
   val viewModel: ShareWithBlinkoViewModel by viewModels<ShareWithBlinkoViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
