@@ -2,6 +2,8 @@ package com.github.pepitoria.blinkoapp.data.net
 
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListResponse
+import com.github.pepitoria.blinkoapp.data.model.noteupsert.Note
+import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -17,4 +19,11 @@ interface BlinkoApi {
     @Header("Authorization") authorization: String
   ): Response<List<NoteListResponse>>
 
+
+  @POST()
+  suspend fun noteCreate(
+    @Body noteCreateRequest: UpsertRequest,
+    @Url url: String,
+    @Header("Authorization") authorization: String
+  ): Response<Note>
 }

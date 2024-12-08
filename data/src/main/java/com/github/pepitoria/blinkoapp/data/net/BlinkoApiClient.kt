@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListResponse
+import com.github.pepitoria.blinkoapp.data.model.noteupsert.Note
+import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,6 +45,43 @@ class BlinkoApiClient @Inject constructor(
         }
       } else {
          apiResult = ApiResult<List<NoteListResponse>>.ApiErrorResponse(
+          code = apiResponse.code(),
+          message = apiResponse.message()
+        )
+      }
+
+      apiResult
+    }
+  }
+
+  suspend fun createNote(url: String, token: String, createNoteRequest: UpsertRequest): ApiResult<Note> {
+    if (!isConnected()) {
+      //TODO handle no internet connection
+      return ApiResult.ApiErrorResponse(message = "No internet connection")
+    }
+
+    var createNoteUrl = url
+    if (url.endsWith("/")) {
+      createNoteUrl = "${url}api/v1/note/upsert"
+    } else {
+      createNoteUrl = "${url}/api/v1/note/upsert"
+    }
+
+    return withContext(Dispatchers.IO) {
+      val apiResponse = api.noteCreate(
+        noteCreateRequest = createNoteRequest,
+        url = createNoteUrl,
+        authorization = "Bearer $token",
+      )
+
+      var apiResult: ApiResult<Note> = ApiResult.ApiErrorResponse.UNKNOWN
+
+      if (apiResponse.isSuccessful) {
+        apiResponse.body()?.let { resp ->
+          apiResult = ApiResult<Note>.ApiSuccess(resp)
+        }
+      } else {
+        apiResult = ApiResult<Note>.ApiErrorResponse(
           code = apiResponse.code(),
           message = apiResponse.message()
         )
