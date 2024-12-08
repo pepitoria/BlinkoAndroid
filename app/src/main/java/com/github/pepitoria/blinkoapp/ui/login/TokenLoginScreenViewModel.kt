@@ -1,13 +1,14 @@
 package com.github.pepitoria.blinkoapp.ui.login
 
 import androidx.lifecycle.viewModelScope
+import com.github.pepitoria.blinkoapp.BuildConfig
 import com.github.pepitoria.blinkoapp.domain.LocalStorageUseCases
-import com.github.pepitoria.blinkoapp.domain.LoginUseCase
-import com.github.pepitoria.blinkoapp.domain.NoteListUseCase
 import com.github.pepitoria.blinkoapp.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,7 +19,26 @@ class TokenLoginScreenViewModel @Inject constructor(
   private val sessionUseCases: SessionUseCases,
 ): BlinkoViewModel(){
 
-  fun login(
+  private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val isLoading = _isLoading.asStateFlow()
+
+  private val _isSessionActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val isSessionActive = _isSessionActive.asStateFlow()
+
+  override fun onStart() {
+    super.onStart()
+    viewModelScope.launch(Dispatchers.IO) {
+      _isLoading.value = true
+      val sessionActive = sessionUseCases.isSessionActive()
+      _isLoading.value = false
+
+      Timber.d("${this::class.java.simpleName}.onStart() sessionActive: $sessionActive")
+
+      _isSessionActive.value = sessionActive
+    }
+  }
+
+  fun checkSession(
     url: String,
     token: String) {
     Timber.d("${this::class.java.simpleName}.login() url: $url")
@@ -28,7 +48,7 @@ class TokenLoginScreenViewModel @Inject constructor(
       val sessionOk = sessionUseCases.checkSession(url = url, token = token)
       Timber.d("${this::class.java.simpleName}.listNotes() loginOk: $sessionOk")
 
-      if (sessionOk) {
+      if (sessionOk && BuildConfig.DEBUG) {
         saveUrl(url)
         saveToken(token)
       }

@@ -28,28 +28,28 @@ class BlinkoApiClient @Inject constructor(
       noteListUrl = "${url}/api/v1/note/list"
     }
 
-    withContext(Dispatchers.IO) {
+    return withContext(Dispatchers.IO) {
       val apiResponse = api.noteList(
         noteListRequest = noteListRequest,
         url = noteListUrl,
         authorization = "Bearer $token",
       )
 
+      var apiResult: ApiResult<List<NoteListResponse>> = ApiResult.ApiErrorResponse.UNKNOWN
+
       if (apiResponse.isSuccessful) {
-        apiResponse.body()?.let { response ->
-          return@withContext ApiResult.ApiSuccess(response)
+        apiResponse.body()?.let { resp ->
+          apiResult = ApiResult<List<NoteListResponse>>.ApiSuccess(resp)
         }
       } else {
-        return@withContext ApiResult.ApiErrorResponse(
+         apiResult = ApiResult<List<NoteListResponse>>.ApiErrorResponse(
           code = apiResponse.code(),
           message = apiResponse.message()
         )
       }
+
+      apiResult
     }
-    return ApiResult.ApiErrorResponse(
-      code = -1,
-      message = "Unknown error"
-    )
   }
 
   fun isConnected(): Boolean {
