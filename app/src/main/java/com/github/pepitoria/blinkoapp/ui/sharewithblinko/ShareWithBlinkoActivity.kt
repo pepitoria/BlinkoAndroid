@@ -20,10 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ShareWithBlinkoActivity : ComponentActivity() {
@@ -74,6 +72,7 @@ class ShareWithBlinkoActivity : ComponentActivity() {
           handleImage(intent)
         }
       }
+
       Intent.ACTION_SEND_MULTIPLE -> {
         // Handle multiple items being shared
       }

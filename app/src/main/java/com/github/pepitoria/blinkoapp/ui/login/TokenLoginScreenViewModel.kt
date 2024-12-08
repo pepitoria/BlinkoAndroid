@@ -17,7 +17,7 @@ import javax.inject.Inject
 class TokenLoginScreenViewModel @Inject constructor(
   private val localStorageUseCases: LocalStorageUseCases,
   private val sessionUseCases: SessionUseCases,
-): BlinkoViewModel(){
+) : BlinkoViewModel() {
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val isLoading = _isLoading.asStateFlow()
@@ -40,7 +40,8 @@ class TokenLoginScreenViewModel @Inject constructor(
 
   fun checkSession(
     url: String,
-    token: String) {
+    token: String
+  ) {
     Timber.d("${this::class.java.simpleName}.login() url: $url")
     Timber.d("${this::class.java.simpleName}.login() token: $token")
 

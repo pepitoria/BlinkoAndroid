@@ -7,7 +7,7 @@ import timber.log.Timber
 const val TAG_PREFIX = "Blinko - "
 
 @HiltAndroidApp
-class BlinkoApp: Application() {
+class BlinkoApp : Application() {
 
   override fun onCreate() {
     super.onCreate()

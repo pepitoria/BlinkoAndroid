@@ -3,10 +3,7 @@ package com.github.pepitoria.blinkoapp.ui.sharewithblinko
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.BuildConfig
-import com.github.pepitoria.blinkoapp.domain.LocalStorageUseCases
 import com.github.pepitoria.blinkoapp.domain.NoteCreateUseCase
-import com.github.pepitoria.blinkoapp.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +19,7 @@ import javax.inject.Inject
 class ShareWithBlinkoViewModel @Inject constructor(
   private val noteCreateUseCase: NoteCreateUseCase,
   @ApplicationContext private val appContext: Context,
-): BlinkoViewModel() {
+) : BlinkoViewModel() {
 
   private val _noteCreated: MutableStateFlow<Boolean?> = MutableStateFlow(null)
   val noteCreated = _noteCreated.asStateFlow()

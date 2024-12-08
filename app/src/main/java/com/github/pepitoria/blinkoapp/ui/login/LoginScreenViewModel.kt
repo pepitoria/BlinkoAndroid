@@ -12,12 +12,13 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
   private val loginUseCase: LoginUseCase
-): BlinkoViewModel(){
+) : BlinkoViewModel() {
 
   fun login(
     url: String,
     username: String,
-    password: String) {
+    password: String
+  ) {
     Timber.d("${this::class.java.simpleName}.login() url: $url")
     Timber.d("${this::class.java.simpleName}.login() username: $username")
     Timber.d("${this::class.java.simpleName}.login() password: $password")
