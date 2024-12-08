@@ -31,4 +31,9 @@ class AuthenticationRepositoryApiImpl @Inject constructor(
       null
     }
   }
+
+  override fun logout() {
+    localStorage.removeValue(URL_KEY)
+    localStorage.removeValue(TOKEN_KEY)
+  }
 }

@@ -45,14 +45,21 @@ class TokenLoginScreenViewModel @Inject constructor(
     Timber.d("${this::class.java.simpleName}.login() token: $token")
 
     viewModelScope.launch(Dispatchers.IO) {
+      _isLoading.value = true
       val sessionOk = sessionUseCases.checkSession(url = url, token = token)
+      _isLoading.value = false
       Timber.d("${this::class.java.simpleName}.listNotes() loginOk: $sessionOk")
-
+      _isSessionActive.value = sessionOk
       if (sessionOk && BuildConfig.DEBUG) {
         saveUrl(url)
         saveToken(token)
       }
     }
+  }
+
+  fun logout() {
+    sessionUseCases.logout()
+    _isSessionActive.value = false
   }
 
   fun getStoredUrl(): String? {

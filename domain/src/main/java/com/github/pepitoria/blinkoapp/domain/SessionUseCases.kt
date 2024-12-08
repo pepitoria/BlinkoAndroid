@@ -12,6 +12,10 @@ class SessionUseCases @Inject constructor(
   private val authenticationRepository: AuthenticationRepository,
 ) {
 
+  fun logout() {
+    authenticationRepository.logout()
+  }
+
   suspend fun isSessionActive(): Boolean {
     val session = authenticationRepository.getSession()
 

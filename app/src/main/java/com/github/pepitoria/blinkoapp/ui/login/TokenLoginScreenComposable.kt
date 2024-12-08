@@ -54,7 +54,11 @@ fun TokenLoginWidget(
     if (isLoading.value) {
       Loading()
     } else if (isSessionActive.value) {
-      SessionActive()
+      SessionActive(
+        logout = {
+          viewModel.logout()
+        }
+      )
     } else {
       TokenLoginScreenViewState(
         url = viewModel.getStoredUrl() ?: "",
@@ -88,12 +92,32 @@ private fun Loading() {
 
 @Composable
 @Preview
-private fun SessionActive() {
-  Text(
-    text = "Session active",
+private fun SessionActive(
+  logout: () -> Unit = {},
+) {
+
+  Column(
     modifier = Modifier.fillMaxSize(),
-    color = Black
-  )
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Text(
+      text = "Session active",
+      modifier = Modifier,
+      color = Black
+    )
+    Button(
+      onClick = logout,
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+    ) {
+      Text(
+        text = "Logout",
+        fontSize = 16.sp
+      )
+    }
+  }
 }
 
 @Preview
@@ -177,7 +201,6 @@ fun TokenLoginButton(
     )
   }
 }
-
 
 @Composable
 fun TokenField(

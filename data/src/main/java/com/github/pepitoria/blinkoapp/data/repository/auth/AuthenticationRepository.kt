@@ -8,4 +8,5 @@ interface AuthenticationRepository {
     suspend fun login(loginRequest: LoginRequest): LoginResponse
     fun saveSession(sessionDto: SessionDto)
     fun getSession(): SessionDto?
+    fun logout()
 }
