@@ -1,0 +1,17 @@
+package com.github.pepitoria.blinkoapp.domain.model
+
+sealed class BlinkoResult<out T> {
+    data class Success<out R>(val value: R) : BlinkoResult<R>()
+    data class Error(
+        val code: Int,
+        val message: String,
+    ) : BlinkoResult<Nothing>() {
+
+        companion object {
+            val UNKNOWN = Error(
+                code = -1,
+                message = "Unknown error",
+            )
+        }
+    }
+}

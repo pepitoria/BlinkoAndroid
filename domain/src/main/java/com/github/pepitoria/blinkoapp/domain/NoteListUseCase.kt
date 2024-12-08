@@ -8,19 +8,23 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class NoteListUseCase @Inject constructor(
-    private val noteRepository: NoteRepository
+  private val noteRepository: NoteRepository,
+  private val authenticationRepository: AuthenticationRepository,
 ) {
-    suspend fun listNotes(
-      url: String,
-      token: String,
-    ): Boolean {
 
-      val response = noteRepository.list(
-        url = url,
-        token = token,
-        noteListRequest = NoteListRequest()
-      )
-      Timber.d("response size: ${response.size}")
-      return true
-    }
+  //TODO WIP
+  suspend fun listNotes(
+    url: String,
+    token: String,
+  ): Boolean {
+    val session = authenticationRepository.getSession()
+
+    val response = noteRepository.list(
+      url = session?.url ?: "",
+      token = session?.token ?: "",
+      noteListRequest = NoteListRequest()
+    )
+
+    return true
+  }
 }

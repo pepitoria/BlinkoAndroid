@@ -2,6 +2,7 @@ package com.github.pepitoria.blinkoapp.data.net
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.github.pepitoria.blinkoapp.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,10 +15,10 @@ class BlinkoApiClient @Inject constructor(
   private val api: BlinkoApi,
 ) {
 
-  suspend fun noteList(url: String, token: String, noteListRequest: NoteListRequest): List<NoteListResponse> {
+  suspend fun noteList(url: String, token: String, noteListRequest: NoteListRequest): ApiResult<List<NoteListResponse>> {
     if (!isConnected()) {
       //TODO handle no internet connection
-      return emptyList()
+      return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
     var noteListUrl = url
@@ -35,14 +36,20 @@ class BlinkoApiClient @Inject constructor(
       )
 
       if (apiResponse.isSuccessful) {
-        val body = apiResponse.body()
-        return@withContext body ?: emptyList()
+        apiResponse.body()?.let { response ->
+          return@withContext ApiResult.ApiSuccess(response)
+        }
       } else {
-        //TODO handle error
-        return@withContext emptyList()
+        return@withContext ApiResult.ApiErrorResponse(
+          code = apiResponse.code(),
+          message = apiResponse.message()
+        )
       }
     }
-    return emptyList()
+    return ApiResult.ApiErrorResponse(
+      code = -1,
+      message = "Unknown error"
+    )
   }
 
   fun isConnected(): Boolean {

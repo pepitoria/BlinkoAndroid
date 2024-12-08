@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.LocalStorageUseCases
 import com.github.pepitoria.blinkoapp.domain.LoginUseCase
 import com.github.pepitoria.blinkoapp.domain.NoteListUseCase
+import com.github.pepitoria.blinkoapp.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TokenLoginScreenViewModel @Inject constructor(
-  private val noteListUseCase: NoteListUseCase,
   private val localStorageUseCases: LocalStorageUseCases,
+  private val sessionUseCases: SessionUseCases,
 ): BlinkoViewModel(){
 
   fun login(
@@ -24,10 +25,10 @@ class TokenLoginScreenViewModel @Inject constructor(
     Timber.d("${this::class.java.simpleName}.login() token: $token")
 
     viewModelScope.launch(Dispatchers.IO) {
-      val loginOk = noteListUseCase.listNotes(url = url, token = token)
-      Timber.d("${this::class.java.simpleName}.listNotes() loginOk: $loginOk")
+      val sessionOk = sessionUseCases.checkSession(url = url, token = token)
+      Timber.d("${this::class.java.simpleName}.listNotes() loginOk: $sessionOk")
 
-      if (loginOk) {
+      if (sessionOk) {
         saveUrl(url)
         saveToken(token)
       }

@@ -2,6 +2,7 @@ package com.github.pepitoria.blinkoapp.data.localstorage
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.Serializable
 import javax.inject.Inject
 
 class LocalStorageSharedPreferences @Inject constructor(
