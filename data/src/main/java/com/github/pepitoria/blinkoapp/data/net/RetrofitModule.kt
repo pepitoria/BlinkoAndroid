@@ -27,7 +27,7 @@ object RetrofitModule {
   fun getRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-      .baseUrl("http://example.com")
+      .baseUrl("https://blinko-demo.vercel.app")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }

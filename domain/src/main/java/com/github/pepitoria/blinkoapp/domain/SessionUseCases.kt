@@ -19,13 +19,17 @@ class SessionUseCases @Inject constructor(
   suspend fun isSessionActive(): Boolean {
     val session = authenticationRepository.getSession()
 
-    val response = noteRepository.list(
-      url = session?.url ?: "",
-      token = session?.token ?: "",
-      noteListRequest = NoteListRequest()
-    )
+    session?.let {
+      val response = noteRepository.list(
+        url = session.url,
+        token = session.token,
+        noteListRequest = NoteListRequest()
+      )
 
-    return response is ApiResult.ApiSuccess
+      return response is ApiResult.ApiSuccess
+    }
+
+    return false
   }
 
   suspend fun checkSession(url: String, token: String): Boolean {
