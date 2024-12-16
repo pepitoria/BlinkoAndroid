@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.ui.sharewithblinko
+package com.github.pepitoria.blinkoapp.ui.sharewithblinko.create
 
 import android.content.Intent
 import android.net.Uri
