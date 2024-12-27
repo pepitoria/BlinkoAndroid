@@ -37,13 +37,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.pepitoria.blinkoapp.BuildConfig
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.theme.Black
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 
 @Composable
 fun TokenLoginWidget(
-  viewModel: TokenLoginScreenViewModel = hiltViewModel()
+  viewModel: TokenLoginScreenViewModel = hiltViewModel(),
+  goToEditWithBlinko: () -> Unit = {},
 ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -57,7 +59,8 @@ fun TokenLoginWidget(
       SessionActive(
         logout = {
           viewModel.logout()
-        }
+        },
+        goToEditWithBlinko = goToEditWithBlinko,
       )
     } else {
       TokenLoginScreenViewState(
@@ -94,6 +97,7 @@ private fun Loading() {
 @Preview
 private fun SessionActive(
   logout: () -> Unit = {},
+  goToEditWithBlinko: () -> Unit = {}
 ) {
 
   Column(
@@ -117,6 +121,28 @@ private fun SessionActive(
         fontSize = 16.sp
       )
     }
+    GoToEditWithBlinko(goToEditWithBlinko = goToEditWithBlinko)
+  }
+}
+
+@Composable
+private fun GoToEditWithBlinko(
+  goToEditWithBlinko: () -> Unit = {}
+) {
+  if (!BuildConfig.DEBUG) {
+    return
+  }
+
+  Button(
+    onClick = goToEditWithBlinko,
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(16.dp)
+  ) {
+    Text(
+      text = "Goto Edit with Blinko",
+      fontSize = 16.sp
+    )
   }
 }
 

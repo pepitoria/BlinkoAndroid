@@ -1,5 +1,6 @@
 package com.github.pepitoria.blinkoapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.pepitoria.blinkoapp.ui.login.LoginWidget
 import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
+import com.github.pepitoria.blinkoapp.ui.sharewithblinko.edit.ShareAndEditWithBlinkoActivity
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.CookieHandler
@@ -34,10 +36,20 @@ class MainActivity : ComponentActivity() {
         ) {
 //                    LoginWidget()
 //                    WebLoginWidget()
-          TokenLoginWidget()
+          TokenLoginWidget(goToEditWithBlinko = {
+            goToEditWithBlinko()
+          })
         }
       }
     }
+  }
+
+  private fun goToEditWithBlinko() {
+    val intent = Intent(this, ShareAndEditWithBlinkoActivity::class.java)
+    intent.action = Intent.ACTION_SEND
+    intent.type = "text/plain"
+    intent.putExtra(Intent.EXTRA_TEXT, "Hello, Blinko lalala!")
+    startActivity(intent)
   }
 }
 

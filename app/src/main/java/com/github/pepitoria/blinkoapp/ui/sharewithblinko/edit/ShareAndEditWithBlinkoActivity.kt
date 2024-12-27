@@ -3,19 +3,30 @@ package com.github.pepitoria.blinkoapp.ui.sharewithblinko.edit
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -32,30 +43,23 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
+//    enableEdgeToEdge()
     setContent {
-
       val uiState = viewModel.noteUiModel.collectAsState()
 
       BlinkoAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
           BlinkoNoteEditor(
             uiState = uiState.value,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            updateNote = { viewModel.updateLocalNote(it.content) },
+            sendToBlinko = { viewModel.createNote() }
           )
         }
       }
     }
     // Handle the intent
     handleIntent(intent)
-  }
-
-  @Composable
-  fun BlinkoNoteEditor(
-    uiState: BlinkoNote,
-    modifier: Modifier = Modifier
-  ) {
-    Text(uiState.content)
   }
 
   override fun onNewIntent(intent: Intent) {
@@ -110,18 +114,47 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
   }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-  Text(
-    text = "Hello $name!",
-    modifier = modifier
-  )
-}
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
   BlinkoAppTheme {
-    Greeting("Android")
+    BlinkoNoteEditor(BlinkoNote(content = "Hello, Blinko!"))
   }
+}
+
+@Composable
+fun BlinkoNoteEditor(
+  uiState: BlinkoNote,
+  modifier: Modifier = Modifier,
+  updateNote: (BlinkoNote) -> Unit = {},
+  sendToBlinko: () -> Unit = {},
+) {
+  Column(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(16.dp)
+  ) {
+    TextField(
+      value = uiState.content,
+      onValueChange = { updateNote(uiState.copy(content = it)) },
+      label = { Text("Content") },
+      minLines = 3,
+      modifier = Modifier.fillMaxWidth()
+    )
+
+    Button(
+      onClick = sendToBlinko,
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+    ) {
+      Text(
+        text = "Send to Blinko",
+        fontSize = 16.sp
+      )
+    }
+
+  }
+
 }

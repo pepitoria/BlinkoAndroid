@@ -36,13 +36,11 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
     )
   }
 
-  fun createNote(
-    content: String,
-  ) {
+  fun createNote() {
     viewModelScope.launch(Dispatchers.IO) {
       _noteCreated.value = false
       val response = noteCreateUseCase.createNote(
-        content = content
+        content = noteUiModel.value.content
       )
       _noteCreated.value = true
 
@@ -58,5 +56,4 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
       }
     }
   }
-
 }
