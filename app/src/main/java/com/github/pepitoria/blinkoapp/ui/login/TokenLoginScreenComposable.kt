@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,14 +40,20 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.BuildConfig
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
+import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.Black
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun TokenLoginWidget(
   viewModel: TokenLoginScreenViewModel = hiltViewModel(),
-  goToDebug: () -> Unit = {},
+  goToDebug: () -> Unit,
+  goToNoteList: () -> Unit,
 ) {
+  val events = viewModel.events
+  ListenForEvents(events, goToNoteList)
+
   ComposableLifecycleEvents(viewModel = viewModel)
 
   val isSessionActive = viewModel.isSessionActive.collectAsState()
@@ -78,18 +85,18 @@ fun TokenLoginWidget(
 }
 
 @Composable
-@Preview
-private fun Loading() {
-  Column(
-    modifier = Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    CircularProgressIndicator(
-      modifier = Modifier.width(64.dp),
-      color = MaterialTheme.colorScheme.secondary,
-      trackColor = MaterialTheme.colorScheme.surfaceVariant,
-    )
+private fun ListenForEvents(
+  events: SharedFlow<NavigationEvents>,
+  goToNoteList: () -> Unit,
+) {
+  LaunchedEffect(Unit) {
+    events.collect { event ->
+      when (event) {
+        is NavigationEvents.GoToNoteList -> {
+          goToNoteList()
+        }
+      }
+    }
   }
 }
 
@@ -144,7 +151,6 @@ private fun GoToDebugButton(
 }
 
 @Preview
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TokenLoginScreenViewState(
   onLoginClicked: (String, String) -> Unit = { _, _ -> },

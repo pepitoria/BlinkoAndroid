@@ -1,10 +1,13 @@
 package com.github.pepitoria.blinkoapp.domain
 
-import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
+import com.github.pepitoria.blinkoapp.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepository
-import timber.log.Timber
+import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNotes
+import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoResult
+import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import javax.inject.Inject
 
 class NoteListUseCase @Inject constructor(
@@ -12,11 +15,8 @@ class NoteListUseCase @Inject constructor(
   private val authenticationRepository: AuthenticationRepository,
 ) {
 
-  //TODO WIP
   suspend fun listNotes(
-    url: String,
-    token: String,
-  ): Boolean {
+  ): BlinkoResult<List<BlinkoNote>> {
     val session = authenticationRepository.getSession()
 
     val response = noteRepository.list(
@@ -25,6 +25,14 @@ class NoteListUseCase @Inject constructor(
       noteListRequest = NoteListRequest()
     )
 
-    return true
+    return when (response) {
+      is ApiResult.ApiSuccess -> {
+        BlinkoResult.Success(response.value.toBlinkoNotes())
+      }
+
+      is ApiResult.ApiErrorResponse -> {
+        response.toBlinkoResult()
+      }
+    }
   }
 }

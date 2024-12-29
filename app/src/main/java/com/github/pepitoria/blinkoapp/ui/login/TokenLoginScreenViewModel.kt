@@ -7,7 +7,9 @@ import com.github.pepitoria.blinkoapp.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -25,16 +27,20 @@ class TokenLoginScreenViewModel @Inject constructor(
   private val _isSessionActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val isSessionActive = _isSessionActive.asStateFlow()
 
+  private val _events = MutableSharedFlow<NavigationEvents>()
+  val events = _events.asSharedFlow()
+
   override fun onStart() {
     super.onStart()
     viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
       val sessionActive = sessionUseCases.isSessionActive()
       _isLoading.value = false
-
       Timber.d("${this::class.java.simpleName}.onStart() sessionActive: $sessionActive")
-
       _isSessionActive.value = sessionActive
+      if (sessionActive) {
+        triggerEvent(NavigationEvents.GoToNoteList)
+      }
     }
   }
 
@@ -51,6 +57,11 @@ class TokenLoginScreenViewModel @Inject constructor(
       _isLoading.value = false
       Timber.d("${this::class.java.simpleName}.listNotes() loginOk: $sessionOk")
       _isSessionActive.value = sessionOk
+
+      if (sessionOk) {
+        triggerEvent(NavigationEvents.GoToNoteList)
+      }
+
       if (sessionOk && BuildConfig.DEBUG) {
         saveUrl(url)
         saveToken(token)
@@ -71,11 +82,21 @@ class TokenLoginScreenViewModel @Inject constructor(
     return localStorageUseCases.getString("getStoredToken")
   }
 
-  fun saveUrl(url: String) {
+  private fun saveUrl(url: String) {
     localStorageUseCases.saveString("getStoredUrl", url)
   }
 
-  fun saveToken(token: String) {
+  private fun saveToken(token: String) {
     localStorageUseCases.saveString("getStoredToken", token)
   }
+
+  private fun triggerEvent(event: NavigationEvents) {
+    viewModelScope.launch {
+      _events.emit(event)
+    }
+  }
+}
+
+sealed class NavigationEvents {
+  data object GoToNoteList : NavigationEvents()
 }

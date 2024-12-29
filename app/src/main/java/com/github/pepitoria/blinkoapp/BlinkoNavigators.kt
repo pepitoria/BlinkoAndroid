@@ -16,3 +16,7 @@ fun NavHostController.goToEditWithBlinko(): () -> Unit = {
 fun NavHostController.goToDebug(): () -> Unit = {
   this.navigate(route = BlinkoNavigationRouter.NavDebug.Debug.route)
 }
+
+fun NavHostController.goToNoteList(): () -> Unit = {
+  this.navigate(route = BlinkoNavigationRouter.NavHome.NoteList.route)
+}
