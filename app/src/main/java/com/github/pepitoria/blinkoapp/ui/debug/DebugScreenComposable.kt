@@ -9,12 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.pepitoria.blinkoapp.BuildConfig
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 
 @Composable
 fun DebugScreenComposable(
   goToEditWithBlinko: () -> Unit = {},
 ) {
-  GoToEditWithBlinko(goToEditWithBlinko = goToEditWithBlinko)
+  BlinkoAppTheme {
+    GoToEditWithBlinko(goToEditWithBlinko = goToEditWithBlinko)
+  }
 }
 
 @Composable
