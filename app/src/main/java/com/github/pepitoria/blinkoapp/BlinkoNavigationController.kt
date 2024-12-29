@@ -9,8 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
 import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
-import com.github.pepitoria.blinkoapp.ui.sharewithblinko.edit.ShareAndEditWithBlinkoActivity
 
 @Composable
 fun BlinkoNavigationController(
@@ -22,6 +22,16 @@ fun BlinkoNavigationController(
     modifier = Modifier
       .fillMaxSize(),
   ) {
+    ///// Debug
+    navigation(
+      startDestination = BlinkoNavigationRouter.NavDebug.Debug.route,
+      route = BlinkoNavigationRouter.NavDebug.route,
+    ) {
+      composable(BlinkoNavigationRouter.NavDebug.Debug.route) {
+        DebugNavigator(navController = navController)
+      }
+    }
+
     ///// AUTHENTICATION
     navigation(
       startDestination = BlinkoNavigationRouter.NavAuth.Login.route,
@@ -39,16 +49,15 @@ fun LoginNavigator(
   navController: NavHostController,
 ) {
   TokenLoginWidget(
-    goToEditWithBlinko = {
-      goToEditWithBlinko(context = navController.context)
-    }
+    goToDebug = navController.goToDebug(),
   )
 }
 
-private fun goToEditWithBlinko(context: Context) {
-  val intent = Intent(context, ShareAndEditWithBlinkoActivity::class.java)
-  intent.action = Intent.ACTION_SEND
-  intent.type = "text/plain"
-  intent.putExtra(Intent.EXTRA_TEXT, "Hello, Blinko lalala!")
-  context.startActivity(intent)
+@Composable
+fun DebugNavigator(
+  navController: NavHostController,
+) {
+  DebugScreenComposable(
+    goToEditWithBlinko = navController.goToEditWithBlinko(),
+  )
 }

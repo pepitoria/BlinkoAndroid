@@ -45,7 +45,7 @@ import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 @Composable
 fun TokenLoginWidget(
   viewModel: TokenLoginScreenViewModel = hiltViewModel(),
-  goToEditWithBlinko: () -> Unit = {},
+  goToDebug: () -> Unit = {},
 ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -60,7 +60,7 @@ fun TokenLoginWidget(
         logout = {
           viewModel.logout()
         },
-        goToEditWithBlinko = goToEditWithBlinko,
+        goToDebug = goToDebug,
       )
     } else {
       TokenLoginScreenViewState(
@@ -97,7 +97,7 @@ private fun Loading() {
 @Preview
 private fun SessionActive(
   logout: () -> Unit = {},
-  goToEditWithBlinko: () -> Unit = {}
+  goToDebug: () -> Unit = {}
 ) {
 
   Column(
@@ -121,26 +121,23 @@ private fun SessionActive(
         fontSize = 16.sp
       )
     }
-    GoToEditWithBlinko(goToEditWithBlinko = goToEditWithBlinko)
+
+    GoToDebugButton(goToDebug = goToDebug)
   }
 }
 
 @Composable
-private fun GoToEditWithBlinko(
-  goToEditWithBlinko: () -> Unit = {}
+private fun GoToDebugButton(
+  goToDebug: () -> Unit = {}
 ) {
-  if (!BuildConfig.DEBUG) {
-    return
-  }
-
   Button(
-    onClick = goToEditWithBlinko,
+    onClick = goToDebug,
     modifier = Modifier
       .fillMaxWidth()
       .padding(16.dp)
   ) {
     Text(
-      text = "Goto Edit with Blinko",
+      text = "Goto Debug",
       fontSize = 16.sp
     )
   }
