@@ -18,7 +18,7 @@ jvmTarget = "17"
 appcompat = "1.7.0"
 material = "1.12.0"
 
-hilt = "2.48.1"
+hilt = "2.49"
 androidx-hilt-navigation-compose = "1.2.0"
 
 retrofit = "2.9.0"
