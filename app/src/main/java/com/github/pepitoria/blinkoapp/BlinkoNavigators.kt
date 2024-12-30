@@ -1,6 +1,5 @@
 package com.github.pepitoria.blinkoapp
 
-import android.content.Context
 import android.content.Intent
 import androidx.navigation.NavHostController
 import com.github.pepitoria.blinkoapp.ui.sharewithblinko.edit.ShareAndEditWithBlinkoActivity
