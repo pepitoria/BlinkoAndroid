@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.ui.notelist
+package com.github.pepitoria.blinkoapp.ui.note.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

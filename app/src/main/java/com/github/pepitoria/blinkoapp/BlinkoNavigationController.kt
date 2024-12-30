@@ -1,7 +1,5 @@
 package com.github.pepitoria.blinkoapp
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +10,7 @@ import androidx.navigation.compose.navigation
 import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
 import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
-import com.github.pepitoria.blinkoapp.ui.notelist.NoteListScreenComposable
+import com.github.pepitoria.blinkoapp.ui.note.list.NoteListScreenComposable
 
 @Composable
 fun BlinkoNavigationController(

@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.ui.notelist
+package com.github.pepitoria.blinkoapp.ui.note.list
 
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.NoteListUseCase
@@ -7,9 +7,7 @@ import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
