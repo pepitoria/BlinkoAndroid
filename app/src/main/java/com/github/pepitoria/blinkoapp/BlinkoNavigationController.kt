@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
 import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
+import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
 import com.github.pepitoria.blinkoapp.ui.notelist.NoteListScreenComposable
 
 @Composable
@@ -51,6 +52,14 @@ fun BlinkoNavigationController(
       composable(BlinkoNavigationRouter.NavHome.NoteList.route) {
         HomeNoteListNavigator(navController = navController)
       }
+      composable(
+        route = BlinkoNavigationRouter.NavHome.NoteEdit.route,
+        arguments = BlinkoNavigationRouter.NavHome.NoteEdit.arguments,
+      ) {
+        HomeNoteEditNavigator(
+          navController = navController,
+          id = it.arguments?.getInt(BlinkoNavigationRouter.NavHome.ARG_NOTE_ID) ?: 0)
+      }
     }
   }
 }
@@ -78,5 +87,17 @@ fun DebugNavigator(
 fun HomeNoteListNavigator(
   navController: NavHostController,
 ) {
-  NoteListScreenComposable()
+  NoteListScreenComposable(
+    noteOnClick = navController.goToNoteEdit(),
+  )
+}
+
+@Composable
+fun HomeNoteEditNavigator(
+  navController: NavHostController,
+  id: Int,
+) {
+  NoteEditScreenComposable(
+    noteId = id,
+  )
 }

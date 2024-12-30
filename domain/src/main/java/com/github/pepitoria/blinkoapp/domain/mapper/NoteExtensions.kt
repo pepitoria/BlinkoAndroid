@@ -16,7 +16,7 @@ fun List<NoteListResponse>.toBlinkoNotes(): List<BlinkoNote> {
 
 fun NoteListResponse.toBlinkoNote(): BlinkoNote {
   return BlinkoNote(
-//    id = this.id,
+    id = this.id,
     content = this.content?:"",
 //    createdAt = this.createdAt,
 //    updatedAt = this.updatedAt

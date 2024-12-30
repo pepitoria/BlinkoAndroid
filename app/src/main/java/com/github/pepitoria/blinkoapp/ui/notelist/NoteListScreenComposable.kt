@@ -25,6 +25,7 @@ import com.halilibo.richtext.ui.BasicRichText
 @Composable
 fun NoteListScreenComposable(
   viewModel: NoteListScreenViewModel = hiltViewModel(),
+  noteOnClick: (Int) -> Unit,
 ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -37,7 +38,10 @@ fun NoteListScreenComposable(
     } else if (notes.value.isEmpty()) {
       EmptyNoteList()
     } else {
-      NoteList(notes = notes.value)
+      NoteList(
+        notes = notes.value,
+        noteOnClick = noteOnClick,
+      )
     }
   }
 }
@@ -48,7 +52,10 @@ private fun EmptyNoteList() {
 }
 
 @Composable
-private fun NoteList(notes: List<BlinkoNote>) {
+private fun NoteList(
+  notes: List<BlinkoNote>,
+  noteOnClick: (Int) -> Unit = {}
+) {
 
   Column(
     modifier = Modifier.padding(16.dp)
@@ -61,7 +68,10 @@ private fun NoteList(notes: List<BlinkoNote>) {
 
     LazyColumn {
       items(notes) { note ->
-        NoteListItem(note)
+        NoteListItem(
+          note = note,
+          onClick = noteOnClick
+        )
         Spacer(modifier = Modifier.height(8.dp))
       }
     }
@@ -69,10 +79,14 @@ private fun NoteList(notes: List<BlinkoNote>) {
 }
 
 @Composable
-private fun NoteListItem(note: BlinkoNote) {
+private fun NoteListItem(
+  note: BlinkoNote,
+  onClick: (Int) -> Unit = { _ -> }
+) {
 
-  Card (
-    modifier = Modifier.fillMaxWidth()
+  Card(
+    modifier = Modifier.fillMaxWidth(),
+    onClick = { note.id?.let(onClick) }
   ) {
     BasicRichText(
       modifier = Modifier.padding(16.dp)

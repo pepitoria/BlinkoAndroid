@@ -1,5 +1,9 @@
 package com.github.pepitoria.blinkoapp
 
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 sealed class BlinkoNavigationRouter(val route: String) {
 
   data object NavDebug: BlinkoNavigationRouter("debug") {
@@ -11,7 +15,12 @@ sealed class BlinkoNavigationRouter(val route: String) {
   }
 
   data object NavHome: BlinkoNavigationRouter("home") {
+    const val ARG_NOTE_ID = "noteId"
+
     data object NoteList: BlinkoNavigationRouter("home/note-list")
-    data object NoteEdit: BlinkoNavigationRouter("home/note-edit")
+    data object NoteEdit: BlinkoNavigationRouter("home/note-edit/{$ARG_NOTE_ID}") {
+      val arguments : List<NamedNavArgument> = listOf(navArgument(ARG_NOTE_ID) { type = NavType.IntType })
+      fun createRoute(noteId: Int) = "home/note-edit/$noteId"
+    }
   }
 }
