@@ -2,7 +2,7 @@ package com.github.pepitoria.blinkoapp.data.model.notelist
 
 import com.google.gson.annotations.SerializedName
 
-data class NoteListResponse(
+data class NoteResponse(
   @SerializedName("id") var id: Int? = null,
   @SerializedName("type") var type: Int? = null,
   @SerializedName("content") var content: String? = null,

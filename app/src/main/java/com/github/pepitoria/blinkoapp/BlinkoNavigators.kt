@@ -4,6 +4,10 @@ import android.content.Intent
 import androidx.navigation.NavHostController
 import com.github.pepitoria.blinkoapp.ui.sharewithblinko.edit.ShareAndEditWithBlinkoActivity
 
+fun NavHostController.goBack(): () -> Unit = {
+  this.popBackStack()
+}
+
 fun NavHostController.goToEditWithBlinko(): () -> Unit = {
   val intent = Intent(context, ShareAndEditWithBlinkoActivity::class.java)
   intent.action = Intent.ACTION_SEND

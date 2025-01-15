@@ -12,6 +12,10 @@ sealed class BlinkoResult<out T> {
                 code = -1,
                 message = "Unknown error",
             )
+            val NOTFOUND = Error(
+                code = -2,
+                message = "Note not found",
+            )
         }
     }
 }

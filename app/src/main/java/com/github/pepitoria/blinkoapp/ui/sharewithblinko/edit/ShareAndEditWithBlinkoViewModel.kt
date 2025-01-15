@@ -40,7 +40,9 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       _noteCreated.value = false
       val response = noteUpsertUseCase.upsertNote(
-        content = noteUiModel.value.content
+        blinkoNote = BlinkoNote(
+          content = noteUiModel.value.content,
+        )
       )
       _noteCreated.value = true
 

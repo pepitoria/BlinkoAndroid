@@ -5,6 +5,7 @@ import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
 import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepository
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNote
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoResult
+import com.github.pepitoria.blinkoapp.domain.mapper.toUpsertRequest
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import javax.inject.Inject
@@ -14,9 +15,9 @@ class NoteUpsertUseCase @Inject constructor(
 ) {
 
   suspend fun upsertNote(
-    content: String,
+    blinkoNote: BlinkoNote,
   ): BlinkoResult<BlinkoNote> {
-    val response = noteRepository.upsertNote(UpsertRequest(content = content))
+    val response = noteRepository.upsertNote(blinkoNote.toUpsertRequest())
 
     return when (response) {
       is ApiResult.ApiSuccess -> {

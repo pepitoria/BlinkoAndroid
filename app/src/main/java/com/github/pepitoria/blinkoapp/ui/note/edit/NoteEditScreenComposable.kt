@@ -7,23 +7,39 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
+import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
+import com.github.pepitoria.blinkoapp.ui.loading.Loading
 
 @Composable
 fun NoteEditScreenComposable(
-//  viewModel: NoteListScreenViewModel = hiltViewModel(),
+  viewModel: NoteEditScreenViewModel = hiltViewModel(),
   noteId: Int,
+  goBack: () -> Unit,
 ) {
-//  Text("editing note $noteId")
-  BlinkoNoteEditor(
-    uiState = BlinkoNote.EMPTY,
-    modifier = Modifier.fillMaxWidth(),
-    updateNote = {},
-    sendToBlinko = {}
-  )
+  ComposableLifecycleEvents(viewModel = viewModel)
+
+  val isLoading = viewModel.isLoading.collectAsState()
+  val uiState = viewModel.noteUiModel.collectAsState()
+
+  viewModel.onStart(noteId = noteId, onNoteUpsert = goBack)
+
+  if (isLoading.value) {
+    Loading()
+  } else {
+    BlinkoNoteEditor(
+      uiState = uiState.value,
+      modifier = Modifier.fillMaxWidth(),
+      updateNote = { viewModel.updateLocalNote(it.content) },
+      sendToBlinko = { viewModel.editNote() },
+      onNoteUpsert = goBack
+    )
+  }
 }
 
 @Composable
@@ -32,6 +48,7 @@ fun BlinkoNoteEditor(
   modifier: Modifier = Modifier,
   updateNote: (BlinkoNote) -> Unit = {},
   sendToBlinko: () -> Unit = {},
+  onNoteUpsert: () -> Unit = {},
 ) {
   Column(
     modifier = modifier

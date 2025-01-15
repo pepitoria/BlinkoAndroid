@@ -97,5 +97,6 @@ fun HomeNoteEditNavigator(
 ) {
   NoteEditScreenComposable(
     noteId = id,
+    goBack = navController.goBack(),
   )
 }
