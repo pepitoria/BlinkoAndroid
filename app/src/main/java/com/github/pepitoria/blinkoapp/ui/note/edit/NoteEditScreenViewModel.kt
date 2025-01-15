@@ -1,10 +1,11 @@
-package com.github.pepitoria.blinkoapp.ui.sharewithblinko.create
+package com.github.pepitoria.blinkoapp.ui.note.edit
 
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.NoteUpsertUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -16,7 +17,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ShareWithBlinkoViewModel @Inject constructor(
+class NoteEditScreenViewModel @Inject constructor(
   private val noteUpsertUseCase: NoteUpsertUseCase,
   @ApplicationContext private val appContext: Context,
 ) : BlinkoViewModel() {
@@ -24,13 +25,22 @@ class ShareWithBlinkoViewModel @Inject constructor(
   private val _noteCreated: MutableStateFlow<Boolean?> = MutableStateFlow(null)
   val noteCreated = _noteCreated.asStateFlow()
 
-  fun createNote(
+  private val _noteUiModel: MutableStateFlow<BlinkoNote> = MutableStateFlow(BlinkoNote.EMPTY)
+  val noteUiModel = _noteUiModel.asStateFlow()
+
+  fun updateLocalNote(
     content: String,
   ) {
+    _noteUiModel.value = _noteUiModel.value.copy(
+      content = content
+    )
+  }
+
+  fun createNote() {
     viewModelScope.launch(Dispatchers.IO) {
       _noteCreated.value = false
       val response = noteUpsertUseCase.upsertNote(
-        content = content
+        content = noteUiModel.value.content
       )
       _noteCreated.value = true
 
@@ -46,5 +56,4 @@ class ShareWithBlinkoViewModel @Inject constructor(
       }
     }
   }
-
 }

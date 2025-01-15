@@ -54,23 +54,23 @@ class BlinkoApiClient @Inject constructor(
     }
   }
 
-  suspend fun createNote(url: String, token: String, createNoteRequest: UpsertRequest): ApiResult<Note> {
+  suspend fun upsertNote(url: String, token: String, upsertNoteRequest: UpsertRequest): ApiResult<Note> {
     if (!isConnected()) {
       //TODO handle no internet connection
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var createNoteUrl = url
+    var upsertNoteUrl = url
     if (url.endsWith("/")) {
-      createNoteUrl = "${url}api/v1/note/upsert"
+      upsertNoteUrl = "${url}api/v1/note/upsert"
     } else {
-      createNoteUrl = "${url}/api/v1/note/upsert"
+      upsertNoteUrl = "${url}/api/v1/note/upsert"
     }
 
     return withContext(Dispatchers.IO) {
       val apiResponse = api.noteCreate(
-        noteCreateRequest = createNoteRequest,
-        url = createNoteUrl,
+        noteCreateRequest = upsertNoteRequest,
+        url = upsertNoteUrl,
         authorization = "Bearer $token",
       )
 

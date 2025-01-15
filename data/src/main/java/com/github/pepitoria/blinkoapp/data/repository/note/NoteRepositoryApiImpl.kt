@@ -1,16 +1,12 @@
 package com.github.pepitoria.blinkoapp.data.repository.note
 
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
-import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListResponse
 import com.github.pepitoria.blinkoapp.data.model.noteupsert.Note
 import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
-import com.github.pepitoria.blinkoapp.data.net.BlinkoApi
 import com.github.pepitoria.blinkoapp.data.net.BlinkoApiClient
 import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
-import retrofit2.Response
 import javax.inject.Inject
 
 class NoteRepositoryApiImpl @Inject constructor(
@@ -28,13 +24,13 @@ class NoteRepositoryApiImpl @Inject constructor(
     return response
   }
 
-  override suspend fun createNote(createNoteRequest: UpsertRequest): ApiResult<Note> {
+  override suspend fun upsertNote(upsertNoteRequest: UpsertRequest): ApiResult<Note> {
 
     authenticationRepository.getSession()?.let { sessionDto ->
-      val response = api.createNote(
+      val response = api.upsertNote(
         url = sessionDto.url,
         token = sessionDto.token,
-        createNoteRequest = createNoteRequest
+        upsertNoteRequest = upsertNoteRequest
       )
 
       return response

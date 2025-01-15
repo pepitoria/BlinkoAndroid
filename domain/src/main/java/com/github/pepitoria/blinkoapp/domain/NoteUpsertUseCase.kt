@@ -1,26 +1,22 @@
 package com.github.pepitoria.blinkoapp.domain
 
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
-import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
-import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepository
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNote
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
-import timber.log.Timber
 import javax.inject.Inject
 
-class NoteCreateUseCase @Inject constructor(
+class NoteUpsertUseCase @Inject constructor(
   private val noteRepository: NoteRepository,
 ) {
 
-  suspend fun createNote(
+  suspend fun upsertNote(
     content: String,
   ): BlinkoResult<BlinkoNote> {
-    val response = noteRepository.createNote(UpsertRequest(content = content))
+    val response = noteRepository.upsertNote(UpsertRequest(content = content))
 
     return when (response) {
       is ApiResult.ApiSuccess -> {
