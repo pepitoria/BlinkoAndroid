@@ -41,10 +41,10 @@ class BlinkoApiClient @Inject constructor(
 
       if (apiResponse.isSuccessful) {
         apiResponse.body()?.let { resp ->
-          apiResult = ApiResult<List<NoteListResponse>>.ApiSuccess(resp)
+          apiResult = ApiResult.ApiSuccess(resp)
         }
       } else {
-         apiResult = ApiResult<List<NoteListResponse>>.ApiErrorResponse(
+         apiResult = ApiResult.ApiErrorResponse(
           code = apiResponse.code(),
           message = apiResponse.message()
         )
@@ -78,10 +78,10 @@ class BlinkoApiClient @Inject constructor(
 
       if (apiResponse.isSuccessful) {
         apiResponse.body()?.let { resp ->
-          apiResult = ApiResult<Note>.ApiSuccess(resp)
+          apiResult = ApiResult.ApiSuccess(resp)
         }
       } else {
-        apiResult = ApiResult<Note>.ApiErrorResponse(
+        apiResult = ApiResult.ApiErrorResponse(
           code = apiResponse.code(),
           message = apiResponse.message()
         )
