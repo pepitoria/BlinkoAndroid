@@ -17,7 +17,13 @@ fun NoteEditScreenComposable(
 //  viewModel: NoteListScreenViewModel = hiltViewModel(),
   noteId: Int,
 ) {
-  Text("editing note $noteId")
+//  Text("editing note $noteId")
+  BlinkoNoteEditor(
+    uiState = BlinkoNote.EMPTY,
+    modifier = Modifier.fillMaxWidth(),
+    updateNote = {},
+    sendToBlinko = {}
+  )
 }
 
 @Composable

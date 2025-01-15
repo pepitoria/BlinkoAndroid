@@ -22,8 +22,8 @@ class NoteEditScreenViewModel @Inject constructor(
   @ApplicationContext private val appContext: Context,
 ) : BlinkoViewModel() {
 
-  private val _noteCreated: MutableStateFlow<Boolean?> = MutableStateFlow(null)
-  val noteCreated = _noteCreated.asStateFlow()
+  private val _noteUpdated: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+  val noteUpdated = _noteUpdated.asStateFlow()
 
   private val _noteUiModel: MutableStateFlow<BlinkoNote> = MutableStateFlow(BlinkoNote.EMPTY)
   val noteUiModel = _noteUiModel.asStateFlow()
@@ -36,13 +36,13 @@ class NoteEditScreenViewModel @Inject constructor(
     )
   }
 
-  fun createNote() {
+  fun editNote() {
     viewModelScope.launch(Dispatchers.IO) {
-      _noteCreated.value = false
+      _noteUpdated.value = false
       val response = noteUpsertUseCase.upsertNote(
         content = noteUiModel.value.content
       )
-      _noteCreated.value = true
+      _noteUpdated.value = true
 
       when (response) {
         is BlinkoResult.Success -> {
