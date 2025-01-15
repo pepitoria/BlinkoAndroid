@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+@Deprecated("Use TokenLoginScreenComposable instead")
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
   private val loginUseCase: LoginUseCase

@@ -40,6 +40,7 @@ import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.Transparent
 
+@Deprecated("Use TokenLoginScreenComposable instead")
 @Composable
 fun LoginWidget(
   viewModel: LoginScreenViewModel = hiltViewModel()

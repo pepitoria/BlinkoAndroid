@@ -39,6 +39,7 @@ import java.net.CookieHandler
 import java.net.CookieManager
 import java.net.URI
 
+@Deprecated("Use TokenLoginScreenComposable instead")
 @Composable
 fun WebLoginWidget(
   viewModel: WebLoginScreenViewModel = hiltViewModel()

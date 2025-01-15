@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 import javax.inject.Inject
 
+@Deprecated("Use TokenLoginScreenComposable instead")
 @HiltViewModel
 class WebLoginScreenViewModel @Inject constructor(
 ) : BlinkoViewModel() {
