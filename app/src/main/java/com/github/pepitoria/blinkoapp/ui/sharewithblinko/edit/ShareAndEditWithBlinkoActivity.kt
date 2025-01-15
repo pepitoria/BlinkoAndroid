@@ -25,6 +25,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
+import com.github.pepitoria.blinkoapp.ui.note.edit.BlinkoNoteEditor
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -114,40 +115,4 @@ fun GreetingPreview() {
   BlinkoAppTheme {
     BlinkoNoteEditor(BlinkoNote(content = "Hello, Blinko!"))
   }
-}
-
-@Composable
-fun BlinkoNoteEditor(
-  uiState: BlinkoNote,
-  modifier: Modifier = Modifier,
-  updateNote: (BlinkoNote) -> Unit = {},
-  sendToBlinko: () -> Unit = {},
-) {
-  Column(
-    modifier = modifier
-      .fillMaxWidth()
-      .padding(16.dp)
-  ) {
-    TextField(
-      value = uiState.content,
-      onValueChange = { updateNote(uiState.copy(content = it)) },
-      label = { Text("Content") },
-      minLines = 3,
-      modifier = Modifier.fillMaxWidth()
-    )
-
-    Button(
-      onClick = sendToBlinko,
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp)
-    ) {
-      Text(
-        text = "Send to Blinko",
-        fontSize = 16.sp
-      )
-    }
-
-  }
-
 }
