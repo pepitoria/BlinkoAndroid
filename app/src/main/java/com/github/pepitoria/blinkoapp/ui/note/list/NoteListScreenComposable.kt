@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.pepitoria.blinkoapp.R
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
@@ -61,7 +63,7 @@ private fun NoteList(
     modifier = Modifier.padding(16.dp)
   ) {
     Text(
-      text = "Notes list",
+      text = stringResource(id = R.string.note_list_title),
       fontSize = 24.sp
     )
     Spacer(modifier = Modifier.height(8.dp))

@@ -3,4 +3,24 @@
   <string name="share_with_blinko">Share with Blinko</string>
   <string name="edit_with_blinko">Edit with Blinko</string>
 
+  <string name="login_title">Login</string>
+  <string name="login_blinko_url">Blinko url</string>
+  <string name="login_username">Username</string>
+  <string name="login_password">Password</string>
+  <string name="login_button_label">Login</string>
+
+  <string name="login_token_session_active">Session active</string>
+  <string name="login_token_logout">Logout</string>
+  <string name="login_token_login_title">Login with token</string>
+  <string name="login_token_label">Token</string>
+  <string name="login_token_login_button">Login</string>
+
+  <string name="note_edit_label">Content</string>
+  <string name="note_edit_save_button_text">Send to Blinko</string>
+  <string name="note_edit_cancel_button_text">Cancel</string>
+
+  <string name="share_with_blinko_note_created">Note created</string>
+
+  <string name="note_list_title">Note list</string>
+
 </resources>

@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.BuildConfig
+import com.github.pepitoria.blinkoapp.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.Black
@@ -113,7 +115,7 @@ private fun SessionActive(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Text(
-      text = "Session active",
+      text = stringResource(id = R.string.login_token_session_active),
       modifier = Modifier,
       color = Black
     )
@@ -124,7 +126,7 @@ private fun SessionActive(
         .padding(16.dp)
     ) {
       Text(
-        text = "Logout",
+        text = stringResource(id = R.string.login_token_logout),
         fontSize = 16.sp
       )
     }
@@ -181,13 +183,13 @@ fun TokenLoginScreenViewState(
       Spacer(modifier = Modifier.weight(1f))
 
       Text(
-        text = "Login with token",
+        text = stringResource(id = R.string.login_token_login_title),
       )
       Spacer(modifier = Modifier.height(12.dp))
 
       BlinkoUrlField(
         url = url,
-        label = "Blinko url",
+        label = stringResource(id = R.string.login_blinko_url),
         onUrlChange = { url = it },
         modifier = Modifier
           .fillMaxWidth()
@@ -197,7 +199,7 @@ fun TokenLoginScreenViewState(
 
       TokenField(
         username = token,
-        label = "Token",
+        label = stringResource(id = R.string.login_token_label),
         onUsernameChange = { token = it },
         modifier = Modifier
           .fillMaxWidth()
@@ -225,7 +227,7 @@ fun TokenLoginButton(
     modifier = modifier,
   ) {
     Text(
-      text = "Login",
+      text = stringResource(id = R.string.login_token_login_button),
       fontSize = 16.sp
     )
   }

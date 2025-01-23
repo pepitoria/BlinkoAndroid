@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.github.pepitoria.blinkoapp.R
+import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,10 +34,7 @@ class ShareWithBlinkoActivity : ComponentActivity() {
     setContent {
       BlinkoAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-          Greeting(
-            name = "Android",
-            modifier = Modifier.padding(innerPadding)
-          )
+          Loading()
         }
       }
     }
@@ -55,7 +54,12 @@ class ShareWithBlinkoActivity : ComponentActivity() {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         viewModel.noteCreated.collect { noteCreated ->
           if (noteCreated == true) {
-            Toast.makeText(this@ShareWithBlinkoActivity, "Note created", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+              this@ShareWithBlinkoActivity,
+              getString(R.string.share_with_blinko_note_created),
+              Toast.LENGTH_SHORT
+            ).show()
+
             finish()
           }
         }
@@ -92,21 +96,5 @@ class ShareWithBlinkoActivity : ComponentActivity() {
     intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let { imageUri ->
       // Handle the image URI
     }
-  }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-  Text(
-    text = "Hello $name!",
-    modifier = modifier
-  )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-  BlinkoAppTheme {
-    Greeting("Android")
   }
 }

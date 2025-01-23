@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.pepitoria.blinkoapp.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.Transparent
@@ -93,14 +95,14 @@ fun LoginScreenViewState(
       Spacer(modifier = Modifier.weight(1f))
 
       Text(
-        text = "Login",
+        text = stringResource(id = R.string.login_title),
       )
 
       Spacer(modifier = Modifier.height(12.dp))
 
       BlinkoUrlField(
         url = url,
-        label = "Blinko url",
+        label = stringResource(id = R.string.login_blinko_url),
         onUrlChange = { url = it },
         modifier = Modifier
           .fillMaxWidth()
@@ -111,7 +113,7 @@ fun LoginScreenViewState(
 
       UsernameField(
         username = username,
-        label = "Username",
+        label = stringResource(id = R.string.login_username),
         onUsernameChange = { username = it },
         modifier = Modifier
           .fillMaxWidth()
@@ -120,7 +122,7 @@ fun LoginScreenViewState(
       Spacer(modifier = Modifier.height(12.dp))
       PasswordField(
         password = password,
-        placeholder = "Password",
+        placeholder = stringResource(id = R.string.login_password),
         onPasswordChange = { password = it },
         modifier = Modifier
           .fillMaxWidth()
@@ -148,7 +150,7 @@ fun LoginButton(
     modifier = modifier,
   ) {
     Text(
-      text = "Login",
+      text = stringResource(id = R.string.login_button_label),
       fontSize = 16.sp
     )
   }
