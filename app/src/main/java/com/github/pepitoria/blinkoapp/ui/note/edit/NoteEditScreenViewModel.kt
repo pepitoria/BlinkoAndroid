@@ -81,7 +81,9 @@ class NoteEditScreenViewModel @Inject constructor(
       when (response) {
         is BlinkoResult.Success -> {
           Timber.d("${this::class.java.simpleName}.upsertNote() response: ${response.value.content}")
-          onNoteUpsert()
+          viewModelScope.launch(Dispatchers.Main) {
+            onNoteUpsert()
+          }
         }
 
         is BlinkoResult.Error -> {
