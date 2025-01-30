@@ -7,24 +7,18 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.ui.note.edit.BlinkoNoteEditor
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -113,6 +107,11 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
   BlinkoAppTheme {
-    BlinkoNoteEditor(BlinkoNote(content = "Hello, Blinko!"))
+    BlinkoNoteEditor(
+      BlinkoNote(
+        content = "Hello, Blinko!",
+        type = BlinkoNoteType.BLINKO,
+      )
+    )
   }
 }

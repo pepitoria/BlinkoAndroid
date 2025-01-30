@@ -4,11 +4,16 @@ import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.NoteListUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,7 +27,18 @@ class NoteListScreenViewModel @Inject constructor(
   val isLoading = _isLoading.asStateFlow()
 
   private val _notes: MutableStateFlow<List<BlinkoNote>> = MutableStateFlow(emptyList())
-  val notes = _notes.asStateFlow()
+
+  fun getNotes(type: BlinkoNoteType): StateFlow<List<BlinkoNote>> {
+    return _notes.map { list ->
+      list.filter {
+        it.type == type
+      }
+    }.stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.Eagerly,
+      initialValue = emptyList()
+    )
+  }
 
   override fun onStart() {
     super.onStart()

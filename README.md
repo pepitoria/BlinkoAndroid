@@ -8,7 +8,7 @@ TODO:
 - List notes
   - ~~List all blinkos and notes: Working~~
   - Styling notes view.
-  - Separate blinkos from notes
+  - ~~Separate blinkos from notes~~
   - filter by search term
   - filter by tags
 - Edit note
@@ -19,4 +19,4 @@ TODO:
   - create note from the app
   - ~~Share with blinko (from outside the app): working~~
   - Share and edit with blinko (from outside the app): working, needs restyling
-- Proper Navigation (ie: tabs, side menu)
+- Proper Navigation (ie: tabs, side menu), tab navigation, still wip

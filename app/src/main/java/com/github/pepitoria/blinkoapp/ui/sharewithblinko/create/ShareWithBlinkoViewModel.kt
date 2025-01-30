@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.NoteUpsertUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -33,6 +34,7 @@ class ShareWithBlinkoViewModel @Inject constructor(
       val response = noteUpsertUseCase.upsertNote(
         blinkoNote = BlinkoNote(
           content = content,
+          type = BlinkoNoteType.BLINKO,
         )
       )
       _noteCreated.value = true

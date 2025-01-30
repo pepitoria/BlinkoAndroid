@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
 import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
@@ -48,7 +49,16 @@ fun BlinkoNavigationController(
       route = BlinkoNavigationRouter.NavHome.route,
     ) {
       composable(BlinkoNavigationRouter.NavHome.NoteList.route) {
-        HomeNoteListNavigator(navController = navController)
+        HomeNoteListNavigatorNotes(
+          navController = navController,
+          route = BlinkoNavigationRouter.NavHome.NoteList.route,
+        )
+      }
+      composable(BlinkoNavigationRouter.NavHome.BlinkoList.route) {
+        HomeNoteListNavigatorBlinkos(
+          navController = navController,
+          route = BlinkoNavigationRouter.NavHome.BlinkoList.route,
+        )
       }
       composable(
         route = BlinkoNavigationRouter.NavHome.NoteEdit.route,
@@ -61,6 +71,7 @@ fun BlinkoNavigationController(
     }
   }
 }
+
 
 @Composable
 fun LoginNavigator(
@@ -82,11 +93,30 @@ fun DebugNavigator(
 }
 
 @Composable
-fun HomeNoteListNavigator(
+fun HomeNoteListNavigatorBlinkos(
   navController: NavHostController,
+  route: String,
 ) {
   NoteListScreenComposable(
     noteOnClick = navController.goToNoteEdit(),
+    noteType = BlinkoNoteType.BLINKO,
+    currentRoute = route,
+    goToNotes = navController.goToNoteList(),
+    goToBlinkos = navController.goToBlinkoList(),
+  )
+}
+
+@Composable
+fun HomeNoteListNavigatorNotes(
+  navController: NavHostController,
+  route: String,
+) {
+  NoteListScreenComposable(
+    noteOnClick = navController.goToNoteEdit(),
+    noteType = BlinkoNoteType.NOTE,
+    currentRoute = route,
+    goToNotes = navController.goToNoteList(),
+    goToBlinkos = navController.goToBlinkoList(),
   )
 }
 

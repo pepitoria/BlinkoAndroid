@@ -16,7 +16,7 @@
   <string name="login_token_login_button">Login</string>
 
   <string name="note_edit_label">Content</string>
-  <string name="note_edit_save_button_text">Send to Blinko</string>
+  <string name="note_edit_save_button_text">Save</string>
   <string name="note_edit_cancel_button_text">Cancel</string>
 
   <string name="share_with_blinko_note_created">Note created</string>
