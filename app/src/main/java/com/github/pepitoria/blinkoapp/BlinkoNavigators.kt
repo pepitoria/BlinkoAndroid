@@ -21,11 +21,17 @@ fun NavHostController.goToDebug(): () -> Unit = {
 }
 
 fun NavHostController.goToNoteList(): () -> Unit = {
-  this.navigate(route = BlinkoNavigationRouter.NavHome.NoteList.route)
+  this.navigate(route = BlinkoNavigationRouter.NavHome.NoteList.route){
+    launchSingleTop = true
+    popUpTo(0)
+  }
 }
 
 fun NavHostController.goToBlinkoList(): () -> Unit = {
-  this.navigate(route = BlinkoNavigationRouter.NavHome.BlinkoList.route)
+  this.navigate(route = BlinkoNavigationRouter.NavHome.BlinkoList.route) {
+    launchSingleTop = true
+    popUpTo(0)
+  }
 }
 
 fun NavHostController.goToNoteEdit(): (id: Int) -> Unit = { id ->
