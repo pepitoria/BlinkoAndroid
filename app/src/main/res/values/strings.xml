@@ -23,4 +23,8 @@
 
   <string name="note_list_title">Note list</string>
 
+  <string name="tab_bar_notes">Notes</string>
+  <string name="tab_bar_blinkos">Blinkos</string>
+  <string name="tab_bar_settings">Settings</string>
+
 </resources>
