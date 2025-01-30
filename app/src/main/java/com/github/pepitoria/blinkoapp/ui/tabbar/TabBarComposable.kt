@@ -1,9 +1,6 @@
 package com.github.pepitoria.blinkoapp.ui.tabbar
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -21,6 +18,7 @@ fun TabBar(
   currentRoute: String,
   goToNotes: () -> Unit,
   goToBlinkos: () -> Unit,
+  goToSettings: () -> Unit,
   content: @Composable (PaddingValues) -> Unit
 ) {
   Scaffold(
@@ -44,6 +42,17 @@ fun TabBar(
           onClick = {
             if (currentRoute != BlinkoNavigationRouter.NavHome.BlinkoList.route) {
               goToBlinkos()
+            }
+          }
+        )
+
+        NavigationBarItem(
+          icon = { Icon(ImageVector.vectorResource(id = R.drawable.settings), contentDescription = stringResource(R.string.tab_bar_settings)) },
+          label = { Text(text = stringResource(R.string.tab_bar_settings)) },
+          selected = currentRoute == BlinkoNavigationRouter.NavHome.Settings.route,
+          onClick = {
+            if (currentRoute != BlinkoNavigationRouter.NavHome.Settings.route) {
+              goToSettings()
             }
           }
         )

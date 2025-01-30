@@ -31,6 +31,7 @@ fun NoteListScreenComposable(
   currentRoute: String,
   goToNotes: () -> Unit,
   goToBlinkos: () -> Unit,
+  goToSettings: () -> Unit,
   ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -42,6 +43,7 @@ fun NoteListScreenComposable(
       currentRoute = currentRoute,
       goToNotes = goToNotes,
       goToBlinkos = goToBlinkos,
+      goToSettings = goToSettings,
     ) { paddingValues ->
       if (isLoading.value) {
         Loading()

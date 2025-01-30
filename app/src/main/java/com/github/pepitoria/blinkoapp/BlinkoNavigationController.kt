@@ -12,6 +12,7 @@ import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
 import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListScreenComposable
+import com.github.pepitoria.blinkoapp.ui.settings.SettingsScreenComposable
 
 @Composable
 fun BlinkoNavigationController(
@@ -48,13 +49,13 @@ fun BlinkoNavigationController(
       startDestination = BlinkoNavigationRouter.NavHome.NoteList.route,
       route = BlinkoNavigationRouter.NavHome.route,
     ) {
-      composable(BlinkoNavigationRouter.NavHome.NoteList.route) {
+      composable(route = BlinkoNavigationRouter.NavHome.NoteList.route) {
         HomeNoteListNavigatorNotes(
           navController = navController,
           route = BlinkoNavigationRouter.NavHome.NoteList.route,
         )
       }
-      composable(BlinkoNavigationRouter.NavHome.BlinkoList.route) {
+      composable(route = BlinkoNavigationRouter.NavHome.BlinkoList.route) {
         HomeNoteListNavigatorBlinkos(
           navController = navController,
           route = BlinkoNavigationRouter.NavHome.BlinkoList.route,
@@ -67,6 +68,12 @@ fun BlinkoNavigationController(
         HomeNoteEditNavigator(
           navController = navController,
           id = it.arguments?.getInt(BlinkoNavigationRouter.NavHome.ARG_NOTE_ID) ?: 0)
+      }
+      composable(route = BlinkoNavigationRouter.NavHome.Settings.route) {
+        SettingsNavigatorNotes(
+          navController = navController,
+          route = BlinkoNavigationRouter.NavHome.Settings.route,
+        )
       }
     }
   }
@@ -103,6 +110,7 @@ fun HomeNoteListNavigatorBlinkos(
     currentRoute = route,
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
+    goToSettings = navController.goToSettings(),
   )
 }
 
@@ -117,6 +125,21 @@ fun HomeNoteListNavigatorNotes(
     currentRoute = route,
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
+    goToSettings = navController.goToSettings(),
+  )
+}
+
+@Composable
+fun SettingsNavigatorNotes(
+  navController: NavHostController,
+  route: String,
+) {
+  SettingsScreenComposable(
+    currentRoute = route,
+    goToNotes = navController.goToNoteList(),
+    goToBlinkos = navController.goToBlinkoList(),
+    goToSettings = navController.goToSettings(),
+    exit = navController.exit(),
   )
 }
 

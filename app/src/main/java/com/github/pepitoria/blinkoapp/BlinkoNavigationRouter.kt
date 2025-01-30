@@ -23,5 +23,7 @@ sealed class BlinkoNavigationRouter(val route: String) {
       val arguments : List<NamedNavArgument> = listOf(navArgument(ARG_NOTE_ID) { type = NavType.IntType })
       fun createRoute(noteId: Int) = "home/note-edit/$noteId"
     }
+    data object Settings: BlinkoNavigationRouter("home/settings")
+
   }
 }
