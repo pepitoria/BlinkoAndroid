@@ -1,26 +1,26 @@
 [versions]
-agp = "8.8.1"
+agp = "8.8.2"
 richtextCommonmark = "1.0.0-alpha02"
 targetSdk = "35"
 compileSdk = "35"
 minSdk = "25"
 
-kotlin = "2.0.0"
-ksp="2.0.0-1.0.21"
+kotlin = "2.0.20"
+ksp="2.0.20-1.0.25"
 
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.10.0"
+activityCompose = "1.10.1"
 composeBom = "2025.02.00"
 jvmTarget = "17"
 appcompat = "1.7.0"
 googleMaterial = "1.12.0"
 composeMaterial = "1.7.8"
 
-hilt = "2.49"
+hilt = "2.51.1"
 androidx-hilt-navigation-compose = "1.2.0"
 
 retrofit = "2.9.0"
