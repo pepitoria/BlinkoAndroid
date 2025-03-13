@@ -25,6 +25,13 @@ fun NavHostController.goToDebug(): () -> Unit = {
   this.navigate(route = BlinkoNavigationRouter.NavDebug.Debug.route)
 }
 
+fun NavHostController.goToHome(): () -> Unit = {
+  this.navigate(route = BlinkoNavigationRouter.NavHome.route) {
+    launchSingleTop = true
+    popUpTo(0)
+  }
+}
+
 fun NavHostController.goToNoteList(): () -> Unit = {
   this.navigate(route = BlinkoNavigationRouter.NavHome.NoteList.route){
     launchSingleTop = true

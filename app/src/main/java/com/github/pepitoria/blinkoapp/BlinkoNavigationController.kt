@@ -46,7 +46,7 @@ fun BlinkoNavigationController(
 
     ///// Home
     navigation(
-      startDestination = BlinkoNavigationRouter.NavHome.NoteList.route,
+      startDestination = BlinkoNavigationRouter.NavHome.BlinkoList.route,
       route = BlinkoNavigationRouter.NavHome.route,
     ) {
       composable(route = BlinkoNavigationRouter.NavHome.NoteList.route) {
@@ -86,7 +86,7 @@ fun LoginNavigator(
 ) {
   TokenLoginWidget(
     goToDebug = navController.goToDebug(),
-    goToNoteList = navController.goToNoteList(),
+    goToHome = navController.goToHome(),
   )
 }
 

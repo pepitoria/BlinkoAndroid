@@ -25,23 +25,23 @@ fun TabBar(
     bottomBar = {
       NavigationBar {
         NavigationBarItem(
-          icon = { Icon(ImageVector.vectorResource(id = R.drawable.note), contentDescription = stringResource(R.string.tab_bar_notes)) },
-          label = { Text(text = stringResource(R.string.tab_bar_notes)) },
-          selected = currentRoute == BlinkoNavigationRouter.NavHome.NoteList.route,
-          onClick = {
-            if (currentRoute != BlinkoNavigationRouter.NavHome.NoteList.route) {
-              goToNotes()
-            }
-          }
-        )
-
-        NavigationBarItem(
           icon = { Icon(ImageVector.vectorResource(id = R.drawable.blinko), contentDescription = stringResource(R.string.tab_bar_blinkos)) },
           label = { Text(text = stringResource(R.string.tab_bar_blinkos)) },
           selected = currentRoute == BlinkoNavigationRouter.NavHome.BlinkoList.route,
           onClick = {
             if (currentRoute != BlinkoNavigationRouter.NavHome.BlinkoList.route) {
               goToBlinkos()
+            }
+          }
+        )
+
+        NavigationBarItem(
+          icon = { Icon(ImageVector.vectorResource(id = R.drawable.note), contentDescription = stringResource(R.string.tab_bar_notes)) },
+          label = { Text(text = stringResource(R.string.tab_bar_notes)) },
+          selected = currentRoute == BlinkoNavigationRouter.NavHome.NoteList.route,
+          onClick = {
+            if (currentRoute != BlinkoNavigationRouter.NavHome.NoteList.route) {
+              goToNotes()
             }
           }
         )
