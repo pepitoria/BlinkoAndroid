@@ -23,6 +23,18 @@ android {
     }
   }
 
+  flavorDimensions += "environment"
+
+  productFlavors {
+    create("remote") {
+      dimension = "environment"
+    }
+
+    create("mockLocal") {
+      dimension = "environment"
+    }
+  }
+
   buildTypes {
     release {
       isMinifyEnabled = false
