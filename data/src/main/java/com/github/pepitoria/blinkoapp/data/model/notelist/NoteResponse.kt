@@ -12,7 +12,7 @@ data class NoteResponse(
   @SerializedName("isTop") var isTop: Boolean? = null,
   @SerializedName("isReviewed") var isReviewed: Boolean? = null,
   @SerializedName("sharePassword") var sharePassword: String? = null,
-  @SerializedName("metadata") var metadata: String? = null,
+//  @SerializedName("metadata") var metadata: String? = null,
   @SerializedName("accountId") var accountId: Int? = null,
   @SerializedName("createdAt") var createdAt: String? = null,
   @SerializedName("updatedAt") var updatedAt: String? = null,
