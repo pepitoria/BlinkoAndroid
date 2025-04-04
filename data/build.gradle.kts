@@ -16,12 +16,25 @@ android {
     consumerProguardFiles("consumer-rules.pro")
   }
 
+  flavorDimensions += "environment"
+
+  productFlavors {
+    create("remote") {
+      dimension = "environment"
+    }
+
+    create("mockLocal") {
+      dimension = "environment"
+    }
+  }
+
   buildTypes {
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
