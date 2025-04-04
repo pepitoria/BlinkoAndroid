@@ -3,6 +3,7 @@ package com.github.pepitoria.blinkoapp.ui.sharewithblinko.edit
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.viewModelScope
+import com.github.pepitoria.blinkoapp.domain.LocalStorageUseCases
 import com.github.pepitoria.blinkoapp.domain.NoteUpsertUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
@@ -20,11 +21,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ShareAndEditWithBlinkoViewModel @Inject constructor(
   private val noteUpsertUseCase: NoteUpsertUseCase,
-  @ApplicationContext private val appContext: Context,
 ) : BlinkoViewModel() {
 
   private val _noteCreated: MutableStateFlow<Boolean?> = MutableStateFlow(null)
   val noteCreated = _noteCreated.asStateFlow()
+
+  private val _error: MutableStateFlow<String?> = MutableStateFlow(null)
+  val error = _error.asStateFlow()
 
   private val _noteUiModel: MutableStateFlow<BlinkoNote> = MutableStateFlow(BlinkoNote.EMPTY)
   val noteUiModel = _noteUiModel.asStateFlow()
@@ -46,16 +49,16 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
           type = BlinkoNoteType.BLINKO,
         )
       )
-      _noteCreated.value = true
 
       when (response) {
         is BlinkoResult.Success -> {
+          _noteCreated.value = true
           Timber.d("${this::class.java.simpleName}.upsertNote() response: ${response.value.content}")
         }
 
         is BlinkoResult.Error -> {
-          Timber.e("${this::class.java.simpleName}.upsertNote() error: ${response.message}")
-          Toast.makeText(appContext, response.message, Toast.LENGTH_SHORT).show()
+          Timber.e("${this::class.java.simpleName}.upsertNote() error: ${response.code}")
+          _error.value = response.message.ifEmpty { response.code.toString() }
         }
       }
     }

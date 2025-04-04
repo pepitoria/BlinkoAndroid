@@ -69,6 +69,17 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
       }
     }
 
+    lifecycleScope.launch {
+      repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewModel.error.collect { error ->
+          error?.let {
+            Toast.makeText(this@ShareAndEditWithBlinkoActivity, "Error: $error", Toast.LENGTH_SHORT).show()
+            finish()
+          }
+        }
+      }
+    }
+
     when (intent.action) {
       Intent.ACTION_SEND -> {
         if (intent.type?.startsWith("text/") == true) {
