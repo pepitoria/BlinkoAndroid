@@ -1,5 +1,6 @@
 package com.github.pepitoria.blinkoapp.ui.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,8 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
-import com.github.pepitoria.blinkoapp.ui.theme.Black
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -105,14 +106,15 @@ private fun SessionActive(
 ) {
 
   Column(
-    modifier = Modifier.fillMaxSize(),
+    modifier = Modifier.fillMaxSize().background(getBackgroundBrush()),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Text(
       text = stringResource(id = R.string.login_token_session_active),
       modifier = Modifier,
-      color = Black
+      fontSize = 18.sp,
+      fontWeight = FontWeight.Bold,
     )
     Button(
       onClick = logout,
@@ -126,7 +128,7 @@ private fun SessionActive(
       )
     }
 
-    GoToDebugButton(goToDebug = goToDebug)
+//    GoToDebugButton(goToDebug = goToDebug)
   }
 }
 
@@ -157,8 +159,9 @@ fun TokenLoginScreenViewState(
   Column(
     modifier = Modifier
       .fillMaxSize()
-      .padding(32.dp)
-      .verticalScroll(rememberScrollState()),
+      .verticalScroll(rememberScrollState())
+      .background(getBackgroundBrush())
+      .padding(32.dp),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -179,6 +182,8 @@ fun TokenLoginScreenViewState(
 
       Text(
         text = stringResource(id = R.string.login_token_login_title),
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
       )
       Spacer(modifier = Modifier.height(12.dp))
 
@@ -200,6 +205,7 @@ fun TokenLoginScreenViewState(
           .fillMaxWidth()
           .focusRequester(second)
       )
+
       Spacer(modifier = Modifier.height(12.dp))
 
       TokenLoginButton(

@@ -11,7 +11,7 @@
 
   <string name="login_token_session_active">Session active</string>
   <string name="login_token_logout">Logout</string>
-  <string name="login_token_login_title">Login with token</string>
+  <string name="login_token_login_title">Login With your Blinko token</string>
   <string name="login_token_label">Token</string>
   <string name="login_token_login_button">Login</string>
 
