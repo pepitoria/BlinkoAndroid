@@ -5,7 +5,7 @@ sealed class ApiResult<out T> {
 
     data class ApiErrorResponse(
         var code: Int? = null,
-        var message: String? ? = null
+        var message: String? = null
     ) : ApiResult<Nothing>() {
         companion object {
             val UNKNOWN = ApiErrorResponse(
