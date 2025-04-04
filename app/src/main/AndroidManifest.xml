@@ -28,19 +28,6 @@
         </activity>
 
         <activity
-            android:name=".ui.sharewithblinko.create.ShareWithBlinkoActivity"
-            android:label="@string/share_with_blinko"
-            android:exported="true"
-            android:theme="@style/Theme.BlinkoApp">
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="*/*" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.sharewithblinko.edit.ShareAndEditWithBlinkoActivity"
             android:label="@string/edit_with_blinko"
             android:exported="true"
