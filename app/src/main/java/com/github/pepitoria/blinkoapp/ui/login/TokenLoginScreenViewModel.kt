@@ -46,10 +46,16 @@ class TokenLoginScreenViewModel @Inject constructor(
 
   fun checkSession(
     url: String,
-    token: String
+    token: String,
+    insecureConnectionCheck: Boolean,
   ) {
     Timber.d("${this::class.java.simpleName}.login() url: $url")
     Timber.d("${this::class.java.simpleName}.login() token: $token")
+
+    if (url.startsWith("http://") && !insecureConnectionCheck) {
+      triggerEvent(NavigationEvents.InsecureConnection)
+      return
+    }
 
     viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
@@ -99,4 +105,5 @@ class TokenLoginScreenViewModel @Inject constructor(
 
 sealed class NavigationEvents {
   data object GoToNoteList : NavigationEvents()
+  data object InsecureConnection : NavigationEvents()
 }

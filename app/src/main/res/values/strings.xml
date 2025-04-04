@@ -14,6 +14,8 @@
   <string name="login_token_login_title">Login With your Blinko token</string>
   <string name="login_token_label">Token</string>
   <string name="login_token_login_button">Login</string>
+  <string name="login_token_insecure_url">I understand I am using an insecure connection</string>
+  <string name="login_token_insecure_toast">You are attempting to connect to an insecure server (http). Are you sure?</string>
 
   <string name="note_edit_label">Content</string>
   <string name="note_edit_save_button_text">Save</string>

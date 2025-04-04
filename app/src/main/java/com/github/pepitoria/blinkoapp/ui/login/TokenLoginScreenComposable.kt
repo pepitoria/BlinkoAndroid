@@ -1,8 +1,10 @@
 package com.github.pepitoria.blinkoapp.ui.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -28,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -69,12 +73,13 @@ fun TokenLoginWidget(
       )
     } else {
       TokenLoginScreenViewState(
-        url = viewModel.getStoredUrl() ?: "",
-        token = viewModel.getStoredToken() ?: "",
-        onLoginClicked = { url, token ->
+        urlParam = viewModel.getStoredUrl() ?: "",
+        tokenParam = viewModel.getStoredToken() ?: "",
+        onLoginClicked = { url, token, insecureConnectionCheck ->
           viewModel.checkSession(
             url = url,
-            token = token
+            token = token,
+            insecureConnectionCheck = insecureConnectionCheck,
           )
         }
       )
@@ -87,11 +92,17 @@ private fun ListenForEvents(
   events: SharedFlow<NavigationEvents>,
   goToHome: () -> Unit,
 ) {
+
+  val context = LocalContext.current
+
   LaunchedEffect(Unit) {
     events.collect { event ->
       when (event) {
         is NavigationEvents.GoToNoteList -> {
           goToHome()
+        }
+        is NavigationEvents.InsecureConnection -> {
+          Toast.makeText(context, R.string.login_token_insecure_toast, Toast.LENGTH_LONG).show()
         }
       }
     }
@@ -152,9 +163,9 @@ private fun GoToDebugButton(
 @Preview
 @Composable
 fun TokenLoginScreenViewState(
-  onLoginClicked: (String, String) -> Unit = { _, _ -> },
-  url: String = "",
-  token: String = "",
+  onLoginClicked: (String, String, Boolean) -> Unit = { _, _, _ -> },
+  urlParam: String = "",
+  tokenParam: String = "",
 ) {
   Column(
     modifier = Modifier
@@ -170,12 +181,13 @@ fun TokenLoginScreenViewState(
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       var url by rememberSaveable {
-        mutableStateOf(url)
+        mutableStateOf(urlParam)
       }
 
       var token by rememberSaveable {
-        mutableStateOf(token)
+        mutableStateOf(tokenParam)
       }
+      var insecureUrlCheckedState by remember { mutableStateOf(false) }
 
       val (first, second) = remember { FocusRequester.createRefs() }
       Spacer(modifier = Modifier.weight(1f))
@@ -206,11 +218,28 @@ fun TokenLoginScreenViewState(
           .focusRequester(second)
       )
 
+      if (url.startsWith("http://")) {
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(
+          verticalAlignment = Alignment.CenterVertically
+        ) {
+          Switch(
+            checked = insecureUrlCheckedState,
+            onCheckedChange = { insecureUrlCheckedState = it }
+          )
+          Text(
+            text = stringResource(id = R.string.login_token_insecure_url),
+            fontSize = 14.sp,
+            modifier = Modifier.padding(start = 8.dp)
+          )
+        }
+      }
+
       Spacer(modifier = Modifier.height(12.dp))
 
       TokenLoginButton(
         onClick = {
-          onLoginClicked(url, token)
+          onLoginClicked(url, token, insecureUrlCheckedState)
         },
       )
       Spacer(modifier = Modifier.weight(1f))
