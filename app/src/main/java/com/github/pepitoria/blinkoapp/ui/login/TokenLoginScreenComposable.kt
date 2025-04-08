@@ -289,3 +289,31 @@ fun TokenField(
       .then(modifier),
   )
 }
+
+
+@Composable
+fun BlinkoUrlField(
+  url: String,
+  label: String,
+  onUrlChange: (String) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  TextField(
+    label = {
+      Text(
+        text = label,
+        fontWeight = FontWeight.Normal
+      )
+    },
+    value = url,
+    singleLine = true,
+    onValueChange = onUrlChange,
+    keyboardOptions = KeyboardOptions(
+      keyboardType = KeyboardType.Uri,
+      imeAction = ImeAction.Next
+    ),
+    modifier = Modifier
+      .clip(RoundedCornerShape(4.dp))
+      .then(modifier),
+  )
+}
