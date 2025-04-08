@@ -55,13 +55,13 @@ fun SettingsScreenComposable(
 
 @Composable
 private fun ListenForEvents(
-  events: SharedFlow<SettingsScreenViewModel.NavigationEvents>,
+  events: SharedFlow<SettingsScreenViewModel.Events>,
   exit: () -> Unit,
 ) {
   LaunchedEffect(Unit) {
     events.collect { event ->
       when (event) {
-        is SettingsScreenViewModel.NavigationEvents.Exit -> {
+        is SettingsScreenViewModel.Events.Exit -> {
           exit()
         }
       }
