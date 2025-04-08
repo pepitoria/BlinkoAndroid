@@ -89,7 +89,7 @@ fun TokenLoginWidget(
 
 @Composable
 private fun ListenForEvents(
-  events: SharedFlow<NavigationEvents>,
+  events: SharedFlow<TokenLoginScreenViewModel.Events>,
   goToHome: () -> Unit,
 ) {
 
@@ -98,10 +98,10 @@ private fun ListenForEvents(
   LaunchedEffect(Unit) {
     events.collect { event ->
       when (event) {
-        is NavigationEvents.GoToNoteList -> {
+        is TokenLoginScreenViewModel.Events.SessionOk -> {
           goToHome()
         }
-        is NavigationEvents.InsecureConnection -> {
+        is TokenLoginScreenViewModel.Events.InsecureConnection -> {
           Toast.makeText(context, R.string.login_token_insecure_toast, Toast.LENGTH_LONG).show()
         }
       }

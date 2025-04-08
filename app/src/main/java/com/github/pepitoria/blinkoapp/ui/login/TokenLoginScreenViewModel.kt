@@ -21,13 +21,18 @@ class TokenLoginScreenViewModel @Inject constructor(
   private val sessionUseCases: SessionUseCases,
 ) : BlinkoViewModel() {
 
+  sealed class Events {
+    data object SessionOk : Events()
+    data object InsecureConnection : Events()
+  }
+
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val isLoading = _isLoading.asStateFlow()
 
   private val _isSessionActive: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val isSessionActive = _isSessionActive.asStateFlow()
 
-  private val _events = MutableSharedFlow<NavigationEvents>()
+  private val _events = MutableSharedFlow<Events>()
   val events = _events.asSharedFlow()
 
   override fun onStart() {
@@ -39,7 +44,7 @@ class TokenLoginScreenViewModel @Inject constructor(
       Timber.d("${this::class.java.simpleName}.onStart() sessionActive: $sessionActive")
       _isSessionActive.value = sessionActive
       if (sessionActive) {
-        triggerEvent(NavigationEvents.GoToNoteList)
+        triggerEvent(Events.SessionOk)
       }
     }
   }
@@ -53,7 +58,7 @@ class TokenLoginScreenViewModel @Inject constructor(
     Timber.d("${this::class.java.simpleName}.login() token: $token")
 
     if (url.startsWith("http://") && !insecureConnectionCheck) {
-      triggerEvent(NavigationEvents.InsecureConnection)
+      triggerEvent(Events.InsecureConnection)
       return
     }
 
@@ -65,7 +70,7 @@ class TokenLoginScreenViewModel @Inject constructor(
       _isSessionActive.value = sessionOk
 
       if (sessionOk) {
-        triggerEvent(NavigationEvents.GoToNoteList)
+        triggerEvent(Events.SessionOk)
       }
 
       if (sessionOk && BuildConfig.DEBUG) {
@@ -96,14 +101,9 @@ class TokenLoginScreenViewModel @Inject constructor(
     localStorageUseCases.saveString("getStoredToken", token)
   }
 
-  private fun triggerEvent(event: NavigationEvents) {
+  private fun triggerEvent(event: Events) {
     viewModelScope.launch {
       _events.emit(event)
     }
   }
-}
-
-sealed class NavigationEvents {
-  data object GoToNoteList : NavigationEvents()
-  data object InsecureConnection : NavigationEvents()
 }
