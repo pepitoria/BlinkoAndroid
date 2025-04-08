@@ -99,7 +99,9 @@ private fun NoteListItem(
 ) {
 
   Card(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+      .fillMaxWidth(),
+    colors = BlinkoAppTheme.cardColors(),
     onClick = { note.id?.let(onClick) }
   ) {
     BasicRichText(

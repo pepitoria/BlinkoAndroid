@@ -3,32 +3,37 @@ package com.github.pepitoria.blinkoapp.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import timber.log.Timber
 
 private val DarkColorScheme = darkColorScheme(
   primary = Purple80,
   secondary = PurpleGrey80,
-  tertiary = Pink80
-)
+  tertiary = Pink80,
+  background = PurpleGrey40,
+  )
 
 private val LightColorScheme = lightColorScheme(
   primary = Purple40,
   secondary = PurpleGrey40,
-  tertiary = Pink40
-
+  tertiary = Pink40,
+  background = PurpleGrey80,
   /* Other default colors to override
-  background = Color(0xFFFFFBFE),
+
   surface = Color(0xFFFFFBFE),
   onPrimary = Color.White,
   onSecondary = Color.White,
@@ -38,6 +43,14 @@ private val LightColorScheme = lightColorScheme(
   */
 )
 
+object BlinkoAppTheme {
+
+  @Composable
+  fun cardColors(): CardColors = CardDefaults.cardColors(
+      containerColor = MaterialTheme.colorScheme.background,
+    )
+}
+
 @Composable
 fun BlinkoAppTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
@@ -46,14 +59,14 @@ fun BlinkoAppTheme(
   content: @Composable () -> Unit
 ) {
   val colorScheme = when {
-    dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-      val context = LocalContext.current
-      if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    }
-
+//    dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//      val context = LocalContext.current
+//      if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//    }
     darkTheme -> DarkColorScheme
     else -> LightColorScheme
   }
+
   val view = LocalView.current
   if (!view.isInEditMode) {
     SideEffect {
@@ -69,6 +82,8 @@ fun BlinkoAppTheme(
     content = content
   )
 }
+
+
 
 fun getBackgroundBrush(): Brush {
   return Brush.linearGradient(
