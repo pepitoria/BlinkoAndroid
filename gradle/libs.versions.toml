@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.2"
+agp = "8.9.1"
 richtextCommonmark = "1.0.0-alpha02"
 targetSdk = "35"
 compileSdk = "35"
