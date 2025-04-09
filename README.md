@@ -9,7 +9,7 @@ This apps was born out of **my** need to add quick notes from my phone to my bli
 - Edit notes/blinko
 - "Share with" functionality with allows you to share (for instance) a url with blinko and create a new note with it.
 
-I know it is not the most user friendly way to do it, but I am not a designer. I am just a guy who wanted to have a quick way to add notes to his blinko instance. Help is welcome!
+Right now the app is ugly as hell :), but I am no designer. I am just a guy who wanted to have a quick way to add notes to his blinko instance. Help is welcome though :)
 
 ## Disclaimer:
 This app is not affiliated with the blinko project. It is a personal project. Use at your own risk.
