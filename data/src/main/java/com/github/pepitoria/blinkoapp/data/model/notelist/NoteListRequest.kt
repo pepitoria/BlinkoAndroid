@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class NoteListRequest(
   @SerializedName("tagId") val tagId: Int? = null,
   @SerializedName("page") val page: Int = 1,
-  @SerializedName("size") val size: Int = 30,
+  @SerializedName("size") val size: Int = 60,
   @SerializedName("orderBy") val orderBy: String = "desc",
   @SerializedName("type") val type: Int = -1,
   @SerializedName("isArchived") val isArchived: Boolean = false,
