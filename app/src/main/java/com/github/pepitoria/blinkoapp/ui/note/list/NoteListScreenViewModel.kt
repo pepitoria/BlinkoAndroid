@@ -28,6 +28,10 @@ class NoteListScreenViewModel @Inject constructor(
 
   private val _notes: MutableStateFlow<List<BlinkoNote>> = MutableStateFlow(emptyList())
 
+  fun refresh() {
+    onStart()
+  }
+
   fun getNotes(type: BlinkoNoteType): StateFlow<List<BlinkoNote>> {
     return _notes.map { list ->
       list.filter {
