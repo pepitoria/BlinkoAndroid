@@ -19,9 +19,11 @@ fun TabBar(
   goToNotes: () -> Unit,
   goToBlinkos: () -> Unit,
   goToSettings: () -> Unit,
+  floatingActionButton: @Composable () -> Unit = {},
   content: @Composable (PaddingValues) -> Unit
 ) {
   Scaffold(
+    floatingActionButton = floatingActionButton,
     bottomBar = {
       NavigationBar {
         NavigationBarItem(

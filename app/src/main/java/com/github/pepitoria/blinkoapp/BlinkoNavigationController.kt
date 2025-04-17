@@ -111,6 +111,7 @@ fun HomeNoteListNavigatorBlinkos(
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
     goToSettings = navController.goToSettings(),
+    goToNewNote = navController.goToEditWithBlinko(),
   )
 }
 
@@ -126,6 +127,7 @@ fun HomeNoteListNavigatorNotes(
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
     goToSettings = navController.goToSettings(),
+    goToNewNote = navController.goToEditWithBlinko(),
   )
 }
 

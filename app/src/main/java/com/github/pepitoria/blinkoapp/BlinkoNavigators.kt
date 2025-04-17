@@ -17,7 +17,7 @@ fun NavHostController.goToEditWithBlinko(): () -> Unit = {
   val intent = Intent(context, ShareAndEditWithBlinkoActivity::class.java)
   intent.action = Intent.ACTION_SEND
   intent.type = "text/plain"
-  intent.putExtra(Intent.EXTRA_TEXT, "Hello, Blinko lalala!")
+  intent.putExtra(Intent.EXTRA_TEXT, "")
   context.startActivity(intent)
 }
 

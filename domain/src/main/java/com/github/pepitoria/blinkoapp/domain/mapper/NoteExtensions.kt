@@ -22,6 +22,7 @@ fun NoteResponse.toBlinkoNote(): BlinkoNote {
 fun BlinkoNote.toUpsertRequest(): UpsertRequest {
   return UpsertRequest(
     id = this.id,
-    content = this.content
+    content = this.content,
+    type = this.type.value,
   )
 }

@@ -9,14 +9,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.pepitoria.blinkoapp.R
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
@@ -36,6 +42,7 @@ fun NoteListScreenComposable(
   goToNotes: () -> Unit,
   goToBlinkos: () -> Unit,
   goToSettings: () -> Unit,
+  goToNewNote: () -> Unit,
   ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -48,6 +55,11 @@ fun NoteListScreenComposable(
       goToNotes = goToNotes,
       goToBlinkos = goToBlinkos,
       goToSettings = goToSettings,
+      floatingActionButton = {
+        AddNoteFAB(
+          onClick = goToNewNote
+        )
+      },
     ) { paddingValues ->
       if (isLoading.value) {
         Loading()
@@ -64,8 +76,17 @@ fun NoteListScreenComposable(
 }
 
 @Composable
+fun AddNoteFAB(onClick: () -> Unit) {
+  FloatingActionButton(
+    onClick = { onClick() }
+  ) {
+    Icon(Icons.Filled.Add, stringResource(id = R.string.note_list_add_note))
+  }
+}
+
+@Composable
 private fun EmptyNoteList() {
-  Text("No notes found")
+  Text(text = stringResource(id = R.string.note_list_no_notes_found))
 }
 
 @Composable

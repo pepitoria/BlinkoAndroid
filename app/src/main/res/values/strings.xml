@@ -24,9 +24,13 @@
   <string name="share_with_blinko_note_created">Note created</string>
 
   <string name="note_list_title">Note list</string>
+  <string name="note_list_add_note">Add note</string>
+  <string name="note_list_no_notes_found">No notes found</string>
 
   <string name="tab_bar_notes">Notes</string>
   <string name="tab_bar_blinkos">Blinkos</string>
   <string name="tab_bar_settings">Settings</string>
+
+
 
 </resources>

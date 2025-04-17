@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class UpsertRequest(
   @SerializedName("id") var id: Int? = null,
   @SerializedName("content") var content: String,
-//  @SerializedName("type") var type: Int? = null,
+  @SerializedName("type") var type: Int,
 //  @SerializedName("attachments") var attachments: ArrayList<String> = arrayListOf(),
 //  @SerializedName("isArchived") var isArchived: Boolean? = false,
 //  @SerializedName("isTop") var isTop: Boolean? = true,

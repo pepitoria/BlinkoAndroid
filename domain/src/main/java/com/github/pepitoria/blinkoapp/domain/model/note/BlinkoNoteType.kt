@@ -1,8 +1,8 @@
 package com.github.pepitoria.blinkoapp.domain.model.note
 
-enum class BlinkoNoteType {
-  BLINKO,
-  NOTE;
+enum class BlinkoNoteType(val value: Int) {
+  BLINKO(0),
+  NOTE(1);
 
   companion object {
     fun fromResponseType(type: Int?): BlinkoNoteType {
