@@ -7,6 +7,7 @@ This apps was born out of **my** need to add quick notes from my phone to my bli
 - List notes
 - List blinkos
 - Edit notes/blinko
+- Adding new notes
 - "Share with" functionality with allows you to share (for instance) a url with blinko and create a new note with it.
 
 Right now the app is ugly as hell :), but I am no designer. I am just a guy who wanted to have a quick way to add notes to his blinko instance. Help is welcome though :)
@@ -22,5 +23,4 @@ This app is not affiliated with the blinko project. It is a personal project. Us
   - transform blinko to note
   - transform note to blinko
   - list available tags to be used
-- Create note
-  - create note from the app
+
