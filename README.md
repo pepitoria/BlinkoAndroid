@@ -12,6 +12,12 @@ This apps was born out of **my** need to add quick notes from my phone to my bli
 
 Right now the app is ugly as hell :), but I am no designer. I am just a guy who wanted to have a quick way to add notes to his blinko instance. Help is welcome though :)
 
+## Installation:
+Right now, the app is not available on the play store. You have 3 ways of getting the app:
+ - Recommended: Install it using [Obtanium](https://github.com/ImranR98/Obtainium). Obtanium will let you add this repository as a source and will let you update the app easily when there are new releases.
+ - Download and install the latest APK from the releases page.
+ - Build it yourself using Android Studio.
+
 ## Disclaimer:
 This app is not affiliated with the blinko project. It is a personal project. Use at your own risk.
 
