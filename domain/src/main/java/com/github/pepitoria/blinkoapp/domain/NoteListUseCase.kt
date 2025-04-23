@@ -16,13 +16,14 @@ class NoteListUseCase @Inject constructor(
 ) {
 
   suspend fun listNotes(
+    type: Int
   ): BlinkoResult<List<BlinkoNote>> {
     val session = authenticationRepository.getSession()
 
     val response = noteRepository.list(
       url = session?.url ?: "",
       token = session?.token ?: "",
-      noteListRequest = NoteListRequest()
+      noteListRequest = NoteListRequest(type = type)
     )
 
     return when (response) {

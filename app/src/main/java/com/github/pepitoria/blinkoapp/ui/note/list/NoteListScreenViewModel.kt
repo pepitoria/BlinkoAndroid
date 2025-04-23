@@ -27,28 +27,22 @@ class NoteListScreenViewModel @Inject constructor(
   val isLoading = _isLoading.asStateFlow()
 
   private val _notes: MutableStateFlow<List<BlinkoNote>> = MutableStateFlow(emptyList())
+  val notes = _notes.asStateFlow()
+
+  private val _noteType: MutableStateFlow<BlinkoNoteType> = MutableStateFlow(BlinkoNoteType.BLINKO)
+  private val noteType = _noteType.asStateFlow()
 
   fun refresh() {
     onStart()
-  }
-
-  fun getNotes(type: BlinkoNoteType): StateFlow<List<BlinkoNote>> {
-    return _notes.map { list ->
-      list.filter {
-        it.type == type
-      }
-    }.stateIn(
-      scope = viewModelScope,
-      started = SharingStarted.Eagerly,
-      initialValue = emptyList()
-    )
   }
 
   override fun onStart() {
     super.onStart()
     viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
-      val notesResponse = noteListUseCase.listNotes()
+      val notesResponse = noteListUseCase.listNotes(
+        type = noteType.value.value
+      )
       _isLoading.value = false
 
       when (notesResponse) {
@@ -60,6 +54,10 @@ class NoteListScreenViewModel @Inject constructor(
         }
       }
     }
+  }
+
+  fun setNoteType(noteType: BlinkoNoteType) {
+    _noteType.value = noteType
   }
 
 }

@@ -45,10 +45,11 @@ fun NoteListScreenComposable(
   goToSettings: () -> Unit,
   goToNewNote: () -> Unit,
   ) {
+  viewModel.setNoteType(noteType)
   ComposableLifecycleEvents(viewModel = viewModel)
 
   val isLoading = viewModel.isLoading.collectAsState()
-  val notes = viewModel.getNotes(noteType).collectAsState()
+  val notes = viewModel.notes.collectAsState()
 
   BlinkoAppTheme {
     TabBar(
