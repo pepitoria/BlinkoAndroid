@@ -14,8 +14,8 @@ android {
     applicationId = "com.github.pepitoria.blinkoapp"
     minSdk = libs.versions.minSdk.get().toInt()
     targetSdk = libs.versions.targetSdk.get().toInt()
-    versionCode = 1
-    versionName = "0.1"
+    versionCode = 3
+    versionName = "0.2.1"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables {
