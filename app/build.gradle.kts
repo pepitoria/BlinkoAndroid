@@ -91,7 +91,7 @@ android {
 
 tasks.register("newRelease") {
   group = "build"
-  description = "Genera el APK de release, lo renombra y lo mueve a otro directorio."
+  description = "Generates the release APK, renames it and copies it to the project root folder."
 
   dependsOn("assembleRemoteRelease")
 
