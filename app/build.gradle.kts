@@ -107,7 +107,7 @@ tasks.register("newRelease") {
       destinationDir.mkdirs()
       val renamedApk = File(destinationDir, "BlinkoApp-$versionName-($versionCode).apk")
       apkFile.copyTo(renamedApk, overwrite = true)
-      println("APK moved to: ${renamedApk.absolutePath}")
+      println("APK copied to: ${renamedApk.absolutePath}")
     } else {
       println("release APK NOT FOUND.")
     }
