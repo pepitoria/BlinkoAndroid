@@ -112,20 +112,115 @@ tasks.register("newRelease") {
   dependsOn("assembleRemoteRelease")
 
   doLast {
-    incrementCodeVersion()
-
-    val apkFile = file("build/outputs/apk/remote/release/app-remote-release.apk")
-    val destinationDir = file("../")
-
-    if (apkFile.exists()) {
-      destinationDir.mkdirs()
-      val renamedApk = File(destinationDir, getApkName())
-      apkFile.copyTo(renamedApk, overwrite = true)
-      println("APK copied to: ${renamedApk.absolutePath}")
-    } else {
-      println("release APK NOT FOUND.")
-    }
+    generateNewRelease()
   }
+}
+
+tasks.register("uploadApkToGitHub") {
+  doLast {
+    uploadApkToGitHub()
+  }
+}
+
+dependencies {
+  implementation(project(":domain"))
+
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.activity.compose)
+  implementation(platform(libs.androidx.compose.bom))
+  implementation(libs.androidx.ui)
+  implementation(libs.androidx.ui.graphics)
+  implementation(libs.androidx.ui.tooling.preview)
+  implementation(libs.androidx.material3)
+
+  implementation(libs.timber)
+
+  // Dagger hilt
+  implementation(libs.hilt.android)
+  implementation(libs.androidx.hilt.navigation.compose)
+  ksp(libs.hilt.compiler)
+
+  implementation(libs.richtext.commonmark)
+
+  testImplementation(libs.junit)
+  androidTestImplementation(libs.androidx.junit)
+  androidTestImplementation(libs.androidx.espresso.core)
+  androidTestImplementation(platform(libs.androidx.compose.bom))
+  androidTestImplementation(libs.androidx.ui.test.junit4)
+  debugImplementation(libs.androidx.ui.tooling)
+  debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+fun generateNewRelease() {
+  incrementCodeVersion()
+
+  val apkFile = file("build/outputs/apk/remote/release/app-remote-release.apk")
+  val destinationDir = file("../")
+
+  if (apkFile.exists()) {
+    destinationDir.mkdirs()
+    val renamedApk = File(destinationDir, getApkName())
+    apkFile.copyTo(renamedApk, overwrite = true)
+    println("APK copied to: ${renamedApk.absolutePath}")
+  } else {
+    println("release APK NOT FOUND.")
+  }
+}
+
+fun uploadApkToGitHub() {
+  val githubToken = getGithubToken()
+  val repoOwner = "pepitoria"
+  val repoName = "BlinkoAndroid"
+  val tagName = getVersionNameFromGit()
+  val releaseName = "Release $tagName"
+  val releaseDescription = getReleaseDescription()
+  val apkFilePath = "../${getApkName()}"
+
+  val apkFile = file(apkFilePath)
+  if (!apkFile.exists()) {
+    throw GradleException("APK not found: $apkFilePath")
+  }
+
+  val createReleaseUrl = "https://api.github.com/repos/$repoOwner/$repoName/releases"
+  val releaseBody = JsonObject().apply {
+    addProperty("tag_name", tagName)
+    addProperty("name", releaseName)
+    addProperty("body", releaseDescription)
+    addProperty("draft", false)
+    addProperty("prerelease", false)
+  }
+
+  val createReleaseRequest = Request.Builder()
+    .url(createReleaseUrl)
+    .addHeader("Authorization", "token $githubToken")
+    .addHeader("Content-Type", "application/json")
+    .post(releaseBody.toString().toRequestBody("application/json".toMediaType()))
+    .build()
+
+  val client = OkHttpClient()
+  val createReleaseResponse = client.newCall(createReleaseRequest).execute()
+  if (!createReleaseResponse.isSuccessful) {
+    throw GradleException("Error creating the release: ${createReleaseResponse.body?.string()}")
+  }
+
+  val releaseResponseJson = JsonParser.parseString(createReleaseResponse.body?.string()).asJsonObject
+  val encodedFileName = URLEncoder.encode(apkFile.name, StandardCharsets.UTF_8.toString())
+  val uploadUrl =   releaseResponseJson["upload_url"].asString.replace("{?name,label}", "?name=$encodedFileName")
+
+  val uploadApkRequest = Request.Builder()
+    .url(uploadUrl)
+    .addHeader("Authorization", "token $githubToken")
+    .addHeader("Content-Type", "application/vnd.android.package-archive")
+    .post(apkFile.asRequestBody("application/vnd.android.package-archive".toMediaType()))
+    .build()
+
+  val uploadApkResponse = client.newCall(uploadApkRequest).execute()
+  if (!uploadApkResponse.isSuccessful) {
+    throw GradleException("Error uploading APK: ${uploadApkResponse.body?.string()}")
+  }
+
+  println("APK uploaded successfully to the release in GitHub.")
 }
 
 fun getApkName(): String {
@@ -194,92 +289,4 @@ fun getGithubToken(): String {
     load(File("../blinkoapp.github.properties").reader())
   }
   return properties["GITHUB_TOKEN"].toString().trim()
-}
-
-tasks.register("uploadApkToGitHub") {
-  doLast {
-    val githubToken = getGithubToken()
-    val repoOwner = "pepitoria"
-    val repoName = "BlinkoAndroid"
-    val tagName = getVersionNameFromGit()
-    val releaseName = "Release $tagName"
-    val releaseDescription = getReleaseDescription()
-    val apkFilePath = "../${getApkName()}"
-
-    val apkFile = file(apkFilePath)
-    if (!apkFile.exists()) {
-      throw GradleException("APK not found: $apkFilePath")
-    }
-
-    val createReleaseUrl = "https://api.github.com/repos/$repoOwner/$repoName/releases"
-    val releaseBody = JsonObject().apply {
-      addProperty("tag_name", tagName)
-      addProperty("name", releaseName)
-      addProperty("body", releaseDescription)
-      addProperty("draft", false)
-      addProperty("prerelease", false)
-    }
-
-    val createReleaseRequest = Request.Builder()
-      .url(createReleaseUrl)
-      .addHeader("Authorization", "token $githubToken")
-      .addHeader("Content-Type", "application/json")
-      .post(releaseBody.toString().toRequestBody("application/json".toMediaType()))
-      .build()
-
-    val client = OkHttpClient()
-    val createReleaseResponse = client.newCall(createReleaseRequest).execute()
-    if (!createReleaseResponse.isSuccessful) {
-      throw GradleException("Error creating the release: ${createReleaseResponse.body?.string()}")
-    }
-
-    val releaseResponseJson = JsonParser.parseString(createReleaseResponse.body?.string()).asJsonObject
-    val encodedFileName = URLEncoder.encode(apkFile.name, StandardCharsets.UTF_8.toString())
-    val uploadUrl =   releaseResponseJson["upload_url"].asString.replace("{?name,label}", "?name=$encodedFileName")
-
-    val uploadApkRequest = Request.Builder()
-      .url(uploadUrl)
-      .addHeader("Authorization", "token $githubToken")
-      .addHeader("Content-Type", "application/vnd.android.package-archive")
-      .post(apkFile.asRequestBody("application/vnd.android.package-archive".toMediaType()))
-      .build()
-
-    val uploadApkResponse = client.newCall(uploadApkRequest).execute()
-    if (!uploadApkResponse.isSuccessful) {
-      throw GradleException("Error uploading APK: ${uploadApkResponse.body?.string()}")
-    }
-
-    println("APK uploaded successfully to the release in GitHub.")
-  }
-}
-
-
-dependencies {
-  implementation(project(":domain"))
-
-  implementation(libs.androidx.core.ktx)
-  implementation(libs.androidx.lifecycle.runtime.ktx)
-  implementation(libs.androidx.activity.compose)
-  implementation(platform(libs.androidx.compose.bom))
-  implementation(libs.androidx.ui)
-  implementation(libs.androidx.ui.graphics)
-  implementation(libs.androidx.ui.tooling.preview)
-  implementation(libs.androidx.material3)
-
-  implementation(libs.timber)
-
-  // Dagger hilt
-  implementation(libs.hilt.android)
-  implementation(libs.androidx.hilt.navigation.compose)
-  ksp(libs.hilt.compiler)
-
-  implementation(libs.richtext.commonmark)
-
-  testImplementation(libs.junit)
-  androidTestImplementation(libs.androidx.junit)
-  androidTestImplementation(libs.androidx.espresso.core)
-  androidTestImplementation(platform(libs.androidx.compose.bom))
-  androidTestImplementation(libs.androidx.ui.test.junit4)
-  debugImplementation(libs.androidx.ui.tooling)
-  debugImplementation(libs.androidx.ui.test.manifest)
 }
