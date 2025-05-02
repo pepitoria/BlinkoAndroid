@@ -18,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +28,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.R
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
+import com.github.pepitoria.blinkoapp.search.api.SearchFactory
+import com.github.pepitoria.blinkoapp.search.api.di.SearchEntryPoint
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
@@ -33,6 +37,7 @@ import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import com.halilibo.richtext.commonmark.Markdown
 import com.halilibo.richtext.ui.BasicRichText
+import dagger.hilt.android.EntryPointAccessors
 
 @Composable
 fun NoteListScreenComposable(
@@ -101,6 +106,11 @@ private fun NoteList(
   isLoading: Boolean = false,
   onRefresh: () -> Unit = {},
 ) {
+  val context = LocalContext.current
+  val searchEntryPoint = remember {
+    EntryPointAccessors.fromApplication(context, SearchEntryPoint::class.java)
+  }
+
   PullToRefreshBox(
     isRefreshing = isLoading,
     onRefresh = onRefresh,
@@ -119,6 +129,9 @@ private fun NoteList(
       }
     }
   }
+
+  searchEntryPoint.searchFactory().SearchComposable()
+
 }
 
 @Composable

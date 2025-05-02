@@ -124,6 +124,8 @@ tasks.register("uploadApkToGitHub") {
 
 dependencies {
   implementation(project(":domain"))
+  implementation(project(":feature-search:feat-search-api"))
+  implementation(project(":feature-search:feat-search-implementation"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)

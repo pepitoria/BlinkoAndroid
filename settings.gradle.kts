@@ -23,3 +23,5 @@ rootProject.name = "BlinkoApp"
 include(":app")
 include(":domain")
 include(":data")
+include(":feature-search:feat-search-api")
+include(":feature-search:feat-search-implementation")

@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.NoteListByIdsUseCase
 import com.github.pepitoria.blinkoapp.domain.NoteUpsertUseCase
-import com.github.pepitoria.blinkoapp.domain.mapper.toUpsertRequest
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
