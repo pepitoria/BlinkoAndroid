@@ -20,15 +20,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.R
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
-import com.github.pepitoria.blinkoapp.search.api.SearchFactory
 import com.github.pepitoria.blinkoapp.search.api.di.SearchEntryPoint
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
@@ -106,10 +108,6 @@ private fun NoteList(
   isLoading: Boolean = false,
   onRefresh: () -> Unit = {},
 ) {
-  val context = LocalContext.current
-  val searchEntryPoint = remember {
-    EntryPointAccessors.fromApplication(context, SearchEntryPoint::class.java)
-  }
 
   PullToRefreshBox(
     isRefreshing = isLoading,
@@ -120,6 +118,9 @@ private fun NoteList(
       .padding(16.dp)
   ) {
     LazyColumn {
+      item {
+        SearchComposable()
+      }
       items(notes) { note ->
         NoteListItem(
           note = note,
@@ -129,9 +130,25 @@ private fun NoteList(
       }
     }
   }
+}
+@Composable
+private fun SearchComposable() {
+  if (LocalInspectionMode.current) {
+    // preview
+    Text(
+      text = "Search widget",
+      fontSize = 28.sp,
+      color = Color.Red
+    )
+    return
+  }
+
+  val context = LocalContext.current
+  val searchEntryPoint = remember {
+    EntryPointAccessors.fromApplication(context, SearchEntryPoint::class.java)
+  }
 
   searchEntryPoint.searchFactory().SearchComposable()
-
 }
 
 @Composable
