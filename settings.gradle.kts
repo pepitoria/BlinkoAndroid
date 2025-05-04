@@ -21,8 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "BlinkoApp"
 include(":app")
-include(":presentation")
-include(":domain")
-include(":data")
+include(":core:presentation")
+include(":core:domain")
+include(":core:data")
 include(":feature-search:feat-search-api")
 include(":feature-search:feat-search-implementation")
