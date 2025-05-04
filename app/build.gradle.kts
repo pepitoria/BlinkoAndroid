@@ -123,7 +123,10 @@ tasks.register("uploadApkToGitHub") {
 }
 
 dependencies {
+
+  implementation(project(":presentation"))
   implementation(project(":domain"))
+  implementation(project(":data"))
   implementation(project(":feature-search:feat-search-api"))
   implementation(project(":feature-search:feat-search-implementation"))
 
