@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.domain.mapper
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult.Success
 

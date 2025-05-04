@@ -1,8 +1,8 @@
 package com.github.pepitoria.blinkoapp.data.localstorage
 
 import android.content.Context
+import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.Serializable
 import javax.inject.Inject
 
 class LocalStorageSharedPreferences @Inject constructor(

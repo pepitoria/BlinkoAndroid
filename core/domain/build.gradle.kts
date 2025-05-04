@@ -44,8 +44,6 @@ android {
 }
 
 dependencies {
-  implementation(project(":core:data"))
-
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.material)
@@ -56,6 +54,8 @@ dependencies {
   ksp(libs.hilt.compiler)
 
   implementation(libs.timber)
+
+  implementation(libs.retrofit2.converter.gson)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)

@@ -1,12 +1,13 @@
 package com.github.pepitoria.blinkoapp.data.repository.note
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
-import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
-import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
-import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
+import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteListRequest
+import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteResponse
+import com.github.pepitoria.blinkoapp.domain.data.model.notelistbyids.NoteListByIdsRequest
+import com.github.pepitoria.blinkoapp.domain.data.model.noteupsert.UpsertRequest
 import com.github.pepitoria.blinkoapp.data.net.BlinkoApiClient
-import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
 import javax.inject.Inject
 
 class NoteRepositoryApiImpl @Inject constructor(

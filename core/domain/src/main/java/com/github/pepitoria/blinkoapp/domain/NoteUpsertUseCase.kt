@@ -1,8 +1,7 @@
 package com.github.pepitoria.blinkoapp.domain
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
-import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepository
+import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
+import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNote
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoResult
 import com.github.pepitoria.blinkoapp.domain.mapper.toUpsertRequest

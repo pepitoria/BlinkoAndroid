@@ -1,8 +1,8 @@
 package com.github.pepitoria.blinkoapp.data.repository
 
-import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepositoryApiImpl
-import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepository
+import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
 import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepositoryApiImpl
 import dagger.Binds
 import dagger.Module

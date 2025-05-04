@@ -1,5 +1,6 @@
 package com.github.pepitoria.blinkoapp.data.localstorage
 
+import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,9 +1,9 @@
 package com.github.pepitoria.blinkoapp.data.net
 
-import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
-import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
-import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
-import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
+import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteListRequest
+import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteResponse
+import com.github.pepitoria.blinkoapp.domain.data.model.notelistbyids.NoteListByIdsRequest
+import com.github.pepitoria.blinkoapp.domain.data.model.noteupsert.UpsertRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header

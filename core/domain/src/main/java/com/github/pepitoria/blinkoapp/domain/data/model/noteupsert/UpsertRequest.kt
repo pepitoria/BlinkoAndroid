@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.data.model.noteupsert
+package com.github.pepitoria.blinkoapp.domain.data.model.noteupsert
 
 import com.google.gson.annotations.SerializedName
 

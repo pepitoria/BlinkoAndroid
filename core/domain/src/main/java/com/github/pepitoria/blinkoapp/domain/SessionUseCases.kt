@@ -1,10 +1,10 @@
 package com.github.pepitoria.blinkoapp.domain
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
-import com.github.pepitoria.blinkoapp.data.model.session.SessionDto
-import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepository
+import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
+import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteListRequest
+import com.github.pepitoria.blinkoapp.domain.data.model.session.SessionDto
 import javax.inject.Inject
 
 class SessionUseCases @Inject constructor(

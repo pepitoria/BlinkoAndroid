@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.data.localstorage
+package com.github.pepitoria.blinkoapp.domain.data
 
 interface LocalStorage {
   fun saveString(key: String, value: String)

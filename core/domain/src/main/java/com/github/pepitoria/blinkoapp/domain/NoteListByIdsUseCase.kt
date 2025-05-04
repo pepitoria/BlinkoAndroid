@@ -1,10 +1,9 @@
 package com.github.pepitoria.blinkoapp.domain
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
-import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
-import com.github.pepitoria.blinkoapp.data.repository.auth.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.data.repository.note.NoteRepository
+import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
+import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.domain.data.model.notelistbyids.NoteListByIdsRequest
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNote
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNotes
 import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoResult
