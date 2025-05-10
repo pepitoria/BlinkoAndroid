@@ -1,10 +1,6 @@
 package com.github.pepitoria.blinkoapp.domain
 
 import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
-import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNote
-import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoResult
-import com.github.pepitoria.blinkoapp.domain.mapper.toUpsertRequest
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import javax.inject.Inject
@@ -16,15 +12,15 @@ class NoteUpsertUseCase @Inject constructor(
   suspend fun upsertNote(
     blinkoNote: BlinkoNote,
   ): BlinkoResult<BlinkoNote> {
-    val response = noteRepository.upsertNote(blinkoNote.toUpsertRequest())
+    val response = noteRepository.upsertNote(blinkoNote)
 
     return when (response) {
-      is ApiResult.ApiSuccess -> {
-        BlinkoResult.Success(response.value.toBlinkoNote())
+      is BlinkoResult.Success -> {
+        BlinkoResult.Success(response.value)
       }
 
-      is ApiResult.ApiErrorResponse -> {
-        response.toBlinkoResult()
+      is BlinkoResult.Error -> {
+        response
       }
     }
   }

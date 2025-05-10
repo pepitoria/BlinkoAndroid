@@ -2,11 +2,11 @@ package com.github.pepitoria.blinkoapp.data.net
 
 import android.content.Context
 import android.net.ConnectivityManager
-import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteListRequest
-import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteResponse
-import com.github.pepitoria.blinkoapp.domain.data.model.notelistbyids.NoteListByIdsRequest
-import com.github.pepitoria.blinkoapp.domain.data.model.noteupsert.UpsertRequest
+import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
+import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
+import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
+import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

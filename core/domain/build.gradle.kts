@@ -54,7 +54,6 @@ dependencies {
   ksp(libs.hilt.compiler)
 
   implementation(libs.timber)
-
   implementation(libs.retrofit2.converter.gson)
 
   testImplementation(libs.junit)

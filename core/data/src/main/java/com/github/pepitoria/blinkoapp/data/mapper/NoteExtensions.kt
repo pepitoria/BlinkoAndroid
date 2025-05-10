@@ -1,7 +1,7 @@
-package com.github.pepitoria.blinkoapp.domain.mapper
+package com.github.pepitoria.blinkoapp.data.mapper
 
-import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteResponse
-import com.github.pepitoria.blinkoapp.domain.data.model.noteupsert.UpsertRequest
+import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
+import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 

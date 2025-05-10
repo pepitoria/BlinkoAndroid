@@ -2,11 +2,6 @@ package com.github.pepitoria.blinkoapp.domain
 
 import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
-import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.data.model.notelistbyids.NoteListByIdsRequest
-import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNote
-import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoNotes
-import com.github.pepitoria.blinkoapp.domain.mapper.toBlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import javax.inject.Inject
@@ -24,18 +19,18 @@ class NoteListByIdsUseCase @Inject constructor(
     val response = noteRepository.listByIds(
       url = session?.url ?: "",
       token = session?.token ?: "",
-      noteListByIdsRequest = NoteListByIdsRequest(listOf(id))
+      id = id,
     )
 
     return when (response) {
-      is ApiResult.ApiSuccess -> {
+      is BlinkoResult.Success -> {
         response.value.firstOrNull()?.let {
-          BlinkoResult.Success(it.toBlinkoNote())
+          BlinkoResult.Success(it)
         } ?: BlinkoResult.Error.NOTFOUND
       }
 
-      is ApiResult.ApiErrorResponse -> {
-        response.toBlinkoResult()
+      is BlinkoResult.Error -> {
+        response
       }
     }
   }
@@ -48,16 +43,16 @@ class NoteListByIdsUseCase @Inject constructor(
     val response = noteRepository.listByIds(
       url = session?.url ?: "",
       token = session?.token ?: "",
-      noteListByIdsRequest = NoteListByIdsRequest(ids)
+      ids = ids,
     )
 
     return when (response) {
-      is ApiResult.ApiSuccess -> {
-        BlinkoResult.Success(response.value.toBlinkoNotes())
+      is BlinkoResult.Success -> {
+        BlinkoResult.Success(response.value)
       }
 
-      is ApiResult.ApiErrorResponse -> {
-        response.toBlinkoResult()
+      is BlinkoResult.Error -> {
+        response
       }
     }
   }

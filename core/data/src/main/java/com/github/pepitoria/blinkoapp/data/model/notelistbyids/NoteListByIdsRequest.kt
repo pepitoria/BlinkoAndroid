@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.domain.data.model.notelistbyids
+package com.github.pepitoria.blinkoapp.data.model.notelistbyids
 
 import com.google.gson.annotations.SerializedName
 

@@ -2,9 +2,8 @@ package com.github.pepitoria.blinkoapp.domain
 
 import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
-import com.github.pepitoria.blinkoapp.domain.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.data.model.notelist.NoteListRequest
-import com.github.pepitoria.blinkoapp.domain.data.model.session.SessionDto
+import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import javax.inject.Inject
 
 class SessionUseCases @Inject constructor(
@@ -23,10 +22,10 @@ class SessionUseCases @Inject constructor(
       val response = noteRepository.list(
         url = session.url,
         token = session.token,
-        noteListRequest = NoteListRequest()
-      )
+        type = BlinkoNoteType.BLINKO.value
+        )
 
-      return response is ApiResult.ApiSuccess
+      return response is BlinkoResult.Success
     }
 
     return false
@@ -37,16 +36,19 @@ class SessionUseCases @Inject constructor(
     val response = noteRepository.list(
       url = url,
       token = token,
-      noteListRequest = NoteListRequest()
+      type = BlinkoNoteType.BLINKO.value,
     )
 
     return when (response) {
-      is ApiResult.ApiSuccess -> {
-        authenticationRepository.saveSession(SessionDto(url = url, token = token))
+      is BlinkoResult.Success-> {
+        authenticationRepository.saveSession(
+          url = url,
+          token = token,
+        )
         true
       }
 
-      is ApiResult.ApiErrorResponse -> {
+      is BlinkoResult.Error -> {
         false
       }
     }

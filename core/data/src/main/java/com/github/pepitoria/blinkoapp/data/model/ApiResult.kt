@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.domain.data.model
+package com.github.pepitoria.blinkoapp.data.model
 
 sealed class ApiResult<out T> {
     data class ApiSuccess<out R>(val value: R) : ApiResult<R>()
