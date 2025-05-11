@@ -23,7 +23,7 @@ This app is not affiliated with the blinko project. It is a personal project. Us
 
 ## TODO/Roadmap:
 - List notes
-  - filter by search term
+  - ~~filter by search term~~ 
   - filter by tags
 - Edit note
   - transform blinko to note
