@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.github.pepitoria.blinkoapp.BlinkoNavigationRouter
-import com.github.pepitoria.blinkoapp.R
+import com.github.pepitoria.blinkoapp.presentation.R
 
 @Composable
 fun TabBar(

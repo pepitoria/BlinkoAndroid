@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.ui.login
 
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.BuildConfig
+import com.github.pepitoria.blinkoapp.presentation.BuildConfig
 import com.github.pepitoria.blinkoapp.domain.LocalStorageUseCases
 import com.github.pepitoria.blinkoapp.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel

@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.pepitoria.blinkoapp.BuildConfig
+import com.github.pepitoria.blinkoapp.presentation.BuildConfig
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 
 @Composable
