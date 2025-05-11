@@ -30,6 +30,7 @@ fun SettingsScreenComposable(
   currentRoute: String,
   goToNotes: () -> Unit,
   goToBlinkos: () -> Unit,
+  goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   exit: () -> Unit,
   ) {
@@ -42,6 +43,7 @@ fun SettingsScreenComposable(
       currentRoute = currentRoute,
       goToNotes = goToNotes,
       goToBlinkos = goToBlinkos,
+      goToSearch = goToSearch,
       goToSettings = goToSettings,
     ) { paddingValues ->
       SessionActive(

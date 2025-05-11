@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
+import com.github.pepitoria.blinkoapp.search.api.SearchFactory
 import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
 import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
@@ -17,6 +18,7 @@ import com.github.pepitoria.blinkoapp.ui.settings.SettingsScreenComposable
 @Composable
 fun BlinkoNavigationController(
   navController: NavHostController,
+  searchFactory: SearchFactory,
 ) {
   NavHost(
     navController = navController,
@@ -61,6 +63,13 @@ fun BlinkoNavigationController(
           route = BlinkoNavigationRouter.NavHome.BlinkoList.route,
         )
       }
+      composable(route = BlinkoNavigationRouter.NavHome.Search.route) {
+        HomeSearchNavigator(
+          navController = navController,
+          route = BlinkoNavigationRouter.NavHome.Search.route,
+          searchFactory = searchFactory,
+        )
+      }
       composable(
         route = BlinkoNavigationRouter.NavHome.NoteEdit.route,
         arguments = BlinkoNavigationRouter.NavHome.NoteEdit.arguments,
@@ -78,7 +87,6 @@ fun BlinkoNavigationController(
     }
   }
 }
-
 
 @Composable
 fun LoginNavigator(
@@ -112,6 +120,7 @@ fun HomeNoteListNavigatorBlinkos(
     goToBlinkos = navController.goToBlinkoList(),
     goToSettings = navController.goToSettings(),
     goToNewNote = navController.goToEditWithBlinko(),
+    goToSearch = navController.goToSearch(),
   )
 }
 
@@ -128,6 +137,23 @@ fun HomeNoteListNavigatorNotes(
     goToBlinkos = navController.goToBlinkoList(),
     goToSettings = navController.goToSettings(),
     goToNewNote = navController.goToEditWithBlinko(),
+    goToSearch = navController.goToSearch(),
+  )
+}
+
+@Composable
+fun HomeSearchNavigator(
+  navController: NavHostController,
+  route: String,
+  searchFactory: SearchFactory,
+) {
+  searchFactory.SearchScreenComposable(
+    noteOnClick = navController.goToNoteEdit(),
+    currentRoute = route,
+    goToNotes = navController.goToNoteList(),
+    goToBlinkos = navController.goToBlinkoList(),
+    goToSearch = navController.goToSearch(),
+    goToSettings = navController.goToSettings(),
   )
 }
 
@@ -141,6 +167,7 @@ fun SettingsNavigatorNotes(
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
     goToSettings = navController.goToSettings(),
+    goToSearch = navController.goToSearch(),
     exit = navController.exit(),
   )
 }

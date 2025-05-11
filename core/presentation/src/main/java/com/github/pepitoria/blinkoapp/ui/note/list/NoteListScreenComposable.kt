@@ -49,6 +49,7 @@ fun NoteListScreenComposable(
   currentRoute: String,
   goToNotes: () -> Unit,
   goToBlinkos: () -> Unit,
+  goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   goToNewNote: () -> Unit,
   ) {
@@ -63,6 +64,7 @@ fun NoteListScreenComposable(
       currentRoute = currentRoute,
       goToNotes = goToNotes,
       goToBlinkos = goToBlinkos,
+      goToSearch = goToSearch,
       goToSettings = goToSettings,
       floatingActionButton = {
         AddNoteFAB(
@@ -118,9 +120,6 @@ private fun NoteList(
       .padding(16.dp)
   ) {
     LazyColumn {
-      item {
-        SearchComposable()
-      }
       items(notes) { note ->
         NoteListItem(
           note = note,
@@ -131,28 +130,9 @@ private fun NoteList(
     }
   }
 }
-@Composable
-private fun SearchComposable() {
-  if (LocalInspectionMode.current) {
-    // preview
-    Text(
-      text = "Search widget",
-      fontSize = 28.sp,
-      color = Color.Red
-    )
-    return
-  }
-
-  val context = LocalContext.current
-  val searchEntryPoint = remember {
-    EntryPointAccessors.fromApplication(context, SearchEntryPoint::class.java)
-  }
-
-  searchEntryPoint.searchFactory().SearchComposable()
-}
 
 @Composable
-private fun NoteListItem(
+fun NoteListItem(
   note: BlinkoNote,
   onClick: (Int) -> Unit = { _ -> }
 ) {

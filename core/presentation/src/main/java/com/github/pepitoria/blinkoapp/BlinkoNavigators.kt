@@ -46,6 +46,13 @@ fun NavHostController.goToBlinkoList(): () -> Unit = {
   }
 }
 
+fun NavHostController.goToSearch(): () -> Unit = {
+  this.navigate(route = BlinkoNavigationRouter.NavHome.Search.route) {
+    launchSingleTop = true
+    popUpTo(0)
+  }
+}
+
 fun NavHostController.goToSettings(): () -> Unit = {
   this.navigate(route = BlinkoNavigationRouter.NavHome.Settings.route) {
     launchSingleTop = true

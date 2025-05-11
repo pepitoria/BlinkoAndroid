@@ -53,6 +53,8 @@ android {
 
 dependencies {
   implementation(project(":feature-search:feat-search-api"))
+  implementation(project(":core:presentation"))
+  implementation(project(":core:domain"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
@@ -62,6 +64,9 @@ dependencies {
   implementation(libs.androidx.ui)
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.ui.tooling.preview)
+  implementation(libs.androidx.ui.tooling.android)
+  implementation(libs.androidx.animation)
+
   implementation(libs.androidx.material3)
 
   implementation(libs.timber)

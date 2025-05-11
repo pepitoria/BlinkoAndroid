@@ -37,6 +37,28 @@ class NoteRepositoryApiImpl @Inject constructor(
     }
   }
 
+  override suspend fun search(url: String, token: String, searchTerm: String): BlinkoResult<List<BlinkoNote>> {
+
+    val response = api.noteList(
+      url = url,
+      token = token,
+      noteListRequest = NoteListRequest(
+        searchText = searchTerm,
+        size = 100,
+      ),
+    )
+
+    return when (response) {
+      is ApiResult.ApiSuccess -> {
+        BlinkoResult.Success(response.value.map { it.toBlinkoNote() })
+      }
+
+      is ApiResult.ApiErrorResponse -> {
+        response.toBlinkoResult()
+      }
+    }
+  }
+
   override suspend fun listByIds(url: String, token: String, id: Int): BlinkoResult<List<BlinkoNote>> {
 
     val response = api.noteListByIds(

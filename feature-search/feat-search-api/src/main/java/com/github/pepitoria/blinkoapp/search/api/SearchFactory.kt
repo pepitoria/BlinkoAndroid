@@ -5,5 +5,12 @@ import androidx.compose.runtime.Composable
 interface SearchFactory {
 
   @Composable
-  fun SearchComposable()
+  fun SearchScreenComposable(
+    noteOnClick: (Int) -> Unit,
+    currentRoute: String,
+    goToNotes: () -> Unit,
+    goToBlinkos: () -> Unit,
+    goToSearch: () -> Unit,
+    goToSettings: () -> Unit,
+  )
 }
