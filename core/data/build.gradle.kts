@@ -45,6 +45,12 @@ android {
   buildFeatures {
     buildConfig = true
   }
+
+  testOptions {
+    unitTests.all {
+      it.useJUnitPlatform()
+    }
+  }
 }
 
 dependencies {
@@ -67,7 +73,15 @@ dependencies {
   implementation(libs.okhttp3.okhttp)
   implementation(libs.okhttp3.logging.interceptor)
 
-  testImplementation(libs.junit)
-  androidTestImplementation(libs.androidx.junit)
-  androidTestImplementation(libs.androidx.espresso.core)
+  testImplementation(libs.junit.jupiter)
+  testImplementation(libs.mockk)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(kotlin("test"))
+
+//  androidTestImplementation(libs.androidx.junit)
+//  androidTestImplementation(libs.androidx.espresso.core)
 }
+
+//tasks.withType<Test> {
+//  useJUnitPlatform()
+//}

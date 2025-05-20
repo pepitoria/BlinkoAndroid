@@ -148,7 +148,7 @@ dependencies {
 
   implementation(libs.richtext.commonmark)
 
-  testImplementation(libs.junit)
+  testImplementation(libs.junit.jupiter)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
   androidTestImplementation(platform(libs.androidx.compose.bom))
