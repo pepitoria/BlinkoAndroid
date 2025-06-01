@@ -19,6 +19,7 @@ sealed class BlinkoNavigationRouter(val route: String) {
 
     data object NoteList: BlinkoNavigationRouter("home/note-list")
     data object BlinkoList: BlinkoNavigationRouter("home/blinko-list")
+    data object TodoList: BlinkoNavigationRouter("home/todo-list")
     data object Search: BlinkoNavigationRouter("home/search")
     data object NoteEdit: BlinkoNavigationRouter("home/note-edit/{$ARG_NOTE_ID}") {
       val arguments : List<NamedNavArgument> = listOf(navArgument(ARG_NOTE_ID) { type = NavType.IntType })

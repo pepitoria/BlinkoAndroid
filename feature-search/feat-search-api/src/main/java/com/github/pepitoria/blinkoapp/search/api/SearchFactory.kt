@@ -12,5 +12,6 @@ interface SearchFactory {
     goToBlinkos: () -> Unit,
     goToSearch: () -> Unit,
     goToSettings: () -> Unit,
+    goToTodoList: () -> Unit,
   )
 }

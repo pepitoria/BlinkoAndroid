@@ -53,6 +53,7 @@ fun SearchScreenInternalComposable(
   goToBlinkos: () -> Unit,
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
+  goToTodoList: () -> Unit,
 ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -69,6 +70,7 @@ fun SearchScreenInternalComposable(
       currentRoute = currentRoute,
       goToNotes = goToNotes,
       goToBlinkos = goToBlinkos,
+      goToTodoList = goToTodoList,
       goToSearch = goToSearch,
       goToSettings = goToSettings,
     ) { paddingValues ->

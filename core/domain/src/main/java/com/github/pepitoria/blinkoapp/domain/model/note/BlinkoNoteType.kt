@@ -1,14 +1,16 @@
 package com.github.pepitoria.blinkoapp.domain.model.note
 
 enum class BlinkoNoteType(val value: Int) {
-  BLINKO(0),
-  NOTE(1);
+  BLINKO(value = 0),
+  NOTE(value = 1),
+  TODO(value = 2);
 
   companion object {
     fun fromResponseType(type: Int?): BlinkoNoteType {
       return when (type) {
         0 -> BLINKO
         1 -> NOTE
+        2 -> TODO
         else -> BLINKO
       }
     }

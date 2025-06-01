@@ -20,12 +20,14 @@ class SearchFactoryImpl @Inject constructor(
     goToBlinkos: () -> Unit,
     goToSearch: () -> Unit,
     goToSettings: () -> Unit,
+    goToTodoList: () -> Unit,
   ) {
     SearchScreenInternalComposable(
       noteOnClick = noteOnClick,
       currentRoute = currentRoute,
       goToNotes = goToNotes,
       goToBlinkos = goToBlinkos,
+      goToTodoList = goToTodoList,
       goToSearch = goToSearch,
       goToSettings = goToSettings,
     )

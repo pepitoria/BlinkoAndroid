@@ -20,6 +20,7 @@ fun TabBar(
   currentRoute: String,
   goToNotes: () -> Unit,
   goToBlinkos: () -> Unit,
+  goToTodoList: () -> Unit,
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   floatingActionButton: @Composable () -> Unit = {},
@@ -47,6 +48,17 @@ fun TabBar(
           onClick = {
             if (currentRoute != BlinkoNavigationRouter.NavHome.NoteList.route) {
               goToNotes()
+            }
+          }
+        )
+
+        NavigationBarItem(
+          icon = { Icon(ImageVector.vectorResource(id = R.drawable.todo), contentDescription = stringResource(R.string.tab_bar_todos)) },
+          label = { Text(text = stringResource(R.string.tab_bar_todos)) },
+          selected = currentRoute == BlinkoNavigationRouter.NavHome.TodoList.route,
+          onClick = {
+            if (currentRoute != BlinkoNavigationRouter.NavHome.TodoList.route) {
+              goToTodoList()
             }
           }
         )

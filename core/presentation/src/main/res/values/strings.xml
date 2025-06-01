@@ -32,6 +32,7 @@
 
   <string name="tab_bar_notes">Notes</string>
   <string name="tab_bar_blinkos">Blinkos</string>
+  <string name="tab_bar_todos">Todos</string>
   <string name="tab_bar_search">Search</string>
   <string name="tab_bar_settings">Settings</string>
 

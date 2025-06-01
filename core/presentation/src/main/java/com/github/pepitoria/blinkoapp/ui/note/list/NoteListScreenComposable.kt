@@ -52,6 +52,7 @@ fun NoteListScreenComposable(
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   goToNewNote: () -> Unit,
+  goToTodoList: () -> Unit,
   ) {
   viewModel.setNoteType(noteType)
   ComposableLifecycleEvents(viewModel = viewModel)
@@ -64,6 +65,7 @@ fun NoteListScreenComposable(
       currentRoute = currentRoute,
       goToNotes = goToNotes,
       goToBlinkos = goToBlinkos,
+      goToTodoList = goToTodoList,
       goToSearch = goToSearch,
       goToSettings = goToSettings,
       floatingActionButton = {

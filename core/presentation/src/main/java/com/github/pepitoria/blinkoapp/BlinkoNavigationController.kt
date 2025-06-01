@@ -63,6 +63,12 @@ fun BlinkoNavigationController(
           route = BlinkoNavigationRouter.NavHome.BlinkoList.route,
         )
       }
+      composable(route = BlinkoNavigationRouter.NavHome.TodoList.route) {
+        HomeNoteListNavigatorTodos(
+          navController = navController,
+          route = BlinkoNavigationRouter.NavHome.TodoList.route,
+        )
+      }
       composable(route = BlinkoNavigationRouter.NavHome.Search.route) {
         HomeSearchNavigator(
           navController = navController,
@@ -118,6 +124,7 @@ fun HomeNoteListNavigatorBlinkos(
     currentRoute = route,
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
+    goToTodoList = navController.goToTodoList(),
     goToSettings = navController.goToSettings(),
     goToNewNote = navController.goToEditWithBlinko(),
     goToSearch = navController.goToSearch(),
@@ -135,6 +142,25 @@ fun HomeNoteListNavigatorNotes(
     currentRoute = route,
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
+    goToTodoList = navController.goToTodoList(),
+    goToSettings = navController.goToSettings(),
+    goToNewNote = navController.goToEditWithBlinko(),
+    goToSearch = navController.goToSearch(),
+  )
+}
+
+@Composable
+fun HomeNoteListNavigatorTodos(
+  navController: NavHostController,
+  route: String,
+) {
+  NoteListScreenComposable(
+    noteOnClick = navController.goToNoteEdit(),
+    noteType = BlinkoNoteType.TODO,
+    currentRoute = route,
+    goToNotes = navController.goToNoteList(),
+    goToBlinkos = navController.goToBlinkoList(),
+    goToTodoList = navController.goToTodoList(),
     goToSettings = navController.goToSettings(),
     goToNewNote = navController.goToEditWithBlinko(),
     goToSearch = navController.goToSearch(),
@@ -152,6 +178,7 @@ fun HomeSearchNavigator(
     currentRoute = route,
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
+    goToTodoList = navController.goToTodoList(),
     goToSearch = navController.goToSearch(),
     goToSettings = navController.goToSettings(),
   )
@@ -166,6 +193,7 @@ fun SettingsNavigatorNotes(
     currentRoute = route,
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),
+    goToTodoList = navController.goToTodoList(),
     goToSettings = navController.goToSettings(),
     goToSearch = navController.goToSearch(),
     exit = navController.exit(),
