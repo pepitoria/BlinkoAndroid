@@ -129,6 +129,8 @@ dependencies {
   implementation(project(":core:data"))
   implementation(project(":feature-search:feat-search-api"))
   implementation(project(":feature-search:feat-search-implementation"))
+  implementation(project(":feature-tags:api"))
+  implementation(project(":feature-tags:implementation"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
