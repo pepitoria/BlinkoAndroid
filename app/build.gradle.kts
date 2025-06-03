@@ -127,8 +127,8 @@ dependencies {
   implementation(project(":core:presentation"))
   implementation(project(":core:domain"))
   implementation(project(":core:data"))
-  implementation(project(":feature-search:feat-search-api"))
-  implementation(project(":feature-search:feat-search-implementation"))
+  implementation(project(":feature-search:api"))
+  implementation(project(":feature-search:implementation"))
   implementation(project(":feature-tags:api"))
   implementation(project(":feature-tags:implementation"))
 

@@ -66,7 +66,7 @@ android {
 
 dependencies {
   implementation(project(":core:domain"))
-  implementation(project(":feature-search:feat-search-api"))
+  implementation(project(":feature-search:api"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
