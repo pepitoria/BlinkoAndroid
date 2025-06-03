@@ -1,7 +1,6 @@
 package com.github.pepitoria.blinkoapp.search.implementation
 
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.domain.NoteListUseCase
 import com.github.pepitoria.blinkoapp.domain.NoteSearchUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote

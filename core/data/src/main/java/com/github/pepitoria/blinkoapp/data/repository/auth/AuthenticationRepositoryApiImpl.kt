@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.data.repository.auth
 
-import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
 import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoSession
 import javax.inject.Inject
 

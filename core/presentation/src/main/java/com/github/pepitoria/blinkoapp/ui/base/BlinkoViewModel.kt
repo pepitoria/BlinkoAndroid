@@ -2,7 +2,6 @@ package com.github.pepitoria.blinkoapp.ui.base
 
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
-import kotlin.jvm.java
 
 abstract class BlinkoViewModel(
 ) : ViewModel(), ViewModelComposableEvents {
