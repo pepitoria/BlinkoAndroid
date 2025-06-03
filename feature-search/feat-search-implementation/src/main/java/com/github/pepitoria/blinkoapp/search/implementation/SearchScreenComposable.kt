@@ -1,5 +1,6 @@
 package com.github.pepitoria.blinkoapp.search.implementation
 
+import android.nfc.Tag
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.presentation.R
+import com.github.pepitoria.blinkoapp.tags.api.TagsFactory
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListItem
@@ -54,7 +56,8 @@ fun SearchScreenInternalComposable(
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   goToTodoList: () -> Unit,
-) {
+  tagsFactory: TagsFactory,
+  ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
   val isLoading = viewModel.isLoading.collectAsState()
@@ -81,6 +84,7 @@ fun SearchScreenInternalComposable(
         query = query.value,
         onSearch = onSearch,
         noteOnClick = noteOnClick,
+        tagsFactory = tagsFactory,
       )
 
     }
@@ -94,7 +98,8 @@ private fun SearchScreen(
   query: String,
   onSearch: (String) -> Unit,
   noteOnClick: (Int) -> Unit = {},
-) {
+  tagsFactory: TagsFactory,
+  ) {
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -113,7 +118,10 @@ private fun SearchScreen(
     if (isLoading) {
       Loading()
     } else if (notes.isEmpty()) {
-      EmptySearch(isSearching = query.isNotEmpty())
+      EmptySearch(
+        isSearching = query.isNotEmpty(),
+        tagsFactory = tagsFactory,
+      )
     } else {
       SearchResults(
         notes = notes,
@@ -143,7 +151,8 @@ private fun SearchResults(
 private fun EmptySearch(
   modifier: Modifier = Modifier,
   isSearching: Boolean = false,
-) {
+  tagsFactory: TagsFactory,
+  ) {
   Spacer(modifier = Modifier.height(8.dp))
   val text = if (isSearching) {
     stringResource(id = R.string.search_no_notes_found)
@@ -153,11 +162,13 @@ private fun EmptySearch(
 
   Text(
     modifier = modifier
-      .fillMaxSize(),
+      .fillMaxWidth(),
     text = text,
     textAlign = TextAlign.Center,
     color = Color.White,
   )
+
+  tagsFactory.TagListComposable()
 }
 
 @Composable
@@ -226,6 +237,12 @@ private fun SearchScreenPreview() {
       notes = emptyList(),
       query = "",
       onSearch = {},
+      tagsFactory = object : TagsFactory {
+        @Composable
+        override fun TagListComposable() {
+          Text("Tag List Composable Preview")
+        }
+      },
     )
   }
 }

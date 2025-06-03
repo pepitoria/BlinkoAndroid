@@ -53,6 +53,7 @@ android {
 
 dependencies {
   implementation(project(":feature-search:feat-search-api"))
+  implementation(project(":feature-tags:api"))
   implementation(project(":core:presentation"))
   implementation(project(":core:domain"))
 
