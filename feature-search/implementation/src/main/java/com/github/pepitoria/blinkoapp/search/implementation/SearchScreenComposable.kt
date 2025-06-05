@@ -1,5 +1,7 @@
 package com.github.pepitoria.blinkoapp.search.implementation
 
+import android.app.Activity
+import android.content.Context
 import android.nfc.Tag
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,6 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.presentation.R
+import com.github.pepitoria.blinkoapp.tags.api.TagsEntryPoint
 import com.github.pepitoria.blinkoapp.tags.api.TagsFactory
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
@@ -45,6 +50,7 @@ import com.github.pepitoria.blinkoapp.ui.note.list.NoteListItem
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import dagger.hilt.android.EntryPointAccessors
 
 @Composable
 fun SearchScreenInternalComposable(
@@ -56,7 +62,6 @@ fun SearchScreenInternalComposable(
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   goToTodoList: () -> Unit,
-  tagsFactory: TagsFactory,
   ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -84,7 +89,6 @@ fun SearchScreenInternalComposable(
         query = query.value,
         onSearch = onSearch,
         noteOnClick = noteOnClick,
-        tagsFactory = tagsFactory,
       )
 
     }
@@ -98,7 +102,6 @@ private fun SearchScreen(
   query: String,
   onSearch: (String) -> Unit,
   noteOnClick: (Int) -> Unit = {},
-  tagsFactory: TagsFactory,
   ) {
   Column(
     modifier = Modifier
@@ -120,7 +123,6 @@ private fun SearchScreen(
     } else if (notes.isEmpty()) {
       EmptySearch(
         isSearching = query.isNotEmpty(),
-        tagsFactory = tagsFactory,
       )
     } else {
       SearchResults(
@@ -151,8 +153,16 @@ private fun SearchResults(
 private fun EmptySearch(
   modifier: Modifier = Modifier,
   isSearching: Boolean = false,
-  tagsFactory: TagsFactory,
   ) {
+  val context = LocalContext.current
+  val isPreviewMode = isPreviewMode()
+  val tagsFactory = remember {
+    getTagsFactory(
+      context = context,
+      isInPreview = isPreviewMode,
+    )
+  }
+
   Spacer(modifier = Modifier.height(8.dp))
   val text = if (isSearching) {
     stringResource(id = R.string.search_no_notes_found)
@@ -169,6 +179,31 @@ private fun EmptySearch(
   )
 
   tagsFactory.TagListComposable()
+}
+
+private fun getTagsFactory(context: Context, isInPreview: Boolean): TagsFactory {
+
+  return if (!isInPreview) {
+    EntryPointAccessors.fromActivity(context as Activity, TagsEntryPoint::class.java).getTagsFactory()
+  } else {
+    object : TagsFactory {
+      @Composable
+      override fun TagListComposable() {
+        Text(
+          modifier = Modifier
+            .fillMaxWidth(),
+          text = "here will be a list of #tags",
+          textAlign = TextAlign.Center,
+          color = Color.White,
+        )
+      }
+    }
+  }
+}
+
+@Composable
+private fun isPreviewMode(): Boolean {
+  return LocalInspectionMode.current
 }
 
 @Composable
@@ -237,12 +272,6 @@ private fun SearchScreenPreview() {
       notes = emptyList(),
       query = "",
       onSearch = {},
-      tagsFactory = object : TagsFactory {
-        @Composable
-        override fun TagListComposable() {
-          Text("Tag List Composable Preview")
-        }
-      },
     )
   }
 }
