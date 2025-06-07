@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -305,6 +306,7 @@ fun PasswordField(
       keyboardType = KeyboardType.Text,
       imeAction = ImeAction.Next
     ),
+    visualTransformation = PasswordVisualTransformation(),
     modifier = Modifier
       .clip(RoundedCornerShape(4.dp))
       .then(modifier),
