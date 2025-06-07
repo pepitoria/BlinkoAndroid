@@ -48,8 +48,8 @@ import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
-fun TokenLoginWidget(
-  viewModel: TokenLoginScreenViewModel = hiltViewModel(),
+fun LoginWidget(
+  viewModel: LoginScreenViewModel = hiltViewModel(),
   goToDebug: () -> Unit,
   goToHome: () -> Unit,
 ) {
@@ -72,14 +72,16 @@ fun TokenLoginWidget(
         goToDebug = goToDebug,
       )
     } else {
-      TokenLoginScreenViewState(
+      LoginScreenViewState(
         urlParam = viewModel.getStoredUrl() ?: "",
-        tokenParam = viewModel.getStoredToken() ?: "",
-        onLoginClicked = { url, token, insecureConnectionCheck ->
-          viewModel.checkSession(
+        userNameParam = viewModel.getStoredUserName() ?: "",
+        passwordParam = viewModel.getStoredToken() ?: "",
+        onLoginClicked = { url, userName, password, insecureConnectionCheck ->
+          viewModel.doLogin(
             url = url,
-            token = token,
-            insecureConnectionCheck = insecureConnectionCheck,
+            userName = userName,
+            password = password,
+            insecureConnectionCheck = insecureConnectionCheck
           )
         }
       )
@@ -89,7 +91,7 @@ fun TokenLoginWidget(
 
 @Composable
 private fun ListenForEvents(
-  events: SharedFlow<TokenLoginScreenViewModel.Events>,
+  events: SharedFlow<LoginScreenViewModel.Events>,
   goToHome: () -> Unit,
 ) {
 
@@ -98,10 +100,10 @@ private fun ListenForEvents(
   LaunchedEffect(Unit) {
     events.collect { event ->
       when (event) {
-        is TokenLoginScreenViewModel.Events.SessionOk -> {
+        is LoginScreenViewModel.Events.SessionOk -> {
           goToHome()
         }
-        is TokenLoginScreenViewModel.Events.InsecureConnection -> {
+        is LoginScreenViewModel.Events.InsecureConnection -> {
           Toast.makeText(context, R.string.login_token_insecure_toast, Toast.LENGTH_LONG).show()
         }
       }
@@ -162,10 +164,11 @@ private fun GoToDebugButton(
 
 @Preview
 @Composable
-fun TokenLoginScreenViewState(
-  onLoginClicked: (String, String, Boolean) -> Unit = { _, _, _ -> },
+fun LoginScreenViewState(
+  onLoginClicked: (String, String, String, Boolean) -> Unit = { _, _, _, _ -> },
   urlParam: String = "",
-  tokenParam: String = "",
+  userNameParam: String = "",
+  passwordParam: String = "",
 ) {
   Column(
     modifier = Modifier
@@ -184,16 +187,20 @@ fun TokenLoginScreenViewState(
         mutableStateOf(urlParam)
       }
 
-      var token by rememberSaveable {
-        mutableStateOf(tokenParam)
+      var username by rememberSaveable {
+        mutableStateOf(userNameParam)
+      }
+
+      var password by rememberSaveable {
+        mutableStateOf(passwordParam)
       }
       var insecureUrlCheckedState by remember { mutableStateOf(false) }
 
-      val (first, second) = remember { FocusRequester.createRefs() }
+      val (first, second, third) = remember { FocusRequester.createRefs() }
       Spacer(modifier = Modifier.weight(1f))
 
       Text(
-        text = stringResource(id = R.string.login_token_login_title_token),
+        text = stringResource(id = R.string.login_token_login_title_password),
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
       )
@@ -211,13 +218,25 @@ fun TokenLoginScreenViewState(
       )
       Spacer(modifier = Modifier.height(12.dp))
 
-      TokenField(
-        username = token,
-        label = stringResource(id = R.string.login_token_label),
-        onUsernameChange = { token = it },
+      BlinkoTextField(
+        url = username,
+        label = stringResource(id = R.string.login_username),
+        onUrlChange = { username = it },
+        keyboardType = KeyboardType.Text,
+        imeAction = ImeAction.Next,
         modifier = Modifier
           .fillMaxWidth()
           .focusRequester(second)
+      )
+      Spacer(modifier = Modifier.height(12.dp))
+      
+      PasswordField(
+        username = password,
+        label = stringResource(id = R.string.login_password),
+        onUsernameChange = { password = it },
+        modifier = Modifier
+          .fillMaxWidth()
+          .focusRequester(third)
       )
 
       if (url.startsWith("http://")) {
@@ -239,9 +258,9 @@ fun TokenLoginScreenViewState(
 
       Spacer(modifier = Modifier.height(12.dp))
 
-      TokenLoginButton(
+      LoginButton(
         onClick = {
-          onLoginClicked(url, token, insecureUrlCheckedState)
+          onLoginClicked(url, username, password, insecureUrlCheckedState)
         },
       )
       Spacer(modifier = Modifier.weight(1f))
@@ -250,7 +269,7 @@ fun TokenLoginScreenViewState(
 }
 
 @Composable
-fun TokenLoginButton(
+fun LoginButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -266,7 +285,7 @@ fun TokenLoginButton(
 }
 
 @Composable
-fun TokenField(
+fun PasswordField(
   username: String,
   label: String,
   onUsernameChange: (String) -> Unit,
@@ -284,6 +303,36 @@ fun TokenField(
     onValueChange = onUsernameChange,
     keyboardOptions = KeyboardOptions(
       keyboardType = KeyboardType.Text,
+      imeAction = ImeAction.Next
+    ),
+    modifier = Modifier
+      .clip(RoundedCornerShape(4.dp))
+      .then(modifier),
+  )
+}
+
+
+@Composable
+fun BlinkoTextField(
+  url: String,
+  label: String,
+  onUrlChange: (String) -> Unit,
+  modifier: Modifier = Modifier,
+  keyboardType: KeyboardType = KeyboardType.Unspecified,
+  imeAction: ImeAction = ImeAction.Unspecified,
+) {
+  TextField(
+    label = {
+      Text(
+        text = label,
+        fontWeight = FontWeight.Normal
+      )
+    },
+    value = url,
+    singleLine = true,
+    onValueChange = onUrlChange,
+    keyboardOptions = KeyboardOptions(
+      keyboardType = KeyboardType.Uri,
       imeAction = ImeAction.Next
     ),
     modifier = Modifier

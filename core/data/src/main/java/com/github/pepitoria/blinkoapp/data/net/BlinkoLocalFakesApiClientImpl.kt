@@ -1,6 +1,7 @@
 package com.github.pepitoria.blinkoapp.data.net
 
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
@@ -8,6 +9,24 @@ import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
 import javax.inject.Inject
 
 class BlinkoLocalFakesApiClientImpl @Inject constructor(): BlinkoApiClient {
+
+  override suspend fun login(
+    url: String,
+    userName: String,
+    password: String
+  ): ApiResult<LoginResponse> {
+    return ApiResult.ApiSuccess(
+      LoginResponse(
+        id = 0,
+        name = userName,
+        nickname = userName,
+        role = "",
+        token = "fake_token",
+        image = "",
+        loginType = "local",
+      )
+    )
+  }
 
   private fun getNote(number: Int = 0): NoteResponse {
     return NoteResponse(

@@ -10,7 +10,7 @@ import androidx.navigation.compose.navigation
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.search.api.SearchFactory
 import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
-import com.github.pepitoria.blinkoapp.ui.login.TokenLoginWidget
+import com.github.pepitoria.blinkoapp.ui.login.LoginWidget
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListScreenComposable
 import com.github.pepitoria.blinkoapp.ui.settings.SettingsScreenComposable
@@ -98,7 +98,11 @@ fun BlinkoNavigationController(
 fun LoginNavigator(
   navController: NavHostController,
 ) {
-  TokenLoginWidget(
+//  TokenLoginWidget(
+//    goToDebug = navController.goToDebug(),
+//    goToHome = navController.goToHome(),
+//  )
+  LoginWidget (
     goToDebug = navController.goToDebug(),
     goToHome = navController.goToHome(),
   )

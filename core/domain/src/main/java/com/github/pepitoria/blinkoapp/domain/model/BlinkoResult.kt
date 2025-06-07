@@ -16,6 +16,10 @@ sealed class BlinkoResult<out T> {
                 code = -2,
                 message = "Note not found",
             )
+            val MISSING_USER_DATA = Error(
+                code = -3,
+                message = "Missing user data, cannot login without user data",
+            )
         }
     }
 }
