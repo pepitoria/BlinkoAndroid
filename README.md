@@ -22,6 +22,7 @@ Right now, the app is not available on the play store. You have 3 ways of gettin
 This app is not affiliated with the blinko project. It is a personal project. Use at your own risk.
 
 ## TODO/Roadmap:
+- ~~Login with user and password~~
 - List notes
   - ~~filter by search term~~ 
   - filter by tags
