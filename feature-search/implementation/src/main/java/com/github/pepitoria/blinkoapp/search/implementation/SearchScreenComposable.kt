@@ -178,7 +178,7 @@ private fun EmptySearch(
     color = Color.White,
   )
 
-  tagsFactory.TagListComposable()
+  //tagsFactory.TagListComposable()
 }
 
 private fun getTagsFactory(context: Context, isInPreview: Boolean): TagsFactory {
