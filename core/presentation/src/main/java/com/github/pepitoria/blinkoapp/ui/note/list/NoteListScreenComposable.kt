@@ -114,7 +114,9 @@ private fun NoteList(
       .background(getBackgroundBrush())
       .padding(16.dp)
   ) {
-    LazyColumn {
+    LazyColumn(
+      modifier = Modifier.fillMaxSize()
+    ) {
       items(notes) { note ->
         NoteListItem(
           note = note,
