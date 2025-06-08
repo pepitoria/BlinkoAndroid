@@ -36,13 +36,19 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
     )
   }
 
+  fun setNoteType(noteType: Int) {
+    _noteUiModel.value = _noteUiModel.value.copy(
+      type = BlinkoNoteType.fromResponseType(noteType)
+    )
+  }
+
   fun createNote() {
     viewModelScope.launch(Dispatchers.IO) {
       _noteCreated.value = false
       val response = noteUpsertUseCase.upsertNote(
         blinkoNote = BlinkoNote(
           content = noteUiModel.value.content,
-          type = BlinkoNoteType.BLINKO,
+          type = noteUiModel.value.type,
         )
       )
 

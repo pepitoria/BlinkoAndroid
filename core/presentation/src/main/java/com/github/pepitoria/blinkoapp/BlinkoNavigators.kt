@@ -13,11 +13,12 @@ fun NavHostController.exit(): () -> Unit = {
   (this.context as? Activity)?.finishAffinity()
 }
 
-fun NavHostController.goToEditWithBlinko(): () -> Unit = {
+fun NavHostController.goToEditWithBlinko(noteType: Int): () -> Unit = {
   val intent = Intent(context, ShareAndEditWithBlinkoActivity::class.java)
   intent.action = Intent.ACTION_SEND
   intent.type = "text/plain"
   intent.putExtra(Intent.EXTRA_TEXT, "")
+  intent.putExtra(ShareAndEditWithBlinkoActivity.NOTE_TYPE, noteType)
   context.startActivity(intent)
 }
 

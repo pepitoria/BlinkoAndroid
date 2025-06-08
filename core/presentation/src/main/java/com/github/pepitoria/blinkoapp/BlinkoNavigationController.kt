@@ -113,7 +113,7 @@ fun DebugNavigator(
   navController: NavHostController,
 ) {
   DebugScreenComposable(
-    goToEditWithBlinko = navController.goToEditWithBlinko(),
+    goToEditWithBlinko = navController.goToEditWithBlinko(0),
   )
 }
 
@@ -130,7 +130,7 @@ fun HomeNoteListNavigatorBlinkos(
     goToBlinkos = navController.goToBlinkoList(),
     goToTodoList = navController.goToTodoList(),
     goToSettings = navController.goToSettings(),
-    goToNewNote = navController.goToEditWithBlinko(),
+    goToNewNote = navController.goToEditWithBlinko(BlinkoNoteType.BLINKO.value),
     goToSearch = navController.goToSearch(),
   )
 }
@@ -148,7 +148,7 @@ fun HomeNoteListNavigatorNotes(
     goToBlinkos = navController.goToBlinkoList(),
     goToTodoList = navController.goToTodoList(),
     goToSettings = navController.goToSettings(),
-    goToNewNote = navController.goToEditWithBlinko(),
+    goToNewNote = navController.goToEditWithBlinko(BlinkoNoteType.NOTE.value),
     goToSearch = navController.goToSearch(),
   )
 }
@@ -166,7 +166,7 @@ fun HomeNoteListNavigatorTodos(
     goToBlinkos = navController.goToBlinkoList(),
     goToTodoList = navController.goToTodoList(),
     goToSettings = navController.goToSettings(),
-    goToNewNote = navController.goToEditWithBlinko(),
+    goToNewNote = navController.goToEditWithBlinko(BlinkoNoteType.TODO.value),
     goToSearch = navController.goToSearch(),
   )
 }

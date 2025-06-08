@@ -28,6 +28,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class ShareAndEditWithBlinkoActivity : ComponentActivity() {
 
+  companion object {
+    const val NOTE_TYPE = "ShareAndEditWithBlinkoActivity.NOTE_TYPE"
+  }
+
   private val viewModel: ShareAndEditWithBlinkoViewModel by viewModels<ShareAndEditWithBlinkoViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +61,9 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
   }
 
   private fun handleIntent(intent: Intent) {
+
+    val noteType = intent.getIntExtra(NOTE_TYPE, BlinkoNoteType.BLINKO.value)
+    viewModel.setNoteType(noteType)
 
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
