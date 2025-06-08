@@ -25,7 +25,7 @@ This app is not affiliated with the blinko project. It is a personal project. Us
 - ~~Login with user and password~~
 - List notes
   - ~~filter by search term~~ 
-  - filter by tags
+  - ~~filter by tags~~
 - Edit note
   - transform blinko to note
   - transform note to blinko
