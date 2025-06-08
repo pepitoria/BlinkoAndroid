@@ -1,4 +1,5 @@
 [versions]
+accompanistFlowlayout = "1.0.0"
 agp = "8.10.1"
 junitJupiter = "5.12.2"
 kotlinxCoroutinesTest = "1.10.2"
@@ -20,6 +21,7 @@ jvmTarget = "17"
 appcompat = "1.7.1"
 googleMaterial = "1.12.0"
 composeMaterial = "1.8.2"
+composeAccompanist = "0.36.0"
 
 hilt = "2.56.2"
 androidx-hilt-navigation-compose = "1.2.0"
@@ -31,6 +33,8 @@ okhttp = "4.12.0"
 mockk = "1.14.0"
 
 [libraries]
+accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "composeAccompanist" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
