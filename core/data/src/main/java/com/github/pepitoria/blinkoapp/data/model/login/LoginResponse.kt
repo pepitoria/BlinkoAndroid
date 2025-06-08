@@ -2,7 +2,7 @@ package com.github.pepitoria.blinkoapp.data.model.login
 
 import com.google.gson.annotations.SerializedName
 
-class LoginResponse(
+data class LoginResponse(
   @SerializedName("id") var id: Int? = null,
   @SerializedName("name") var name: String? = null,
   @SerializedName("nickname") var nickname: String? = null,

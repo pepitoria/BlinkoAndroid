@@ -1,8 +1,7 @@
-package com.github.pepitoria.blinkoapp.tags
+package com.github.pepitoria.blinkoapp.tags.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,6 +20,7 @@ import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 @Composable
 internal fun TagListComposableInternal(
   viewModel: TagsListViewModel = hiltViewModel(),
+  onTagClick: (String) -> Unit,
 ) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -31,7 +31,11 @@ internal fun TagListComposableInternal(
     columns = GridCells.Adaptive(minSize = 96.dp),
   ) {
     items(tags.value) { tag ->
-      Tag(tag = tag)
+      Tag(
+        tag = tag,
+        onTagClick = onTagClick,
+      )
+
     }
   }
 }
@@ -39,6 +43,7 @@ internal fun TagListComposableInternal(
 @Composable
 private fun Tag(
   tag: String,
+  onTagClick: (String) -> Unit,
 ) {
   Text(
     modifier = Modifier
@@ -47,7 +52,8 @@ private fun Tag(
         color = Color.Gray,
         shape = RoundedCornerShape(8.dp)
       )
-      .padding(all = 4.dp),
+      .padding(all = 4.dp)
+      .clickable { onTagClick(tag) },
     maxLines = 1,
     text = tag,
     textAlign = TextAlign.Center,

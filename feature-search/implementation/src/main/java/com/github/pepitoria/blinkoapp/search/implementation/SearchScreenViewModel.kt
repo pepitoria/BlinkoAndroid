@@ -30,6 +30,11 @@ class SearchScreenViewModel @Inject constructor(
   fun search(query: String) {
     _query.value = query
 
+    if (query.isBlank()) {
+      _notes.value = emptyList()
+      return
+    }
+
     viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
       val notesResponse = searchUseCase.searchNotes(

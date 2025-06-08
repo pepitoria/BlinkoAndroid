@@ -2,8 +2,8 @@ package com.github.pepitoria.blinkoapp.search.implementation
 
 import android.app.Activity
 import android.content.Context
-import android.nfc.Tag
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -120,9 +121,12 @@ private fun SearchScreen(
 
     if (isLoading) {
       Loading()
-    } else if (notes.isEmpty()) {
+    } else if (notes.isEmpty() || query.isEmpty()) {
       EmptySearch(
         isSearching = query.isNotEmpty(),
+        onTagClick = { tag ->
+          onSearch(tag)
+        },
       )
     } else {
       SearchResults(
@@ -153,7 +157,8 @@ private fun SearchResults(
 private fun EmptySearch(
   modifier: Modifier = Modifier,
   isSearching: Boolean = false,
-  ) {
+  onTagClick: (String) -> Unit,
+) {
   val context = LocalContext.current
   val isPreviewMode = isPreviewMode()
   val tagsFactory = remember {
@@ -178,17 +183,20 @@ private fun EmptySearch(
     color = Color.White,
   )
 
-  //tagsFactory.TagListComposable()
+  tagsFactory.TagListComposable(
+    onTagClick = onTagClick,
+  )
 }
 
 private fun getTagsFactory(context: Context, isInPreview: Boolean): TagsFactory {
-
   return if (!isInPreview) {
     EntryPointAccessors.fromActivity(context as Activity, TagsEntryPoint::class.java).getTagsFactory()
   } else {
     object : TagsFactory {
       @Composable
-      override fun TagListComposable() {
+      override fun TagListComposable(
+        onTagClick: (String) -> Unit,
+      ) {
         Text(
           modifier = Modifier
             .fillMaxWidth(),
@@ -222,17 +230,18 @@ private fun SearchBar(
       modifier = Modifier
         .height(64.dp)
     ) {
+
       TextField(
         label = {
           Text(
-            text = "Search...",
+            text = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
             fontWeight = FontWeight.Normal
           )
         },
         value = query,
         singleLine = true,
-        onValueChange = {
-          onSearch(it)
+        onValueChange = { newValue ->
+          onSearch(newValue)
         },
         keyboardOptions = KeyboardOptions(
           keyboardType = KeyboardType.Text,
@@ -251,13 +260,28 @@ private fun SearchBar(
       modifier = Modifier
         .align(Alignment.CenterEnd)
     ) {
-      Icon(
-        imageVector = Icons.Default.Search,
-        tint = Color.Gray,
-        contentDescription = "Buscar",
-        modifier = Modifier
-          .padding(end = 8.dp)
-      )
+
+      if (query.isEmpty()) {
+        Icon(
+          imageVector = Icons.Default.Search,
+          tint = Color.Gray,
+          contentDescription = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
+          modifier = Modifier
+            .padding(end = 8.dp)
+        )
+      } else {
+        Icon(
+          imageVector = Icons.Default.Close,
+          tint = Color.Gray,
+          contentDescription = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
+          modifier = Modifier
+            .padding(end = 8.dp)
+            .clickable {
+              onSearch("")
+            }
+        )
+      }
+
       Spacer(modifier = Modifier.height(8.dp))
     }
   }

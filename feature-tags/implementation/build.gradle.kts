@@ -54,6 +54,8 @@ android {
 dependencies {
   implementation(project(":feature-tags:api"))
   implementation(project(":core:presentation"))
+  implementation(project(":core:data"))
+  implementation(project(":core:domain"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
@@ -74,6 +76,14 @@ dependencies {
   implementation(libs.hilt.android)
   implementation(libs.androidx.hilt.navigation.compose)
   ksp(libs.hilt.compiler)
+
+  // Retrofit
+  implementation(libs.retrofit2.retrofit)
+  implementation(libs.retrofit2.converter.gson)
+
+  // okhttp
+  implementation(libs.okhttp3.okhttp)
+  implementation(libs.okhttp3.logging.interceptor)
 
   // testing
   testImplementation(libs.junit.jupiter)
