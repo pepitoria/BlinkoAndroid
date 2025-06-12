@@ -38,6 +38,10 @@
   <string name="tab_bar_search">Search</string>
   <string name="tab_bar_settings">Settings</string>
 
-
+  <string-array name="blinko_note_types">
+    <item>Blinko</item>
+    <item>Note</item>
+    <item>Todo</item>
+  </string-array>
 
 </resources>
