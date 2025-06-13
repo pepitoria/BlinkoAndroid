@@ -24,10 +24,14 @@ This app is not affiliated with the blinko project. It is a personal project. Us
 ## TODO/Roadmap:
 - ~~Login with user and password~~
 - List notes
+  - Delete blinkos/notes/todos
+  - Mark todo as done
+- Search notes
   - ~~filter by search term~~ 
   - ~~filter by tags~~
+  - improve search (search by different terms/tags at the same time)
 - Edit note
-  - transform blinko to note
-  - transform note to blinko
+  - ~~transform blinko to note~~
+  - ~~transform note to blinko~~
   - list available tags to be used
 
