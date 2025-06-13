@@ -1,5 +1,6 @@
 package com.github.pepitoria.blinkoapp.ui.note.edit
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,9 +14,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +36,7 @@ import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun NoteEditScreenComposable(
@@ -47,8 +48,10 @@ fun NoteEditScreenComposable(
 
   val isLoading = viewModel.isLoading.collectAsState()
   val uiState = viewModel.noteUiModel.collectAsState()
+  val noteTypes = viewModel.noteTypes.collectAsState()
 
   viewModel.onStart(noteId = noteId, onNoteUpsert = goBack)
+  ListenForErrors(viewModel.error)
 
   BlinkoAppTheme {
     if (isLoading.value) {
@@ -56,11 +59,35 @@ fun NoteEditScreenComposable(
     } else {
       BlinkoNoteEditor(
         uiState = uiState.value,
+        noteTypes = noteTypes.value,
         modifier = Modifier.fillMaxWidth(),
-        updateNote = { viewModel.updateLocalNote(it.content) },
-        sendToBlinko = { viewModel.editNote() },
+        defaultNoteType = uiState.value.type,
+        updateNote = {
+          viewModel.updateLocalNote(
+            content = it.content,
+            noteType = it.type.value
+          )
+        },
+        sendToBlinko = { viewModel.upsertNote() },
         goBack = { goBack() },
       )
+    }
+  }
+}
+
+@Composable
+private fun ListenForErrors(
+  errors: SharedFlow<String?>,
+  ) {
+  val context = LocalContext.current
+  LaunchedEffect(Unit) {
+    errors.collect { error ->
+      error?.let {
+        Toast.makeText(
+          context,
+          context.getString(R.string.error_toast, it),
+          Toast.LENGTH_LONG).show()
+      }
     }
   }
 }
@@ -74,6 +101,12 @@ private fun BlinkoNoteEditorPreview() {
       content = "This is a sample note content for preview purposes.",
       type = BlinkoNoteType.BLINKO,
     ),
+    noteTypes = listOf(
+      BlinkoNoteType.BLINKO.value,
+      BlinkoNoteType.NOTE.value,
+      BlinkoNoteType.TODO.value
+    ),
+    defaultNoteType = BlinkoNoteType.BLINKO,
     updateNote = {},
     sendToBlinko = {},
     goBack = {}
@@ -83,10 +116,12 @@ private fun BlinkoNoteEditorPreview() {
 @Composable
 fun BlinkoNoteEditor(
   uiState: BlinkoNote,
+  noteTypes: List<Int>,
+  defaultNoteType: BlinkoNoteType,
   modifier: Modifier = Modifier,
-  updateNote: (BlinkoNote) -> Unit = {},
-  sendToBlinko: () -> Unit = {},
-  goBack: () -> Unit = {},
+  updateNote: (BlinkoNote) -> Unit,
+  sendToBlinko: () -> Unit,
+  goBack: () -> Unit,
 ) {
   Box(
     modifier = modifier
@@ -110,14 +145,18 @@ fun BlinkoNoteEditor(
         .align(Alignment.BottomCenter)
     ) {
 
-      val items = listOf(0, 1, 2)
-      var selectedItem by remember { mutableIntStateOf(items[0]) }
-
+      val noteType = if (uiState.id == -1) {
+        defaultNoteType
+      } else {
+        uiState.type
+      }
 
       BlinkoDropDown(
-        items = items,
-        selectedItem = selectedItem,
-        onItemSelected = { selectedItem = it }
+        items = noteTypes,
+        selectedItem = noteType.value,
+        onItemSelected = {
+          updateNote(uiState.copy(type = BlinkoNoteType.fromResponseType(it)))
+        }
       )
 
       Row(
@@ -144,7 +183,6 @@ fun BlinkoDropDown(
   onItemSelected: (Int) -> Unit
 ) {
   var expanded by remember { mutableStateOf(false) }
-  val array = LocalContext.current.resources.getStringArray(R.array.blinko_note_types)
 
   Column(modifier = Modifier.fillMaxWidth()) {
     Row(
