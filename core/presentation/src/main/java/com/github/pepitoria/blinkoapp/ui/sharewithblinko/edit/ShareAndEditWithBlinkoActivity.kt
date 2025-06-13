@@ -19,7 +19,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
+import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.ui.note.edit.BlinkoNoteEditor
+import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenViewModel
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,20 +34,31 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
     const val NOTE_TYPE = "ShareAndEditWithBlinkoActivity.NOTE_TYPE"
   }
 
-  private val viewModel: ShareAndEditWithBlinkoViewModel by viewModels<ShareAndEditWithBlinkoViewModel>()
+  private val viewModel: NoteEditScreenViewModel by viewModels<NoteEditScreenViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    val noteType = intent.getIntExtra(NOTE_TYPE, BlinkoNoteType.BLINKO.value)
     setContent {
       val uiState = viewModel.noteUiModel.collectAsState()
+      val noteTypes = viewModel.noteTypes.collectAsState()
 
       BlinkoAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
           BlinkoNoteEditor(
             uiState = uiState.value,
+            noteTypes = noteTypes.value,
+            defaultNoteType = BlinkoNoteType.fromResponseType(noteType),
             modifier = Modifier.padding(innerPadding),
-            updateNote = { viewModel.updateLocalNote(it.content) },
-            sendToBlinko = { viewModel.createNote() }
+            updateNote = {
+              viewModel.updateLocalNote(
+                content = it.content,
+                noteType = it.type.value,
+              )
+            },
+            sendToBlinko = { viewModel.upsertNote() },
+            goBack = { finish() },
           )
         }
       }
@@ -61,18 +74,15 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
   }
 
   private fun handleIntent(intent: Intent) {
-
-    val noteType = intent.getIntExtra(NOTE_TYPE, BlinkoNoteType.BLINKO.value)
-    viewModel.setNoteType(noteType)
-
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
-        viewModel.noteCreated.collect { noteCreated ->
-          if (noteCreated == true) {
-            Toast.makeText(this@ShareAndEditWithBlinkoActivity, "Note created", Toast.LENGTH_SHORT).show()
+        viewModel.onStart(onNoteUpsert = {
+            Toast.makeText(
+              this@ShareAndEditWithBlinkoActivity,
+              getString(R.string.note_created),
+              Toast.LENGTH_SHORT).show()
             finish()
-          }
-        }
+        })
       }
     }
 
@@ -80,7 +90,8 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         viewModel.error.collect { error ->
           error?.let {
-            Toast.makeText(this@ShareAndEditWithBlinkoActivity, "Error: $error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@ShareAndEditWithBlinkoActivity,
+              getString(R.string.error_toast, error), Toast.LENGTH_SHORT).show()
             finish()
           }
         }
@@ -105,10 +116,11 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
 
   private fun handleText(intent: Intent) {
     intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
-      // Process the shared text
-      // (e.g., display it in a TextView, save it to a database)
-      Timber.d("handleText: $sharedText")
-      viewModel.updateLocalNote(sharedText)
+      viewModel.updateLocalNote(content = sharedText)
+    }
+
+    intent.getIntExtra(NOTE_TYPE, BlinkoNoteType.BLINKO.value).let { noteType ->
+      viewModel.updateLocalNote(noteType = noteType)
     }
   }
 
@@ -129,7 +141,16 @@ fun GreetingPreview() {
       BlinkoNote(
         content = "Hello, Blinko!",
         type = BlinkoNoteType.BLINKO,
-      )
+      ),
+      noteTypes = listOf(
+        BlinkoNoteType.BLINKO.value,
+        BlinkoNoteType.NOTE.value,
+        BlinkoNoteType.TODO.value
+      ),
+      defaultNoteType = BlinkoNoteType.BLINKO,
+      updateNote = {},
+      sendToBlinko = {},
+      goBack = {},
     )
   }
 }

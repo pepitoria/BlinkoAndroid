@@ -30,9 +30,11 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
 
   fun updateLocalNote(
     content: String,
-  ) {
+    noteType: Int = BlinkoNoteType.BLINKO.value,
+    ) {
     _noteUiModel.value = _noteUiModel.value.copy(
-      content = content
+      content = content,
+      type = BlinkoNoteType.fromResponseType(noteType),
     )
   }
 
@@ -46,10 +48,7 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       _noteCreated.value = false
       val response = noteUpsertUseCase.upsertNote(
-        blinkoNote = BlinkoNote(
-          content = noteUiModel.value.content,
-          type = noteUiModel.value.type,
-        )
+        blinkoNote = noteUiModel.value
       )
 
       when (response) {

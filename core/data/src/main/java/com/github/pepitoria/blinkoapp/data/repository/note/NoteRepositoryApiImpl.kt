@@ -129,7 +129,6 @@ class NoteRepositoryApiImpl @Inject constructor(
           response.toBlinkoResult()
         }
       }
-
     }
 
     return BlinkoResult.Error.NOTFOUND

@@ -1,17 +1,18 @@
 package com.github.pepitoria.blinkoapp.ui.note.edit
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.NoteListByIdsUseCase
 import com.github.pepitoria.blinkoapp.domain.NoteUpsertUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
+import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -33,12 +34,23 @@ class NoteEditScreenViewModel @Inject constructor(
   private val _noteUiModel: MutableStateFlow<BlinkoNote> = MutableStateFlow(BlinkoNote.EMPTY)
   val noteUiModel = _noteUiModel.asStateFlow()
 
+  private val _error: MutableStateFlow<String?> = MutableStateFlow(null)
+  val error = _error.asStateFlow()
+
+  val noteTypes: StateFlow<List<Int>> = MutableStateFlow(
+    listOf(
+      BlinkoNoteType.BLINKO.value,
+      BlinkoNoteType.NOTE.value,
+      BlinkoNoteType.TODO.value,
+    )
+  ).asStateFlow()
+
   private var onNoteUpsert: () -> Unit = {}
 
-  fun onStart(noteId: Int, onNoteUpsert: () -> Unit) {
+  fun onStart(noteId: Int = -1, onNoteUpsert: () -> Unit) {
     this.onNoteUpsert = onNoteUpsert
 
-    if (noteUiModel.value != BlinkoNote.EMPTY) {
+    if (noteId == -1 || noteUiModel.value != BlinkoNote.EMPTY) {
       return
     }
 
@@ -56,20 +68,31 @@ class NoteEditScreenViewModel @Inject constructor(
 
         is BlinkoResult.Error -> {
           Timber.e("${this::class.java.simpleName}.onStart() error: ${noteResponse.message}")
+          _error.value = noteResponse.message.ifEmpty { noteResponse.code.toString() }
         }
       }
     }
   }
 
   fun updateLocalNote(
-    content: String,
+    content: String = "",
+    noteType: Int = -1,
   ) {
-    _noteUiModel.value = _noteUiModel.value.copy(
-      content = content
-    )
+
+    if (content.isNotEmpty()) {
+      _noteUiModel.value = _noteUiModel.value.copy(
+        content = content,
+      )
+    }
+
+    if (noteType != -1) {
+      _noteUiModel.value = _noteUiModel.value.copy(
+        type = BlinkoNoteType.fromResponseType(noteType)
+      )
+    }
   }
 
-  fun editNote() {
+  fun upsertNote() {
     viewModelScope.launch(Dispatchers.IO) {
       _noteUpdated.value = false
       val response = noteUpsertUseCase.upsertNote(
@@ -87,7 +110,7 @@ class NoteEditScreenViewModel @Inject constructor(
 
         is BlinkoResult.Error -> {
           Timber.e("${this::class.java.simpleName}.upsertNote() error: ${response.message}")
-          Toast.makeText(appContext, response.message, Toast.LENGTH_SHORT).show()
+          _error.value = response.message.ifEmpty { response.code.toString() }
         }
       }
     }
