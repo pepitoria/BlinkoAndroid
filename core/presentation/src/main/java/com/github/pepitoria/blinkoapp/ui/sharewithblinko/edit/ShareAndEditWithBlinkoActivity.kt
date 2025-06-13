@@ -44,7 +44,6 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
       val uiState = viewModel.noteUiModel.collectAsState()
       val noteTypes = viewModel.noteTypes.collectAsState()
 
-
       BlinkoAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
           BlinkoNoteEditor(
