@@ -181,9 +181,9 @@ class BlinkoApiClientNetImpl @Inject constructor(
     }
 
     val deleteNoteUrl = if (url.endsWith("/")) {
-      "${url}api/v1/note/batch-delete"
+      "${url}api/v1/note/batch-trash"
     } else {
-      "${url}/api/v1/note/batch-delete"
+      "${url}/api/v1/note/batch-trash"
     }
 
     return withContext(Dispatchers.IO) {

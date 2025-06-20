@@ -61,15 +61,12 @@ class NoteListScreenViewModel @Inject constructor(
   fun deleteNote(note: BlinkoNote) {
     note.id?.let { noteId ->
       viewModelScope.launch(Dispatchers.IO) {
-        _isLoading.value = true
         val deleteResponse = noteDeleteUseCase.deleteNote(noteId)
-        _isLoading.value = false
 
         when (deleteResponse) {
           is BlinkoResult.Success -> {
             Timber.d("Note deleted successfully: $noteId")
             _notes.value = _notes.value.filter { it.id != noteId }
-//            onStart() // Refresh the list after deletion
           }
           is BlinkoResult.Error -> {
             Timber.e("${this::class.java.simpleName}.deleteNote() error: ${deleteResponse.message}")

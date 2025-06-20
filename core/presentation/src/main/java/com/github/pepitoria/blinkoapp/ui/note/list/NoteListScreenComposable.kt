@@ -1,6 +1,5 @@
 package com.github.pepitoria.blinkoapp.ui.note.list
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +23,10 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -153,17 +156,17 @@ fun NoteListItem(
 ) {
   val dismissState = rememberSwipeToDismissBoxState(
     positionalThreshold = { totalDistance ->
-      Timber.d("positionalThreshold totalDistance: $totalDistance")
       totalDistance * 0.5f
     },
     confirmValueChange = { newValue ->
-      if (newValue == SwipeToDismissBoxValue.EndToStart) {
-        Timber.d("deleted note with id: ${note.id}")
-//        onDeleteSwipe(note)
-        true
-      } else {
-        Timber.d("not deleted note with id: ${note.id}")
-        false
+      when (newValue) {
+          SwipeToDismissBoxValue.EndToStart -> {
+            onDeleteSwipe(note)
+            false
+          }
+          else -> {
+            false
+          }
       }
     }
   )
@@ -176,6 +179,13 @@ fun NoteListItem(
           .fillMaxSize(),
         contentAlignment = Alignment.CenterEnd
       ) {
+        Text(
+          text = stringResource(R.string.release_to_delete),
+          color = Color.White,
+          modifier = Modifier
+            .padding(4.dp)
+            .align(Alignment.Center)
+        )
         Icon(
           imageVector = Icons.Filled.Delete,
           contentDescription = stringResource(id = R.string.delete_note),
@@ -199,7 +209,6 @@ fun NoteListItem(
       }
     }
   }
-
 }
 
 
