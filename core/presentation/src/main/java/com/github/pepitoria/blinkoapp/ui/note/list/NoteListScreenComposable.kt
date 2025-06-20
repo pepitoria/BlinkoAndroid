@@ -1,6 +1,7 @@
 package com.github.pepitoria.blinkoapp.ui.note.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,15 +11,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -77,6 +84,9 @@ fun NoteListScreenComposable(
           noteOnClick = noteOnClick,
           isLoading = isLoading.value,
           onRefresh = { viewModel.refresh() },
+          onDeleteSwipe = { note ->
+            viewModel.deleteNote(note)
+          },
         )
       }
     }
@@ -104,6 +114,7 @@ private fun NoteList(
   noteOnClick: (Int) -> Unit = {},
   isLoading: Boolean = false,
   onRefresh: () -> Unit = {},
+  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> }
 ) {
 
   PullToRefreshBox(
@@ -117,10 +128,14 @@ private fun NoteList(
     LazyColumn(
       modifier = Modifier.fillMaxSize()
     ) {
-      items(notes) { note ->
+      items(
+        items = notes,
+        key = { it.id ?: 0 }
+      ) { note ->
         NoteListItem(
           note = note,
-          onClick = noteOnClick
+          onClick = noteOnClick,
+          onDeleteSwipe = onDeleteSwipe,
         )
         Spacer(modifier = Modifier.height(8.dp))
       }
@@ -131,20 +146,62 @@ private fun NoteList(
 @Composable
 fun NoteListItem(
   note: BlinkoNote,
-  onClick: (Int) -> Unit = { _ -> }
+  onClick: (Int) -> Unit = { _ -> },
+  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> }
 ) {
-  Card(
-    modifier = Modifier
-      .fillMaxWidth(),
-    colors = BlinkoAppTheme.cardColors(),
-    onClick = { note.id?.let(onClick) }
+  val dismissState = rememberSwipeToDismissBoxState(
+    positionalThreshold = { totalDistance ->
+      totalDistance * 0.5f
+    },
+    confirmValueChange = { newValue ->
+      when (newValue) {
+          SwipeToDismissBoxValue.EndToStart -> {
+            onDeleteSwipe(note)
+            false
+          }
+          else -> {
+            false
+          }
+      }
+    }
+  )
+
+  SwipeToDismissBox(
+    state = dismissState,
+    backgroundContent = {
+      Box(
+        modifier = Modifier
+          .fillMaxSize(),
+        contentAlignment = Alignment.CenterEnd
+      ) {
+        Text(
+          text = stringResource(R.string.release_to_delete),
+          color = Color.White,
+          modifier = Modifier
+            .padding(4.dp)
+            .align(Alignment.Center)
+        )
+        Icon(
+          imageVector = Icons.Filled.Delete,
+          contentDescription = stringResource(id = R.string.delete_note),
+          tint = Color.Black,
+        )
+      }
+    },
   ) {
-    BasicRichText(
-      modifier = Modifier.padding(16.dp),
+    Card(
+      modifier = Modifier
+        .fillMaxWidth(),
+      colors = BlinkoAppTheme.cardColors(),
+      onClick = { note.id?.let(onClick) }
     ) {
-      Markdown(
-        content = note.content.trimIndent(),
-      )
+      BasicRichText(
+        modifier = Modifier.padding(16.dp),
+      ) {
+        Markdown(
+          content = note.content.trimIndent(),
+        )
+      }
     }
   }
 }

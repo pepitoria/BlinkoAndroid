@@ -39,6 +39,8 @@
   <string name="tab_bar_settings">Settings</string>
   <string name="note_created">Note created</string>
   <string name="error_toast">Error: %1$s</string>
+  <string name="delete_note">Delete Note</string>
+  <string name="release_to_delete">Release to delete</string>
 
   <string-array name="blinko_note_types">
     <item>Blinko</item>

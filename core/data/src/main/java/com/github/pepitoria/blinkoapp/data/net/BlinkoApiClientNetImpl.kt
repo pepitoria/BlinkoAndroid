@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
 import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
+import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
+import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
@@ -28,11 +30,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var loginUrl = url
-    if (url.endsWith("/")) {
-      loginUrl = "${url}api/v1/user/login"
+    val loginUrl = if (url.endsWith("/")) {
+      "${url}api/v1/user/login"
     } else {
-      loginUrl = "${url}/api/v1/user/login"
+      "${url}/api/v1/user/login"
     }
 
     return withContext(Dispatchers.IO) {
@@ -67,11 +68,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var noteListUrl = url
-    if (url.endsWith("/")) {
-      noteListUrl = "${url}api/v1/note/list"
+    val noteListUrl = if (url.endsWith("/")) {
+      "${url}api/v1/note/list"
     } else {
-      noteListUrl = "${url}/api/v1/note/list"
+      "${url}/api/v1/note/list"
     }
 
     return withContext(Dispatchers.IO) {
@@ -104,11 +104,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var noteListUrl = url
-    if (url.endsWith("/")) {
-      noteListUrl = "${url}api/v1/note/list-by-ids"
+    val noteListUrl = if (url.endsWith("/")) {
+      "${url}api/v1/note/list-by-ids"
     } else {
-      noteListUrl = "${url}/api/v1/note/list-by-ids"
+      "${url}/api/v1/note/list-by-ids"
     }
 
     return withContext(Dispatchers.IO) {
@@ -141,11 +140,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var upsertNoteUrl = url
-    if (url.endsWith("/")) {
-      upsertNoteUrl = "${url}api/v1/note/upsert"
+    val upsertNoteUrl = if (url.endsWith("/")) {
+      "${url}api/v1/note/upsert"
     } else {
-      upsertNoteUrl = "${url}/api/v1/note/upsert"
+      "${url}/api/v1/note/upsert"
     }
 
     return withContext(Dispatchers.IO) {
@@ -156,6 +154,42 @@ class BlinkoApiClientNetImpl @Inject constructor(
       )
 
       var apiResult: ApiResult<NoteResponse> = ApiResult.ApiErrorResponse.UNKNOWN
+
+      if (apiResponse.isSuccessful) {
+        apiResponse.body()?.let { resp ->
+          apiResult = ApiResult.ApiSuccess(resp)
+        }
+      } else {
+        apiResult = ApiResult.ApiErrorResponse(
+          code = apiResponse.code(),
+          message = apiResponse.message()
+        )
+      }
+
+      apiResult
+    }
+  }
+
+  override suspend fun deleteNote(url: String, token: String, deleteNoteRequest: DeleteNoteRequest): ApiResult<DeleteNoteResponse> {
+    if (!isConnected()) {
+      //TODO handle no internet connection
+      return ApiResult.ApiErrorResponse(message = "No internet connection")
+    }
+
+    val deleteNoteUrl = if (url.endsWith("/")) {
+      "${url}api/v1/note/batch-trash"
+    } else {
+      "${url}/api/v1/note/batch-trash"
+    }
+
+    return withContext(Dispatchers.IO) {
+      val apiResponse = api.deleteNote(
+        deleteNoteRequest = deleteNoteRequest,
+        url = deleteNoteUrl,
+        authorization = "Bearer $token",
+      )
+
+      var apiResult: ApiResult<DeleteNoteResponse> = ApiResult.ApiErrorResponse.UNKNOWN
 
       if (apiResponse.isSuccessful) {
         apiResponse.body()?.let { resp ->
