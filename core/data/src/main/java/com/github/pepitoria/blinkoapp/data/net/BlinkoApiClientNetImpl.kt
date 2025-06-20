@@ -30,11 +30,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var loginUrl = url
-    if (url.endsWith("/")) {
-      loginUrl = "${url}api/v1/user/login"
+    val loginUrl = if (url.endsWith("/")) {
+      "${url}api/v1/user/login"
     } else {
-      loginUrl = "${url}/api/v1/user/login"
+      "${url}/api/v1/user/login"
     }
 
     return withContext(Dispatchers.IO) {
@@ -69,11 +68,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var noteListUrl = url
-    if (url.endsWith("/")) {
-      noteListUrl = "${url}api/v1/note/list"
+    val noteListUrl = if (url.endsWith("/")) {
+      "${url}api/v1/note/list"
     } else {
-      noteListUrl = "${url}/api/v1/note/list"
+      "${url}/api/v1/note/list"
     }
 
     return withContext(Dispatchers.IO) {
@@ -106,11 +104,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var noteListUrl = url
-    if (url.endsWith("/")) {
-      noteListUrl = "${url}api/v1/note/list-by-ids"
+    val noteListUrl = if (url.endsWith("/")) {
+      "${url}api/v1/note/list-by-ids"
     } else {
-      noteListUrl = "${url}/api/v1/note/list-by-ids"
+      "${url}/api/v1/note/list-by-ids"
     }
 
     return withContext(Dispatchers.IO) {
@@ -143,11 +140,10 @@ class BlinkoApiClientNetImpl @Inject constructor(
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
 
-    var upsertNoteUrl = url
-    if (url.endsWith("/")) {
-      upsertNoteUrl = "${url}api/v1/note/upsert"
+    val upsertNoteUrl = if (url.endsWith("/")) {
+      "${url}api/v1/note/upsert"
     } else {
-      upsertNoteUrl = "${url}/api/v1/note/upsert"
+      "${url}/api/v1/note/upsert"
     }
 
     return withContext(Dispatchers.IO) {
