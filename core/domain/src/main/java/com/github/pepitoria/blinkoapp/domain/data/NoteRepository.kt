@@ -9,4 +9,5 @@ interface NoteRepository {
     suspend fun listByIds(url: String, token: String, id: Int): BlinkoResult<List<BlinkoNote>>
     suspend fun listByIds(url: String, token: String, ids: List<Int>): BlinkoResult<List<BlinkoNote>>
     suspend fun upsertNote(blinkoNote: BlinkoNote): BlinkoResult<BlinkoNote>
+    suspend fun delete(url: String, token: String, id: Int): BlinkoResult<Boolean>
 }

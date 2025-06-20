@@ -3,6 +3,7 @@ package com.github.pepitoria.blinkoapp.data.repository.note
 import com.github.pepitoria.blinkoapp.data.mapper.toBlinkoNote
 import com.github.pepitoria.blinkoapp.data.mapper.toBlinkoResult
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
@@ -124,6 +125,29 @@ class NoteRepositoryApiImpl @Inject constructor(
       return when (response) {
         is ApiResult.ApiSuccess -> {
           BlinkoResult.Success(response.value.toBlinkoNote())
+        }
+        is ApiResult.ApiErrorResponse -> {
+          response.toBlinkoResult()
+        }
+      }
+    }
+
+    return BlinkoResult.Error.NOTFOUND
+  }
+
+  override suspend fun delete(url: String, token: String, id: Int): BlinkoResult<Boolean> {
+    authenticationRepository.getSession()?.let { sessionDto ->
+      val response = api.deleteNote(
+        url = sessionDto.url,
+        token = sessionDto.token,
+        deleteNoteRequest = DeleteNoteRequest(
+          ids = listOf(id)
+        )
+      )
+
+      return when (response) {
+        is ApiResult.ApiSuccess -> {
+          BlinkoResult.Success(true)
         }
         is ApiResult.ApiErrorResponse -> {
           response.toBlinkoResult()

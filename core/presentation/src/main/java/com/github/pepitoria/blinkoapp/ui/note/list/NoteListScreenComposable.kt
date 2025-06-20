@@ -1,6 +1,8 @@
 package com.github.pepitoria.blinkoapp.ui.note.list
 
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,15 +12,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +41,7 @@ import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import com.halilibo.richtext.commonmark.Markdown
 import com.halilibo.richtext.ui.BasicRichText
+import timber.log.Timber
 
 @Composable
 fun NoteListScreenComposable(
@@ -77,6 +86,9 @@ fun NoteListScreenComposable(
           noteOnClick = noteOnClick,
           isLoading = isLoading.value,
           onRefresh = { viewModel.refresh() },
+          onDeleteSwipe = { note ->
+            viewModel.deleteNote(note)
+          },
         )
       }
     }
@@ -104,6 +116,7 @@ private fun NoteList(
   noteOnClick: (Int) -> Unit = {},
   isLoading: Boolean = false,
   onRefresh: () -> Unit = {},
+  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> }
 ) {
 
   PullToRefreshBox(
@@ -117,10 +130,14 @@ private fun NoteList(
     LazyColumn(
       modifier = Modifier.fillMaxSize()
     ) {
-      items(notes) { note ->
+      items(
+        items = notes,
+        key = { it.id ?: 0 }
+      ) { note ->
         NoteListItem(
           note = note,
-          onClick = noteOnClick
+          onClick = noteOnClick,
+          onDeleteSwipe = onDeleteSwipe,
         )
         Spacer(modifier = Modifier.height(8.dp))
       }
@@ -131,22 +148,58 @@ private fun NoteList(
 @Composable
 fun NoteListItem(
   note: BlinkoNote,
-  onClick: (Int) -> Unit = { _ -> }
+  onClick: (Int) -> Unit = { _ -> },
+  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> }
 ) {
-  Card(
-    modifier = Modifier
-      .fillMaxWidth(),
-    colors = BlinkoAppTheme.cardColors(),
-    onClick = { note.id?.let(onClick) }
+  val dismissState = rememberSwipeToDismissBoxState(
+    positionalThreshold = { totalDistance ->
+      Timber.d("positionalThreshold totalDistance: $totalDistance")
+      totalDistance * 0.5f
+    },
+    confirmValueChange = { newValue ->
+      if (newValue == SwipeToDismissBoxValue.EndToStart) {
+        Timber.d("deleted note with id: ${note.id}")
+//        onDeleteSwipe(note)
+        true
+      } else {
+        Timber.d("not deleted note with id: ${note.id}")
+        false
+      }
+    }
+  )
+
+  SwipeToDismissBox(
+    state = dismissState,
+    backgroundContent = {
+      Box(
+        modifier = Modifier
+          .fillMaxSize(),
+        contentAlignment = Alignment.CenterEnd
+      ) {
+        Icon(
+          imageVector = Icons.Filled.Delete,
+          contentDescription = stringResource(id = R.string.delete_note),
+          tint = Color.Black,
+        )
+      }
+    },
   ) {
-    BasicRichText(
-      modifier = Modifier.padding(16.dp),
+    Card(
+      modifier = Modifier
+        .fillMaxWidth(),
+      colors = BlinkoAppTheme.cardColors(),
+      onClick = { note.id?.let(onClick) }
     ) {
-      Markdown(
-        content = note.content.trimIndent(),
-      )
+      BasicRichText(
+        modifier = Modifier.padding(16.dp),
+      ) {
+        Markdown(
+          content = note.content.trimIndent(),
+        )
+      }
     }
   }
+
 }
 
 

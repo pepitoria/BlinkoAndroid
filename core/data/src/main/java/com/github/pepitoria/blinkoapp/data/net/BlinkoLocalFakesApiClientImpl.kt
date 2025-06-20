@@ -2,6 +2,8 @@ package com.github.pepitoria.blinkoapp.data.net
 
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
+import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
+import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
@@ -57,6 +59,14 @@ class BlinkoLocalFakesApiClientImpl @Inject constructor(): BlinkoApiClient {
 
   override suspend fun upsertNote(url: String, token: String, upsertNoteRequest: UpsertRequest): ApiResult<NoteResponse> {
     return ApiResult.ApiSuccess(getNote(0))
+  }
+
+  override suspend fun deleteNote(
+    url: String,
+    token: String,
+    deleteNoteRequest: DeleteNoteRequest
+  ): ApiResult<DeleteNoteResponse> {
+    return ApiResult.ApiErrorResponse.UNKNOWN
   }
 
   override fun isConnected(): Boolean {

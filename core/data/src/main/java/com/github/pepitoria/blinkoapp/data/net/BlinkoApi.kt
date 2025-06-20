@@ -2,6 +2,8 @@ package com.github.pepitoria.blinkoapp.data.net
 
 import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
 import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
+import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
+import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
@@ -41,5 +43,10 @@ interface BlinkoApi {
     @Header("Authorization") authorization: String
   ): Response<NoteResponse>
 
-
+  @POST()
+  suspend fun deleteNote(
+    @Body deleteNoteRequest: DeleteNoteRequest,
+    @Url url: String,
+    @Header("Authorization") authorization: String
+  ): Response<DeleteNoteResponse>
 }
