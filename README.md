@@ -24,7 +24,7 @@ This app is not affiliated with the blinko project. It is a personal project. Us
 ## TODO/Roadmap:
 - ~~Login with user and password~~
 - List notes
-  - Delete blinkos/notes/todos
+  - ~~Delete blinkos/notes/todos~~
   - Mark todo as done
 - Search notes
   - ~~filter by search term~~ 
