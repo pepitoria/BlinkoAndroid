@@ -7,6 +7,7 @@ This app was born out of **my** need to add quick notes from my phone to my blin
 - List blinkos / notes / todos 
 - Edit blinkos / notes / todos 
 - Adding new blinkos / notes / todos
+- Delete blinkos / notes / todos
 - Search your blinkos / notes / todos
 - "Share with" functionality with allows you to share (for instance) a url with blinko and create a new note with it.
 
