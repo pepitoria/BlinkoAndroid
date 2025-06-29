@@ -141,6 +141,7 @@ fun GreetingPreview() {
       BlinkoNote(
         content = "Hello, Blinko!",
         type = BlinkoNoteType.BLINKO,
+        isArchived = false,
       ),
       noteTypes = listOf(
         BlinkoNoteType.BLINKO.value,

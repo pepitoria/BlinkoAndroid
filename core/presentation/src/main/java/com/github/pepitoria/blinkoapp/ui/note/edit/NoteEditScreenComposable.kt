@@ -100,6 +100,7 @@ private fun BlinkoNoteEditorPreview() {
       id = 1,
       content = "This is a sample note content for preview purposes.",
       type = BlinkoNoteType.BLINKO,
+      isArchived = false,
     ),
     noteTypes = listOf(
       BlinkoNoteType.BLINKO.value,

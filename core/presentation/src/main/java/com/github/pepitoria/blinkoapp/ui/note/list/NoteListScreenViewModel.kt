@@ -3,6 +3,7 @@ package com.github.pepitoria.blinkoapp.ui.note.list
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.NoteDeleteUseCase
 import com.github.pepitoria.blinkoapp.domain.NoteListUseCase
+import com.github.pepitoria.blinkoapp.domain.NoteUpsertUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class NoteListScreenViewModel @Inject constructor(
   private val noteListUseCase: NoteListUseCase,
   private val noteDeleteUseCase: NoteDeleteUseCase,
+  private val noteUpsertUseCase: NoteUpsertUseCase,
 ) : BlinkoViewModel() {
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -74,5 +76,27 @@ class NoteListScreenViewModel @Inject constructor(
         }
       }
     }
+  }
+
+  fun markNoteAsDone(note: BlinkoNote) {
+    viewModelScope.launch(Dispatchers.IO) {
+      val response = noteUpsertUseCase.upsertNote(
+        blinkoNote = note
+      )
+
+      when (response) {
+        is BlinkoResult.Success -> {
+          Timber.d("${this::class.java.simpleName}.markNoteAsDone() response: ${response.value.content}")
+          viewModelScope.launch(Dispatchers.Main) {
+
+          }
+        }
+
+        is BlinkoResult.Error -> {
+          Timber.e("${this::class.java.simpleName}.markNoteAsDone() error: ${response.message}")
+        }
+      }
+    }
+
   }
 }

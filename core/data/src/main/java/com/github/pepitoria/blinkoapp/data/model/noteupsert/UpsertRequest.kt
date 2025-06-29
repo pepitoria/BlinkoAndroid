@@ -7,7 +7,7 @@ data class UpsertRequest(
   @SerializedName("content") var content: String,
   @SerializedName("type") var type: Int,
 //  @SerializedName("attachments") var attachments: ArrayList<String> = arrayListOf(),
-//  @SerializedName("isArchived") var isArchived: Boolean? = false,
+  @SerializedName("isArchived") var isArchived: Boolean? = false,
 //  @SerializedName("isTop") var isTop: Boolean? = true,
 //  @SerializedName("isShare") var isShare: String? = null,
 //  @SerializedName("isRecycle") var isRecycle: String? = null,

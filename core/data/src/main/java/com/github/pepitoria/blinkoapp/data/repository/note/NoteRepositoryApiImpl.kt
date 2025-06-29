@@ -2,6 +2,7 @@ package com.github.pepitoria.blinkoapp.data.repository.note
 
 import com.github.pepitoria.blinkoapp.data.mapper.toBlinkoNote
 import com.github.pepitoria.blinkoapp.data.mapper.toBlinkoResult
+import com.github.pepitoria.blinkoapp.data.mapper.toUpsertRequest
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
 import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
@@ -115,11 +116,7 @@ class NoteRepositoryApiImpl @Inject constructor(
       val response = api.upsertNote(
         url = sessionDto.url,
         token = sessionDto.token,
-        upsertNoteRequest = UpsertRequest(
-          id = blinkoNote.id,
-          content = blinkoNote.content,
-          type = blinkoNote.type.value,
-        )
+        upsertNoteRequest = blinkoNote.toUpsertRequest()
       )
 
       return when (response) {

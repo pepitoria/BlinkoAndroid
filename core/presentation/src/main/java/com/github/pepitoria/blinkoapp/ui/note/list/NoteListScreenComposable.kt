@@ -2,6 +2,7 @@ package com.github.pepitoria.blinkoapp.ui.note.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,6 +25,10 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -87,6 +93,9 @@ fun NoteListScreenComposable(
           onDeleteSwipe = { note ->
             viewModel.deleteNote(note)
           },
+          markAsDone = { note ->
+            viewModel.markNoteAsDone(note)
+          },
         )
       }
     }
@@ -114,7 +123,8 @@ private fun NoteList(
   noteOnClick: (Int) -> Unit = {},
   isLoading: Boolean = false,
   onRefresh: () -> Unit = {},
-  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> }
+  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> },
+  markAsDone: (BlinkoNote) -> Unit = { _ -> },
 ) {
 
   PullToRefreshBox(
@@ -136,6 +146,7 @@ private fun NoteList(
           note = note,
           onClick = noteOnClick,
           onDeleteSwipe = onDeleteSwipe,
+          markAsDone = markAsDone,
         )
         Spacer(modifier = Modifier.height(8.dp))
       }
@@ -147,7 +158,8 @@ private fun NoteList(
 fun NoteListItem(
   note: BlinkoNote,
   onClick: (Int) -> Unit = { _ -> },
-  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> }
+  onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> },
+  markAsDone: (BlinkoNote) -> Unit = { _ -> },
 ) {
   val dismissState = rememberSwipeToDismissBoxState(
     positionalThreshold = { totalDistance ->
@@ -195,12 +207,37 @@ fun NoteListItem(
       colors = BlinkoAppTheme.cardColors(),
       onClick = { note.id?.let(onClick) }
     ) {
-      BasicRichText(
-        modifier = Modifier.padding(16.dp),
-      ) {
-        Markdown(
-          content = note.content.trimIndent(),
-        )
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        var isChecked by remember { mutableStateOf(note.isArchived) }
+
+        if (note.type == BlinkoNoteType.TODO) {
+          Checkbox(
+            checked = isChecked,
+            onCheckedChange = {
+              isChecked = it
+              markAsDone(note.copy(isArchived = isChecked))
+            },
+            modifier = Modifier.padding(
+              top = 4.dp,
+              start = 4.dp,
+              bottom = 4.dp,
+              end = 0.dp
+            ),
+          )
+        }
+
+        BasicRichText(
+          modifier = Modifier.padding(
+            top = 16.dp,
+            start = if (note.type == BlinkoNoteType.TODO) 4.dp else 16.dp,
+            bottom = 16.dp,
+            end = 16.dp
+          )
+        ) {
+          Markdown(
+            content = note.content.trimIndent(),
+          )
+        }
       }
     }
   }
@@ -216,12 +253,14 @@ private fun NoteListPreview() {
         BlinkoNote(
           id = 1,
           content = "This is a note",
-          type = BlinkoNoteType.BLINKO
+          type = BlinkoNoteType.BLINKO,
+          isArchived = false,
         ),
         BlinkoNote(
           id = 2,
           content = "This is another note",
-          type = BlinkoNoteType.BLINKO
+          type = BlinkoNoteType.TODO,
+          isArchived = false,
         )
       )
     )

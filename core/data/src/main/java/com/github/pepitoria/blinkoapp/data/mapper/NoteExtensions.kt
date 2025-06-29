@@ -13,9 +13,8 @@ fun NoteResponse.toBlinkoNote(): BlinkoNote {
   return BlinkoNote(
     id = this.id,
     content = this.content?:"",
-    type = BlinkoNoteType.fromResponseType(this.type)
-//    createdAt = this.createdAt,
-//    updatedAt = this.updatedAt
+    type = BlinkoNoteType.fromResponseType(this.type),
+    isArchived = this.isArchived ?: false,
   )
 }
 
@@ -24,5 +23,6 @@ fun BlinkoNote.toUpsertRequest(): UpsertRequest {
     id = this.id,
     content = this.content,
     type = this.type.value,
+    isArchived = this.isArchived,
   )
 }
