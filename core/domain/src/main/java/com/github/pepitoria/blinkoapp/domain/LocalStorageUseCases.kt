@@ -21,4 +21,12 @@ class LocalStorageUseCases @Inject constructor(
   fun clearAll() {
     localStorage.clearAll()
   }
+
+  fun saveStringSet(key: String, values: List<String>) {
+    localStorage.saveStringSet(key, values)
+  }
+
+  fun getStringSet(key: String): Set<String>? {
+    return localStorage.getStringSet(key)
+  }
 }

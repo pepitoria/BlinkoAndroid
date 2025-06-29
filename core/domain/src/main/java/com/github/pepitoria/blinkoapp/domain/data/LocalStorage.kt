@@ -5,4 +5,7 @@ interface LocalStorage {
   fun getString(key: String): String?
   fun removeValue(key: String)
   fun clearAll()
+  fun saveStringSet(key: String, values: List<String>)
+  fun getStringSet(key: String): Set<String>?
+
 }
