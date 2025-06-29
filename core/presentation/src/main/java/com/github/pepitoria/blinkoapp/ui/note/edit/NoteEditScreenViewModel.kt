@@ -77,6 +77,7 @@ class NoteEditScreenViewModel @Inject constructor(
   fun updateLocalNote(
     content: String = "",
     noteType: Int = -1,
+    isArchived: Boolean? = null,
   ) {
 
     if (content.isNotEmpty()) {
@@ -88,6 +89,12 @@ class NoteEditScreenViewModel @Inject constructor(
     if (noteType != -1) {
       _noteUiModel.value = _noteUiModel.value.copy(
         type = BlinkoNoteType.fromResponseType(noteType)
+      )
+    }
+
+    if (isArchived != null) {
+      _noteUiModel.value = _noteUiModel.value.copy(
+        isArchived = isArchived
       )
     }
   }

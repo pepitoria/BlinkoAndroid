@@ -22,6 +22,8 @@
   <string name="note_edit_label">Content</string>
   <string name="note_edit_save_button_text">Save</string>
   <string name="note_edit_cancel_button_text">Cancel</string>
+  <string name="note_edit_archive_button_text">Archive</string>
+  <string name="note_edit_mark_as_done_button_text">Done</string>
 
   <string name="share_with_blinko_note_created">Note created</string>
 

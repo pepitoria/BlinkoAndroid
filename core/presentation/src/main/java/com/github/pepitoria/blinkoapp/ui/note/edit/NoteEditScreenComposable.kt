@@ -65,7 +65,8 @@ fun NoteEditScreenComposable(
         updateNote = {
           viewModel.updateLocalNote(
             content = it.content,
-            noteType = it.type.value
+            noteType = it.type.value,
+            isArchived = it.isArchived,
           )
         },
         sendToBlinko = { viewModel.upsertNote() },
@@ -168,6 +169,26 @@ fun BlinkoNoteEditor(
           modifier = Modifier.weight(1f),
           onClick = goBack
         )
+        if (uiState.id != null) {
+          if (uiState.type == BlinkoNoteType.TODO) {
+            MarkAsDoneButton(
+              modifier = Modifier.weight(1f),
+              onClick = {
+                updateNote(uiState.copy(isArchived = true))
+                sendToBlinko()
+              }
+            )
+          } else {
+            ArchiveButton(
+              modifier = Modifier.weight(1f),
+              onClick = {
+                updateNote(uiState.copy(isArchived = true))
+                sendToBlinko()
+              }
+            )
+          }
+        }
+
         SaveButton(
           modifier = Modifier.weight(1f),
           onClick = sendToBlinko
@@ -254,6 +275,30 @@ private fun SaveButton(
     modifier = modifier,
     onClick = onClick,
     text = stringResource(R.string.note_edit_save_button_text),
+  )
+}
+
+@Composable
+private fun ArchiveButton(
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit = {},
+) {
+  GenericButton(
+    modifier = modifier,
+    onClick = onClick,
+    text = stringResource(R.string.note_edit_archive_button_text),
+  )
+}
+
+@Composable
+private fun MarkAsDoneButton(
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit = {},
+) {
+  GenericButton(
+    modifier = modifier,
+    onClick = onClick,
+    text = stringResource(R.string.note_edit_mark_as_done_button_text),
   )
 }
 
