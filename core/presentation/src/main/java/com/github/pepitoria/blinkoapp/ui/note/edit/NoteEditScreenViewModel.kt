@@ -7,6 +7,8 @@ import com.github.pepitoria.blinkoapp.domain.NoteUpsertUseCase
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
+import com.github.pepitoria.blinkoapp.tags.api.domain.BlinkoTag
+import com.github.pepitoria.blinkoapp.tags.api.domain.GetTagsUseCase
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,6 +25,7 @@ class NoteEditScreenViewModel @Inject constructor(
   private val noteUpsertUseCase: NoteUpsertUseCase,
   private val noteListByIdsUseCase: NoteListByIdsUseCase,
   @ApplicationContext private val appContext: Context,
+  private val getTagsUseCase: GetTagsUseCase,
 ) : BlinkoViewModel() {
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -33,6 +36,9 @@ class NoteEditScreenViewModel @Inject constructor(
 
   private val _noteUiModel: MutableStateFlow<BlinkoNote> = MutableStateFlow(BlinkoNote.EMPTY)
   val noteUiModel = _noteUiModel.asStateFlow()
+
+  private val _tags: MutableStateFlow<Set<BlinkoTag>> = MutableStateFlow(emptySet())
+  val tags = _tags.asStateFlow()
 
   private val _error: MutableStateFlow<String?> = MutableStateFlow(null)
   val error = _error.asStateFlow()
@@ -49,7 +55,19 @@ class NoteEditScreenViewModel @Inject constructor(
 
   fun onStart(noteId: Int = -1, onNoteUpsert: () -> Unit) {
     this.onNoteUpsert = onNoteUpsert
+    loadNote(noteId)
+    loadTags()
+  }
 
+  private fun loadTags() {
+
+    viewModelScope.launch(Dispatchers.IO) {
+      val tags = getTagsUseCase.invoke()
+      _tags.value = tags.toSet()
+    }
+  }
+
+  private fun loadNote(noteId: Int) {
     if (noteId == -1 || noteUiModel.value != BlinkoNote.EMPTY) {
       return
     }

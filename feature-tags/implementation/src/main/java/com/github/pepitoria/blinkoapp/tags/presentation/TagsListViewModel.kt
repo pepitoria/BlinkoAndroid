@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.tags.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.tags.domain.GetTagsUseCase
+import com.github.pepitoria.blinkoapp.tags.domain.GetTagsUseCaseImpl
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TagsListViewModel @Inject constructor(
-  private val getTagsUseCase: GetTagsUseCase,
+  private val getTagsUseCase: GetTagsUseCaseImpl,
 ) : BlinkoViewModel() {
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)

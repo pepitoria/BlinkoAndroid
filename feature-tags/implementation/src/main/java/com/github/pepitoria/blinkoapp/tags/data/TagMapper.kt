@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.tags.data
 
-import com.github.pepitoria.blinkoapp.tags.domain.BlinkoTag
+import com.github.pepitoria.blinkoapp.tags.api.domain.BlinkoTag
 import javax.inject.Inject
 
 class TagMapper @Inject constructor() {

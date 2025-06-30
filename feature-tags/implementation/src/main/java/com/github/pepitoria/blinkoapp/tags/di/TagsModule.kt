@@ -1,10 +1,12 @@
 package com.github.pepitoria.blinkoapp.tags.di
 
 import com.github.pepitoria.blinkoapp.tags.api.TagsFactory
+import com.github.pepitoria.blinkoapp.tags.api.domain.GetTagsUseCase
 import com.github.pepitoria.blinkoapp.tags.data.TagsRepository
 import com.github.pepitoria.blinkoapp.tags.data.TagsRepositoryImpl
 import com.github.pepitoria.blinkoapp.tags.data.net.TagsApiClient
 import com.github.pepitoria.blinkoapp.tags.data.net.TagsApiClientNetImpl
+import com.github.pepitoria.blinkoapp.tags.domain.GetTagsUseCaseImpl
 import com.github.pepitoria.blinkoapp.tags.presentation.TagsFactoryImpl
 import dagger.Binds
 import dagger.Module
@@ -29,4 +31,8 @@ abstract class TagsModule {
     tagsApiClient: TagsApiClientNetImpl
   ): TagsApiClient
 
+  @Binds
+  abstract fun bindGetTagsUseCase(
+    getTagsUseCaseImpl: GetTagsUseCaseImpl
+  ): GetTagsUseCase
 }
