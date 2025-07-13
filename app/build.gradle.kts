@@ -5,6 +5,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -88,8 +89,10 @@ android {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
   }
-  kotlinOptions {
-    jvmTarget = libs.versions.jvmTarget.get()
+  kotlin {
+    compilerOptions {
+      jvmTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
+    }
   }
   buildFeatures {
     compose = true
@@ -208,10 +211,10 @@ fun uploadApkToGitHub() {
   val client = OkHttpClient()
   val createReleaseResponse = client.newCall(createReleaseRequest).execute()
   if (!createReleaseResponse.isSuccessful) {
-    throw GradleException("Error creating the release: ${createReleaseResponse.body?.string()}")
+    throw GradleException("Error creating the release: ${createReleaseResponse.body.string()}")
   }
 
-  val releaseResponseJson = JsonParser.parseString(createReleaseResponse.body?.string()).asJsonObject
+  val releaseResponseJson = JsonParser.parseString(createReleaseResponse.body.string()).asJsonObject
   val encodedFileName = URLEncoder.encode(apkFile.name, StandardCharsets.UTF_8.toString())
   val uploadUrl =   releaseResponseJson["upload_url"].asString.replace("{?name,label}", "?name=$encodedFileName")
 
@@ -224,7 +227,7 @@ fun uploadApkToGitHub() {
 
   val uploadApkResponse = client.newCall(uploadApkRequest).execute()
   if (!uploadApkResponse.isSuccessful) {
-    throw GradleException("Error uploading APK: ${uploadApkResponse.body?.string()}")
+    throw GradleException("Error uploading APK: ${uploadApkResponse.body.string()}")
   }
 
   println("APK uploaded successfully to the release in GitHub.")
