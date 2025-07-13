@@ -44,6 +44,8 @@
   <string name="delete_note">Delete Note</string>
   <string name="release_to_delete">Release to delete</string>
 
+  <string name="settings_preselected_tab">Page to show first</string>
+
   <string-array name="blinko_note_types">
     <item>Blinko</item>
     <item>Note</item>
