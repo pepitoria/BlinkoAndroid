@@ -22,10 +22,6 @@ fun NavHostController.goToEditWithBlinko(noteType: Int): () -> Unit = {
   context.startActivity(intent)
 }
 
-fun NavHostController.goToDebug(): () -> Unit = {
-  this.navigate(route = BlinkoNavigationRouter.NavDebug.Debug.route)
-}
-
 fun NavHostController.goToHome(): () -> Unit = {
   this.navigate(route = BlinkoNavigationRouter.NavHome.route) {
     launchSingleTop = true

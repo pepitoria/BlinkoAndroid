@@ -1,41 +1,39 @@
 package com.github.pepitoria.blinkoapp
 
+import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.search.api.SearchFactory
-import com.github.pepitoria.blinkoapp.ui.debug.DebugScreenComposable
+import com.github.pepitoria.blinkoapp.settings.api.domain.SettingsEntryPoint
+import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
 import com.github.pepitoria.blinkoapp.ui.login.LoginWidget
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListScreenComposable
 import com.github.pepitoria.blinkoapp.ui.settings.SettingsScreenComposable
+import dagger.hilt.android.EntryPointAccessors
 
 @Composable
 fun BlinkoNavigationController(
   navController: NavHostController,
   searchFactory: SearchFactory,
 ) {
+
+  val defaultTabRoute = getDefaultTabRoute()
+
   NavHost(
     navController = navController,
     startDestination = BlinkoNavigationRouter.NavAuth.route,
     modifier = Modifier
       .fillMaxSize(),
   ) {
-    ///// Debug
-    navigation(
-      startDestination = BlinkoNavigationRouter.NavDebug.Debug.route,
-      route = BlinkoNavigationRouter.NavDebug.route,
-    ) {
-      composable(BlinkoNavigationRouter.NavDebug.Debug.route) {
-        DebugNavigator(navController = navController)
-      }
-    }
-
     ///// AUTHENTICATION
     navigation(
       startDestination = BlinkoNavigationRouter.NavAuth.Login.route,
@@ -48,7 +46,7 @@ fun BlinkoNavigationController(
 
     ///// Home
     navigation(
-      startDestination = BlinkoNavigationRouter.NavHome.BlinkoList.route,
+      startDestination = defaultTabRoute,
       route = BlinkoNavigationRouter.NavHome.route,
     ) {
       composable(route = BlinkoNavigationRouter.NavHome.NoteList.route) {
@@ -95,25 +93,33 @@ fun BlinkoNavigationController(
 }
 
 @Composable
-fun LoginNavigator(
-  navController: NavHostController,
-) {
-//  TokenLoginWidget(
-//    goToDebug = navController.goToDebug(),
-//    goToHome = navController.goToHome(),
-//  )
-  LoginWidget (
-    goToDebug = navController.goToDebug(),
-    goToHome = navController.goToHome(),
-  )
+private fun getDefaultTabRoute(): String {
+  val activity = LocalActivity.current as Activity
+
+  val getDefaultTabUseCase = EntryPointAccessors.fromActivity(
+    activity = activity,
+    entryPoint = SettingsEntryPoint::class.java
+  ).getDefaultTabUseCase()
+
+  val defaultTab = getDefaultTabUseCase.getDefaultTab()
+
+  val homeDefaultRoute = when (defaultTab) {
+    Tab.BLINKOS -> BlinkoNavigationRouter.NavHome.BlinkoList.route
+    Tab.NOTES -> BlinkoNavigationRouter.NavHome.NoteList.route
+    Tab.TODOS -> BlinkoNavigationRouter.NavHome.TodoList.route
+    Tab.SEARCH -> BlinkoNavigationRouter.NavHome.Search.route
+    else -> BlinkoNavigationRouter.NavHome.NoteList.route
+  }
+
+  return homeDefaultRoute
 }
 
 @Composable
-fun DebugNavigator(
+fun LoginNavigator(
   navController: NavHostController,
 ) {
-  DebugScreenComposable(
-    goToEditWithBlinko = navController.goToEditWithBlinko(0),
+  LoginWidget (
+    goToHome = navController.goToHome(),
   )
 }
 

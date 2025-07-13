@@ -51,7 +51,6 @@ import kotlinx.coroutines.flow.SharedFlow
 @Composable
 fun LoginWidget(
   viewModel: LoginScreenViewModel = hiltViewModel(),
-  goToDebug: () -> Unit,
   goToHome: () -> Unit,
 ) {
   val events = viewModel.events
@@ -70,7 +69,6 @@ fun LoginWidget(
         logout = {
           viewModel.logout()
         },
-        goToDebug = goToDebug,
       )
     } else {
       LoginScreenViewState(
@@ -116,7 +114,6 @@ private fun ListenForEvents(
 @Preview
 private fun SessionActive(
   logout: () -> Unit = {},
-  goToDebug: () -> Unit = {}
 ) {
 
   Column(
@@ -141,25 +138,6 @@ private fun SessionActive(
         fontSize = 16.sp
       )
     }
-
-//    GoToDebugButton(goToDebug = goToDebug)
-  }
-}
-
-@Composable
-private fun GoToDebugButton(
-  goToDebug: () -> Unit = {}
-) {
-  Button(
-    onClick = goToDebug,
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(16.dp)
-  ) {
-    Text(
-      text = "Goto Debug",
-      fontSize = 16.sp
-    )
   }
 }
 
