@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +66,8 @@ fun NoteListScreenComposable(
 
   val isLoading = viewModel.isLoading.collectAsState()
   val notes = viewModel.notes.collectAsState()
+  val noteType = viewModel.noteType.collectAsState()
+  val archived = viewModel.archived.collectAsState()
 
   BlinkoAppTheme {
     TabBar(
@@ -87,6 +90,8 @@ fun NoteListScreenComposable(
       } else {
         NoteList(
           notes = notes.value,
+          archived = archived.value,
+          noteType = noteType.value,
           noteOnClick = noteOnClick,
           isLoading = isLoading.value,
           onRefresh = { viewModel.refresh() },
@@ -120,6 +125,8 @@ private fun EmptyNoteList() {
 @Composable
 private fun NoteList(
   notes: List<BlinkoNote>,
+  archived: List<BlinkoNote>,
+  noteType: BlinkoNoteType,
   noteOnClick: (Int) -> Unit = {},
   isLoading: Boolean = false,
   onRefresh: () -> Unit = {},
@@ -150,6 +157,29 @@ private fun NoteList(
         )
         Spacer(modifier = Modifier.height(8.dp))
       }
+
+      if (noteType == BlinkoNoteType.TODO) {
+        item {
+          Text(
+            text = stringResource(id = R.string.todo_done),
+            modifier = Modifier.padding(16.dp),
+            color = Color.White
+          )
+        }
+
+        items(
+          items = archived,
+          key = { it.id ?: 0 }
+        ) { note ->
+          NoteListItem(
+            note = note,
+            onClick = noteOnClick,
+            onDeleteSwipe = onDeleteSwipe,
+            markAsDone = markAsDone,
+          )
+          Spacer(modifier = Modifier.height(8.dp))
+        }
+      }
     }
   }
 }
@@ -178,7 +208,14 @@ fun NoteListItem(
     }
   )
 
+  val modifier = if (note.isArchived) {
+    Modifier.graphicsLayer(alpha = 0.7f)
+  } else {
+    Modifier
+  }
+
   SwipeToDismissBox(
+    modifier = modifier,
     state = dismissState,
     backgroundContent = {
       Box(
@@ -262,7 +299,9 @@ private fun NoteListPreview() {
           type = BlinkoNoteType.TODO,
           isArchived = false,
         )
-      )
+      ),
+      noteType = BlinkoNoteType.TODO,
+      archived = emptyList()
     )
   }
 }

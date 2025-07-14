@@ -34,6 +34,8 @@
   <string name="search_no_notes_found">No results found</string>
   <string name="search_make_a_search">Start typing to search</string>
 
+  <string name="todo_done">Done</string>
+
   <string name="tab_bar_notes">Notes</string>
   <string name="tab_bar_blinkos">Blinkos</string>
   <string name="tab_bar_todos">Todos</string>

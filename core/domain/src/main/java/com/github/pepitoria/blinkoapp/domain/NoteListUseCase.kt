@@ -12,7 +12,8 @@ class NoteListUseCase @Inject constructor(
 ) {
 
   suspend fun listNotes(
-    type: Int
+    type: Int,
+    archived: Boolean = false,
   ): BlinkoResult<List<BlinkoNote>> {
     val session = authenticationRepository.getSession()
 
@@ -20,6 +21,7 @@ class NoteListUseCase @Inject constructor(
       url = session?.url ?: "",
       token = session?.token ?: "",
       type = type,
+      archived = archived,
     )
 
     return when (response) {

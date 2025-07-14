@@ -20,12 +20,12 @@ class NoteRepositoryApiImpl @Inject constructor(
   private val api: BlinkoApiClient,
   private val authenticationRepository: AuthenticationRepository,
 ) : NoteRepository {
-  override suspend fun list(url: String, token: String, type: Int): BlinkoResult<List<BlinkoNote>> {
+  override suspend fun list(url: String, token: String, type: Int, archived: Boolean): BlinkoResult<List<BlinkoNote>> {
 
     val response = api.noteList(
       url = url,
       token = token,
-      noteListRequest = NoteListRequest(type = type)
+      noteListRequest = NoteListRequest(type = type, isArchived = archived)
     )
 
     return when (response) {

@@ -29,11 +29,17 @@ class NoteListScreenViewModel @Inject constructor(
   private val _notes: MutableStateFlow<List<BlinkoNote>> = MutableStateFlow(emptyList())
   val notes = _notes.asStateFlow()
 
+  private val _archived: MutableStateFlow<List<BlinkoNote>> = MutableStateFlow(emptyList())
+  val archived = _archived.asStateFlow()
+
   private val _noteType: MutableStateFlow<BlinkoNoteType> = MutableStateFlow(BlinkoNoteType.BLINKO)
-  private val noteType = _noteType.asStateFlow()
+  val noteType = _noteType.asStateFlow()
 
   fun refresh() {
     onStart()
+    if (noteType.value == BlinkoNoteType.TODO) {
+      fetchDoneTodos()
+    }
   }
 
   override fun onStart() {
@@ -58,6 +64,28 @@ class NoteListScreenViewModel @Inject constructor(
 
   fun setNoteType(noteType: BlinkoNoteType) {
     _noteType.value = noteType
+
+    if (noteType == BlinkoNoteType.TODO) {
+      fetchDoneTodos()
+    }
+  }
+
+  private fun fetchDoneTodos() {
+    viewModelScope.launch(Dispatchers.IO) {
+      val notesResponse = noteListUseCase.listNotes(
+        type = noteType.value.value,
+        archived = true,
+      )
+
+      when (notesResponse) {
+        is BlinkoResult.Success -> {
+          _archived.value = notesResponse.value
+        }
+        is BlinkoResult.Error -> {
+          Timber.e("${this::class.java.simpleName}.onStart() error: ${notesResponse.message}")
+        }
+      }
+    }
   }
 
   fun deleteNote(note: BlinkoNote) {
@@ -87,8 +115,19 @@ class NoteListScreenViewModel @Inject constructor(
       when (response) {
         is BlinkoResult.Success -> {
           Timber.d("${this::class.java.simpleName}.markNoteAsDone() response: ${response.value.content}")
-          viewModelScope.launch(Dispatchers.Main) {
 
+          if (note.isArchived) {
+            _notes.value = _notes.value.filter { it.id != note.id }
+
+            val updatedList = _archived.value.toMutableList()
+            updatedList.add(note)
+            _archived.value = updatedList
+          } else {
+            _archived.value = _archived.value.filter { it.id != note.id }
+
+            val updatedList = _notes.value.toMutableList()
+            updatedList.add(note)
+            _notes.value = updatedList
           }
         }
 
