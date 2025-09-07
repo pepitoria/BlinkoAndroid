@@ -10,6 +10,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -24,11 +25,14 @@ private val DarkColorScheme = darkColorScheme(
   )
 
 private val LightColorScheme = lightColorScheme(
-  primary = Purple40,
-  secondary = PurpleGrey40,
-  tertiary = Pink40,
+  primary = White,
+  secondary = Black,
+  tertiary = GreyBackground,
   background = White,
   onBackground = Black,
+
+  onPrimary = Black,
+  onSecondary = White,
   /* Other default colors to override
 
   surface = Color(0xFFFFFBFE),
@@ -83,7 +87,8 @@ fun BlinkoAppTheme(
 
 
 fun getBackgroundBrush(): Brush {
-  return Brush.linearGradient(
-    colors = listOf(Black, BlinkoBlue, BlinkoPink, Black),
-  )
+//  return Brush.linearGradient(
+//    colors = listOf(Black, BlinkoBlue, BlinkoPink, Black),
+//  )
+  return SolidColor(RDGreyBackground)
 }

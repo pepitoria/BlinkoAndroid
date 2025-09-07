@@ -45,6 +45,7 @@ import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -127,19 +128,18 @@ private fun SessionActive(
       fontSize = 18.sp,
       fontWeight = FontWeight.Bold,
     )
-    Button(
+
+    BlinkoButton(
       onClick = logout,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(16.dp)
-    ) {
-      Text(
-        text = stringResource(id = R.string.login_token_logout),
-        fontSize = 16.sp
-      )
-    }
+        .padding(16.dp),
+      text = stringResource(id = R.string.login_token_logout),
+    )
   }
 }
+
+
 
 @Preview
 @Composable
