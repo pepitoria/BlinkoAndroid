@@ -254,15 +254,11 @@ fun LoginButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Button(
+  BlinkoButton(
+    text = stringResource(id = R.string.login_token_login_button),
     onClick = onClick,
-    modifier = modifier,
-  ) {
-    Text(
-      text = stringResource(id = R.string.login_token_login_button),
-      fontSize = 16.sp
-    )
-  }
+    modifier = modifier
+  )
 }
 
 

@@ -1,11 +1,15 @@
 package com.github.pepitoria.blinkoapp.ui.theme
 
+import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-@Preview
+@Preview(
+  showBackground = true,
+  name = "Dark Theme",
+  uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Preview(
+  showBackground = true,
+  name = "Light Theme",
+  uiMode = Configuration.UI_MODE_NIGHT_NO,
+)
 private fun BlinkoButtonPreview() {
   Column(
     modifier = Modifier
@@ -40,11 +53,14 @@ fun BlinkoButton(
 ) {
   Button(
     onClick = onClick,
+    border = BorderStroke( // This is where you define the border
+      width = 0.5.dp,
+      color = MaterialTheme.colorScheme.secondary // Or any color you want
+    ),
+    colors = ButtonDefaults.buttonColors(
+      containerColor = MaterialTheme.colorScheme.primary
+    ),
     modifier = Modifier
-      .shadow(
-        elevation = 2.dp,
-        shape = ButtonDefaults.shape
-      )
       .then(modifier)
 
   ) {

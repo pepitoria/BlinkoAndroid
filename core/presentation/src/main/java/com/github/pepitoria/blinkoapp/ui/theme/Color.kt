@@ -20,3 +20,5 @@ val GreyBackground = Color(0xFF586F83)
 
 val RDGreyBackgroundLight = Color(0xFFF5F5F5)
 val RDGreyBackgroundDark= Color(0xFF525252)
+
+val Red = Color(0xFFD32F2F)

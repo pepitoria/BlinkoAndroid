@@ -2,15 +2,12 @@ package com.github.pepitoria.blinkoapp.ui.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -25,17 +22,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.Black
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -133,17 +129,11 @@ fun SessionActive(
 
     Spacer(modifier = Modifier.height(12.dp))
 
-    Button(
+    BlinkoButton(
+      text = stringResource(id = R.string.login_token_logout),
       onClick = logout,
-      modifier = Modifier
-        .fillMaxWidth()
-
-    ) {
-      Text(
-        text = stringResource(id = R.string.login_token_logout),
-        fontSize = 16.sp
+      modifier = Modifier.fillMaxWidth(),
       )
-    }
   }
 }
 

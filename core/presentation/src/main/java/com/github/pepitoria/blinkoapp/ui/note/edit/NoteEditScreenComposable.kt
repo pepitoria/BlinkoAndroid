@@ -36,6 +36,7 @@ import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -271,8 +272,8 @@ private fun SaveButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit = {},
 ) {
-  GenericButton(
-    modifier = modifier,
+  BlinkoButton(
+    modifier = modifier.padding(8.dp),
     onClick = onClick,
     text = stringResource(R.string.note_edit_save_button_text),
   )
@@ -283,8 +284,8 @@ private fun ArchiveButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit = {},
 ) {
-  GenericButton(
-    modifier = modifier,
+  BlinkoButton(
+    modifier = modifier.padding(8.dp),
     onClick = onClick,
     text = stringResource(R.string.note_edit_archive_button_text),
   )
@@ -295,8 +296,8 @@ private fun MarkAsDoneButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit = {},
 ) {
-  GenericButton(
-    modifier = modifier,
+  BlinkoButton(
+    modifier = modifier.padding(8.dp),
     onClick = onClick,
     text = stringResource(R.string.note_edit_mark_as_done_button_text),
   )
@@ -307,27 +308,9 @@ private fun CancelButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit = {},
 ) {
-  GenericButton(
-    modifier = modifier,
+  BlinkoButton(
+    modifier = modifier.padding(8.dp),
     onClick = onClick,
     text = stringResource(R.string.note_edit_cancel_button_text),
   )
-}
-
-@Composable
-private fun GenericButton(
-  modifier: Modifier = Modifier,
-  onClick: () -> Unit = {},
-  text: String,
-) {
-  Button(
-    onClick = onClick,
-    modifier = modifier
-      .padding(8.dp)
-  ) {
-    Text(
-      text = text,
-      fontSize = 16.sp
-    )
-  }
 }

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -242,6 +243,7 @@ fun NoteListItem(
       modifier = Modifier
         .fillMaxWidth(),
       colors = BlinkoAppTheme.cardColors(),
+      elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
       onClick = { note.id?.let(onClick) }
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
