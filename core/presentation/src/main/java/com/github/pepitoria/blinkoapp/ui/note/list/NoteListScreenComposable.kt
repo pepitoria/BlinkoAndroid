@@ -164,7 +164,6 @@ private fun NoteList(
           Text(
             text = stringResource(id = R.string.todo_done),
             modifier = Modifier.padding(16.dp),
-            color = Color.White
           )
         }
 
