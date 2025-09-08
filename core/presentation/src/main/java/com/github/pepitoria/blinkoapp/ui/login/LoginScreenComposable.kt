@@ -46,6 +46,8 @@ import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoPasswordField
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -209,7 +211,7 @@ fun LoginScreenViewState(
       )
       Spacer(modifier = Modifier.height(12.dp))
       
-      PasswordField(
+      BlinkoPasswordField(
         username = password,
         label = stringResource(id = R.string.login_password),
         onUsernameChange = { password = it },
@@ -263,60 +265,6 @@ fun LoginButton(
   }
 }
 
-@Composable
-fun PasswordField(
-  username: String,
-  label: String,
-  onUsernameChange: (String) -> Unit,
-  modifier: Modifier = Modifier
-) {
-  TextField(
-    label = {
-      Text(
-        text = label,
-        fontWeight = FontWeight.Normal
-      )
-    },
-    value = username,
-    singleLine = true,
-    onValueChange = onUsernameChange,
-    keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Text,
-      imeAction = ImeAction.Next
-    ),
-    visualTransformation = PasswordVisualTransformation(),
-    modifier = Modifier
-      .clip(RoundedCornerShape(4.dp))
-      .then(modifier),
-  )
-}
 
 
-@Composable
-fun BlinkoTextField(
-  url: String,
-  label: String,
-  onUrlChange: (String) -> Unit,
-  modifier: Modifier = Modifier,
-  keyboardType: KeyboardType = KeyboardType.Unspecified,
-  imeAction: ImeAction = ImeAction.Unspecified,
-) {
-  TextField(
-    label = {
-      Text(
-        text = label,
-        fontWeight = FontWeight.Normal
-      )
-    },
-    value = url,
-    singleLine = true,
-    onValueChange = onUrlChange,
-    keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Uri,
-      imeAction = ImeAction.Next
-    ),
-    modifier = Modifier
-      .clip(RoundedCornerShape(4.dp))
-      .then(modifier),
-  )
-}
+

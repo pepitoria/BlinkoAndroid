@@ -18,4 +18,5 @@ val GreyBackground = Color(0xFF586F83)
 //val BlinkoBlue = Color(0xFF4f06ff)
 //val BlinkoPink = Color(0xFFffb6ff)
 
-val RDGreyBackground = Color(0xFFF5F5F5)
+val RDGreyBackgroundLight = Color(0xFFF5F5F5)
+val RDGreyBackgroundDark= Color(0xFF525252)

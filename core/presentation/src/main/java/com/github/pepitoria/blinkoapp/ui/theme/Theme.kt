@@ -12,23 +12,26 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-  primary = Purple80,
-  secondary = PurpleGrey80,
-  tertiary = Pink80,
-  background = GreyBackground,
+  primary = Black,
+  secondary = White,
+  tertiary = GreyBackground,
+  background = RDGreyBackgroundDark,
   onBackground = White,
 
+  onPrimary = White,
+  onSecondary = Black,
   )
 
 private val LightColorScheme = lightColorScheme(
   primary = White,
   secondary = Black,
   tertiary = GreyBackground,
-  background = White,
+  background = RDGreyBackgroundLight,
   onBackground = Black,
 
   onPrimary = Black,
@@ -86,9 +89,7 @@ fun BlinkoAppTheme(
 
 
 
+@Composable
 fun getBackgroundBrush(): Brush {
-//  return Brush.linearGradient(
-//    colors = listOf(Black, BlinkoBlue, BlinkoPink, Black),
-//  )
-  return SolidColor(RDGreyBackground)
+  return SolidColor(MaterialTheme.colorScheme.background)
 }

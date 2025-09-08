@@ -44,6 +44,7 @@ import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import kotlinx.coroutines.flow.SharedFlow
 
