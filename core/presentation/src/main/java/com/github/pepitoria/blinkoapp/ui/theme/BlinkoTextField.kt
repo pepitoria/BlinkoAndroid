@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BlinkoTextField(
-  url: String,
+  text: String,
   label: String,
-  onUrlChange: (String) -> Unit,
+  onTextChanged: (String) -> Unit,
   modifier: Modifier = Modifier,
   keyboardType: KeyboardType = KeyboardType.Unspecified,
   imeAction: ImeAction = ImeAction.Unspecified,
@@ -31,9 +31,9 @@ fun BlinkoTextField(
         color = MaterialTheme.colorScheme.secondary,
       )
     },
-    value = url,
+    value = text,
     singleLine = true,
-    onValueChange = onUrlChange,
+    onValueChange = onTextChanged,
     keyboardOptions = KeyboardOptions(
       keyboardType = KeyboardType.Uri,
       imeAction = ImeAction.Next

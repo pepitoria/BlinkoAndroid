@@ -50,6 +50,7 @@ import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListItem
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
 import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
 import dagger.hilt.android.EntryPointAccessors
 
@@ -180,7 +181,6 @@ private fun EmptySearch(
       .fillMaxWidth(),
     text = text,
     textAlign = TextAlign.Center,
-    color = Color.White,
   )
 
   tagsFactory.TagListComposable(
@@ -202,7 +202,6 @@ private fun getTagsFactory(context: Context, isInPreview: Boolean): TagsFactory 
             .fillMaxWidth(),
           text = "here will be a list of #tags",
           textAlign = TextAlign.Center,
-          color = Color.White,
         )
       }
     }
@@ -231,27 +230,40 @@ private fun SearchBar(
         .height(64.dp)
     ) {
 
-      TextField(
-        label = {
-          Text(
-            text = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
-            fontWeight = FontWeight.Normal
-          )
-        },
-        value = query,
-        singleLine = true,
-        onValueChange = { newValue ->
+      BlinkoTextField(
+        label = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
+        text = query,
+        onTextChanged = { newValue ->
           onSearch(newValue)
         },
-        keyboardOptions = KeyboardOptions(
-          keyboardType = KeyboardType.Text,
-          imeAction = ImeAction.Search
-        ),
+        keyboardType = KeyboardType.Text,
+        imeAction = ImeAction.Search,
         modifier = Modifier
           .fillMaxWidth()
           .clip(RoundedCornerShape(50.dp))
           .focusRequester(focusRequester),
       )
+//      TextField(
+//        label = {
+//          Text(
+//            text = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
+//            fontWeight = FontWeight.Normal
+//          )
+//        },
+//        value = query,
+//        singleLine = true,
+//        onValueChange = { newValue ->
+//          onSearch(newValue)
+//        },
+//        keyboardOptions = KeyboardOptions(
+//          keyboardType = KeyboardType.Text,
+//          imeAction = ImeAction.Search
+//        ),
+//        modifier = Modifier
+//          .fillMaxWidth()
+//          .clip(RoundedCornerShape(50.dp))
+//          .focusRequester(focusRequester),
+//      )
 
       Spacer(modifier = Modifier.height(8.dp))
     }

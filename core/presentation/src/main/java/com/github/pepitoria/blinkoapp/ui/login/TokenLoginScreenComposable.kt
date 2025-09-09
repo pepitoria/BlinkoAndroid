@@ -201,9 +201,9 @@ fun TokenLoginScreenViewState(
       Spacer(modifier = Modifier.height(12.dp))
 
       BlinkoTextField(
-        url = url,
+        text = url,
         label = stringResource(id = R.string.login_blinko_url),
-        onUrlChange = { url = it },
+        onTextChanged = { url = it },
         keyboardType = KeyboardType.Uri,
         imeAction = ImeAction.Next,
         modifier = Modifier
