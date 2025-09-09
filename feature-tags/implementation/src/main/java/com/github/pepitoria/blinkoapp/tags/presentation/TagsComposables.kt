@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
 
 @Composable
 internal fun TagListComposableInternal(
@@ -51,23 +53,13 @@ private fun Tag(
   tag: String,
   onTagClick: (String) -> Unit,
 ) {
-  Text(
-    modifier = Modifier
-      .padding(all = 4.dp)
-      .background(
-        color = Color.White,
-        shape = RoundedCornerShape(8.dp)
-      )
-      .padding(horizontal = 16.dp, vertical = 4.dp)
-      .clickable { onTagClick(tag) },
-    maxLines = 1,
+  BlinkoButton(
     text = tag,
-    textAlign = TextAlign.Center,
-    color = Color.Black,
+    onClick = { onTagClick(tag) },
   )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun TagListPreview() {
   Column {
