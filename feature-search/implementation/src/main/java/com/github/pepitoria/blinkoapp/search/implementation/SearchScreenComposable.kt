@@ -226,7 +226,6 @@ private fun SearchBar(
       modifier = Modifier
         .height(64.dp)
     ) {
-
       BlinkoTextField(
         label = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
         text = query,
@@ -240,27 +239,6 @@ private fun SearchBar(
           .clip(RoundedCornerShape(50.dp))
           .focusRequester(focusRequester),
       )
-//      TextField(
-//        label = {
-//          Text(
-//            text = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
-//            fontWeight = FontWeight.Normal
-//          )
-//        },
-//        value = query,
-//        singleLine = true,
-//        onValueChange = { newValue ->
-//          onSearch(newValue)
-//        },
-//        keyboardOptions = KeyboardOptions(
-//          keyboardType = KeyboardType.Text,
-//          imeAction = ImeAction.Search
-//        ),
-//        modifier = Modifier
-//          .fillMaxWidth()
-//          .clip(RoundedCornerShape(50.dp))
-//          .focusRequester(focusRequester),
-//      )
 
       Spacer(modifier = Modifier.height(8.dp))
     }
