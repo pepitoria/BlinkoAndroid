@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
@@ -37,6 +34,7 @@ import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -131,15 +129,16 @@ fun BlinkoNoteEditor(
       .fillMaxWidth()
       .padding(16.dp)
   ) {
-    TextField(
-      value = uiState.content,
-      onValueChange = { updateNote(uiState.copy(content = it)) },
-      label = { Text(text = stringResource(R.string.note_edit_label)) },
+    BlinkoTextField(
+      text = uiState.content,
+      onTextChanged = { updateNote(uiState.copy(content = it)) },
+      label = stringResource(R.string.note_edit_label),
       minLines = 3,
+      singleLine = false,
       modifier = Modifier
-        .fillMaxWidth()
-        .align(Alignment.TopStart)
-        .padding(bottom = 128.dp)
+      .fillMaxWidth()
+      .align(Alignment.TopStart)
+      .padding(bottom = 128.dp)
     )
 
     Column(

@@ -13,12 +13,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 
 @Composable
 fun BlinkoTextField(
   text: String,
   label: String,
   onTextChanged: (String) -> Unit,
+  minLines: Int = 1,
+  singleLine: Boolean = true,
   modifier: Modifier = Modifier,
   keyboardType: KeyboardType = KeyboardType.Unspecified,
   imeAction: ImeAction = ImeAction.Unspecified,
@@ -31,8 +34,9 @@ fun BlinkoTextField(
         color = MaterialTheme.colorScheme.secondary,
       )
     },
+    minLines = minLines,
     value = text,
-    singleLine = true,
+    singleLine = singleLine,
     onValueChange = onTextChanged,
     keyboardOptions = KeyboardOptions(
       keyboardType = keyboardType,
