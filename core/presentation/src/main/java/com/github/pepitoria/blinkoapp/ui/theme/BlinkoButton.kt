@@ -58,7 +58,7 @@ fun BlinkoButton(
       color = MaterialTheme.colorScheme.secondary // Or any color you want
     ),
     colors = ButtonDefaults.buttonColors(
-      containerColor = MaterialTheme.colorScheme.primary
+      containerColor = MaterialTheme.colorScheme.background
     ),
     modifier = Modifier
       .then(modifier)

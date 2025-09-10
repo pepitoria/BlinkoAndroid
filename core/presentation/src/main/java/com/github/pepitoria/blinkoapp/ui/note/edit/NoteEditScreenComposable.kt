@@ -1,6 +1,7 @@
 package com.github.pepitoria.blinkoapp.ui.note.edit
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -127,6 +129,7 @@ fun BlinkoNoteEditor(
   Box(
     modifier = modifier
       .fillMaxWidth()
+      .background(MaterialTheme.colorScheme.background)
       .padding(16.dp)
   ) {
     BlinkoTextField(

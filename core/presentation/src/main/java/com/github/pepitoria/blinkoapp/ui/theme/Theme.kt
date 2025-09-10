@@ -12,7 +12,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
@@ -25,6 +24,7 @@ private val DarkColorScheme = darkColorScheme(
 
   onPrimary = White,
   onSecondary = Black,
+  onSurface = White,
   )
 
 private val LightColorScheme = lightColorScheme(
@@ -36,6 +36,7 @@ private val LightColorScheme = lightColorScheme(
 
   onPrimary = Black,
   onSecondary = White,
+  onSurface = Black,
   /* Other default colors to override
 
   surface = Color(0xFFFFFBFE),
