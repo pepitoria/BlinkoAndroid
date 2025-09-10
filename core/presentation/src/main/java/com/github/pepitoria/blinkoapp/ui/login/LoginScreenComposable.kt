@@ -42,7 +42,7 @@ import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoPasswordField
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
-import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -114,7 +114,9 @@ private fun SessionActive(
 ) {
 
   Column(
-    modifier = Modifier.fillMaxSize().background(getBackgroundBrush()),
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = getBackgroundColor()),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -149,7 +151,7 @@ fun LoginScreenViewState(
     modifier = Modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
-      .background(getBackgroundBrush())
+      .background(getBackgroundColor())
       .padding(32.dp),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally

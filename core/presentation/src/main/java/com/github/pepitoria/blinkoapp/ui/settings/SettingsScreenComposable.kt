@@ -32,7 +32,7 @@ import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.Black
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
-import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -108,7 +108,7 @@ fun SessionActive(
 
   Column(
     modifier = Modifier
-      .background(getBackgroundBrush())
+      .background(getBackgroundColor())
       .padding(16.dp)
       .fillMaxSize(),
     verticalArrangement = Arrangement.Center,

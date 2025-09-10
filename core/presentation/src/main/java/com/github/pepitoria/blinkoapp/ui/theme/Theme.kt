@@ -9,8 +9,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -31,7 +30,7 @@ private val LightColorScheme = lightColorScheme(
   primary = White,
   secondary = Black,
   tertiary = GreyBackground,
-  background = RDGreyBackgroundLight,
+  background = RDGreyBackgroundLighter,
   onBackground = Black,
 
   onPrimary = Black,
@@ -88,9 +87,11 @@ fun BlinkoAppTheme(
   )
 }
 
-
-
 @Composable
-fun getBackgroundBrush(): Brush {
-  return SolidColor(MaterialTheme.colorScheme.background)
+fun getBackgroundColor(): Color {
+  return if (isSystemInDarkTheme()) {
+    RDGreyBackgroundDarker
+  } else {
+    RDGreyBackgroundLighter
+  }
 }

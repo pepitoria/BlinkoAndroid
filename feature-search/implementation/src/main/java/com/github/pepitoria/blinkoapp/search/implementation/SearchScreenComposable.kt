@@ -48,7 +48,7 @@ import com.github.pepitoria.blinkoapp.ui.note.list.NoteListItem
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
-import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import dagger.hilt.android.EntryPointAccessors
 
 @Composable
@@ -106,7 +106,7 @@ private fun SearchScreen(
     modifier = Modifier
       .fillMaxSize()
       .background(
-        brush = getBackgroundBrush()
+         color = getBackgroundColor()
       )
       .padding(16.dp),
   ) {

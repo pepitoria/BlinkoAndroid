@@ -1,6 +1,7 @@
 package com.github.pepitoria.blinkoapp.ui.note.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +47,7 @@ import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
-import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import com.halilibo.richtext.commonmark.Markdown
 import com.halilibo.richtext.ui.BasicRichText
 
@@ -122,6 +124,9 @@ private fun EmptyNoteList() {
   Text(text = stringResource(id = R.string.note_list_no_notes_found))
 }
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NoteList(
@@ -140,11 +145,11 @@ private fun NoteList(
     onRefresh = onRefresh,
     modifier = Modifier
       .fillMaxSize()
-      .background(getBackgroundBrush())
+      .background(color = getBackgroundColor())
       .padding(16.dp)
   ) {
     LazyColumn(
-      modifier = Modifier.fillMaxSize()
+      modifier = Modifier.fillMaxSize(),
     ) {
       items(
         items = notes,
