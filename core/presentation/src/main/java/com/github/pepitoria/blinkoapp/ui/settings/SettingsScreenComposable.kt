@@ -116,8 +116,6 @@ fun SessionActive(
   ) {
     Text(
       text = stringResource(id = R.string.login_token_session_active),
-      modifier = Modifier,
-      color = Black
     )
 
     Spacer(modifier = Modifier.height(12.dp))
