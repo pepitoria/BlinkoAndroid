@@ -3,7 +3,6 @@ package com.github.pepitoria.blinkoapp.domain
 import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
-import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
 import javax.inject.Inject
 
 class NoteDeleteUseCase @Inject constructor(

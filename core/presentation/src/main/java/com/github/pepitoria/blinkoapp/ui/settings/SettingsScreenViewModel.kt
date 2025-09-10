@@ -1,6 +1,5 @@
 package com.github.pepitoria.blinkoapp.ui.settings
 
-import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.settings.api.domain.GetDefaultTabUseCase
@@ -11,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
 
