@@ -35,8 +35,8 @@ fun BlinkoTextField(
     singleLine = true,
     onValueChange = onTextChanged,
     keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Uri,
-      imeAction = ImeAction.Next
+      keyboardType = keyboardType,
+      imeAction = imeAction,
     ),
     modifier = Modifier
       .clip(RoundedCornerShape(4.dp))
