@@ -14,10 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
@@ -31,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +45,7 @@ import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
-import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import com.halilibo.richtext.commonmark.Markdown
 import com.halilibo.richtext.ui.BasicRichText
 
@@ -121,6 +122,9 @@ private fun EmptyNoteList() {
   Text(text = stringResource(id = R.string.note_list_no_notes_found))
 }
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NoteList(
@@ -139,11 +143,11 @@ private fun NoteList(
     onRefresh = onRefresh,
     modifier = Modifier
       .fillMaxSize()
-      .background(getBackgroundBrush())
+      .background(color = getBackgroundColor())
       .padding(16.dp)
   ) {
     LazyColumn(
-      modifier = Modifier.fillMaxSize()
+      modifier = Modifier.fillMaxSize(),
     ) {
       items(
         items = notes,
@@ -163,7 +167,6 @@ private fun NoteList(
           Text(
             text = stringResource(id = R.string.todo_done),
             modifier = Modifier.padding(16.dp),
-            color = Color.White
           )
         }
 
@@ -225,7 +228,6 @@ fun NoteListItem(
       ) {
         Text(
           text = stringResource(R.string.release_to_delete),
-          color = Color.White,
           modifier = Modifier
             .padding(4.dp)
             .align(Alignment.Center)
@@ -233,7 +235,7 @@ fun NoteListItem(
         Icon(
           imageVector = Icons.Filled.Delete,
           contentDescription = stringResource(id = R.string.delete_note),
-          tint = Color.Black,
+          tint = MaterialTheme.colorScheme.tertiary
         )
       }
     },
@@ -242,6 +244,7 @@ fun NoteListItem(
       modifier = Modifier
         .fillMaxWidth(),
       colors = BlinkoAppTheme.cardColors(),
+      elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
       onClick = { note.id?.let(onClick) }
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {

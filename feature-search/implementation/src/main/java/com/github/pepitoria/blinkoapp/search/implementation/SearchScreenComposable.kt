@@ -14,13 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -34,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +47,8 @@ import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListItem
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
-import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import dagger.hilt.android.EntryPointAccessors
 
 @Composable
@@ -108,7 +106,7 @@ private fun SearchScreen(
     modifier = Modifier
       .fillMaxSize()
       .background(
-        brush = getBackgroundBrush()
+         color = getBackgroundColor()
       )
       .padding(16.dp),
   ) {
@@ -180,7 +178,6 @@ private fun EmptySearch(
       .fillMaxWidth(),
     text = text,
     textAlign = TextAlign.Center,
-    color = Color.White,
   )
 
   tagsFactory.TagListComposable(
@@ -202,7 +199,6 @@ private fun getTagsFactory(context: Context, isInPreview: Boolean): TagsFactory 
             .fillMaxWidth(),
           text = "here will be a list of #tags",
           textAlign = TextAlign.Center,
-          color = Color.White,
         )
       }
     }
@@ -230,23 +226,14 @@ private fun SearchBar(
       modifier = Modifier
         .height(64.dp)
     ) {
-
-      TextField(
-        label = {
-          Text(
-            text = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
-            fontWeight = FontWeight.Normal
-          )
-        },
-        value = query,
-        singleLine = true,
-        onValueChange = { newValue ->
+      BlinkoTextField(
+        label = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
+        text = query,
+        onTextChanged = { newValue ->
           onSearch(newValue)
         },
-        keyboardOptions = KeyboardOptions(
-          keyboardType = KeyboardType.Text,
-          imeAction = ImeAction.Search
-        ),
+        keyboardType = KeyboardType.Text,
+        imeAction = ImeAction.Search,
         modifier = Modifier
           .fillMaxWidth()
           .clip(RoundedCornerShape(50.dp))

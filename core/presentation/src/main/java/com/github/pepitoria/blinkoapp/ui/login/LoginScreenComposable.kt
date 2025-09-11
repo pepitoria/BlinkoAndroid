@@ -11,13 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,15 +24,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusRequester.Companion.FocusRequesterFactory.component1
+import androidx.compose.ui.focus.FocusRequester.Companion.FocusRequesterFactory.component2
+import androidx.compose.ui.focus.FocusRequester.Companion.FocusRequesterFactory.component3
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +42,10 @@ import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
-import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundBrush
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoPasswordField
+import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
+import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -117,7 +117,9 @@ private fun SessionActive(
 ) {
 
   Column(
-    modifier = Modifier.fillMaxSize().background(getBackgroundBrush()),
+    modifier = Modifier
+      .fillMaxSize()
+      .background(color = getBackgroundColor()),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
@@ -127,19 +129,18 @@ private fun SessionActive(
       fontSize = 18.sp,
       fontWeight = FontWeight.Bold,
     )
-    Button(
+
+    BlinkoButton(
       onClick = logout,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(16.dp)
-    ) {
-      Text(
-        text = stringResource(id = R.string.login_token_logout),
-        fontSize = 16.sp
-      )
-    }
+        .padding(16.dp),
+      text = stringResource(id = R.string.login_token_logout),
+    )
   }
 }
+
+
 
 @Preview
 @Composable
@@ -153,7 +154,7 @@ fun LoginScreenViewState(
     modifier = Modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
-      .background(getBackgroundBrush())
+      .background(getBackgroundColor())
       .padding(32.dp),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
@@ -186,9 +187,9 @@ fun LoginScreenViewState(
       Spacer(modifier = Modifier.height(12.dp))
 
       BlinkoTextField(
-        url = url,
+        text = url,
         label = stringResource(id = R.string.login_blinko_url),
-        onUrlChange = { url = it },
+        onTextChanged = { url = it },
         keyboardType = KeyboardType.Uri,
         imeAction = ImeAction.Next,
         modifier = Modifier
@@ -198,9 +199,9 @@ fun LoginScreenViewState(
       Spacer(modifier = Modifier.height(12.dp))
 
       BlinkoTextField(
-        url = username,
+        text = username,
         label = stringResource(id = R.string.login_username),
-        onUrlChange = { username = it },
+        onTextChanged = { username = it },
         keyboardType = KeyboardType.Text,
         imeAction = ImeAction.Next,
         modifier = Modifier
@@ -209,7 +210,7 @@ fun LoginScreenViewState(
       )
       Spacer(modifier = Modifier.height(12.dp))
       
-      PasswordField(
+      BlinkoPasswordField(
         username = password,
         label = stringResource(id = R.string.login_password),
         onUsernameChange = { password = it },
@@ -252,71 +253,13 @@ fun LoginButton(
   onClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Button(
+  BlinkoButton(
+    text = stringResource(id = R.string.login_token_login_button),
     onClick = onClick,
-    modifier = modifier,
-  ) {
-    Text(
-      text = stringResource(id = R.string.login_token_login_button),
-      fontSize = 16.sp
-    )
-  }
-}
-
-@Composable
-fun PasswordField(
-  username: String,
-  label: String,
-  onUsernameChange: (String) -> Unit,
-  modifier: Modifier = Modifier
-) {
-  TextField(
-    label = {
-      Text(
-        text = label,
-        fontWeight = FontWeight.Normal
-      )
-    },
-    value = username,
-    singleLine = true,
-    onValueChange = onUsernameChange,
-    keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Text,
-      imeAction = ImeAction.Next
-    ),
-    visualTransformation = PasswordVisualTransformation(),
-    modifier = Modifier
-      .clip(RoundedCornerShape(4.dp))
-      .then(modifier),
+    modifier = modifier
   )
 }
 
 
-@Composable
-fun BlinkoTextField(
-  url: String,
-  label: String,
-  onUrlChange: (String) -> Unit,
-  modifier: Modifier = Modifier,
-  keyboardType: KeyboardType = KeyboardType.Unspecified,
-  imeAction: ImeAction = ImeAction.Unspecified,
-) {
-  TextField(
-    label = {
-      Text(
-        text = label,
-        fontWeight = FontWeight.Normal
-      )
-    },
-    value = url,
-    singleLine = true,
-    onValueChange = onUrlChange,
-    keyboardOptions = KeyboardOptions(
-      keyboardType = KeyboardType.Uri,
-      imeAction = ImeAction.Next
-    ),
-    modifier = Modifier
-      .clip(RoundedCornerShape(4.dp))
-      .then(modifier),
-  )
-}
+
+

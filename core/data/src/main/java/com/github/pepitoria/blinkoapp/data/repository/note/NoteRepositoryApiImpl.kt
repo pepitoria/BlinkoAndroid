@@ -8,7 +8,6 @@ import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelistbyids.NoteListByIdsRequest
-import com.github.pepitoria.blinkoapp.data.model.noteupsert.UpsertRequest
 import com.github.pepitoria.blinkoapp.data.net.BlinkoApiClient
 import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.domain.data.NoteRepository
