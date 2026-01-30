@@ -3,8 +3,6 @@ package com.github.pepitoria.blinkoapp.data.net
 import android.content.Context
 import android.net.ConnectivityManager
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
-import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
 import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
@@ -20,47 +18,6 @@ class BlinkoApiClientNetImpl @Inject constructor(
   @ApplicationContext private val appContext: Context,
   private val api: BlinkoApi,
 ): BlinkoApiClient {
-
-  override suspend fun login(
-    url: String,
-    userName: String,
-    password: String
-  ): ApiResult<LoginResponse> {
-    if (!isConnected()) {
-      return ApiResult.ApiErrorResponse(message = "No internet connection")
-    }
-
-    val loginUrl = if (url.endsWith("/")) {
-      "${url}api/v1/user/login"
-    } else {
-      "${url}/api/v1/user/login"
-    }
-
-    return withContext(Dispatchers.IO) {
-      val apiResponse = api.login(
-        url = loginUrl,
-        loginRequest = LoginRequest(
-          name = userName,
-          password = password
-        )
-      )
-
-      var apiResult: ApiResult<LoginResponse> = ApiResult.ApiErrorResponse.UNKNOWN
-
-      if (apiResponse.isSuccessful) {
-        apiResponse.body()?.let { resp ->
-          apiResult = ApiResult.ApiSuccess(resp)
-        }
-      } else {
-        apiResult = ApiResult.ApiErrorResponse(
-          code = apiResponse.code(),
-          message = apiResponse.message()
-        )
-      }
-
-      apiResult
-    }
-  }
 
   override suspend fun noteList(url: String, token: String, noteListRequest: NoteListRequest): ApiResult<List<NoteResponse>> {
     if (!isConnected()) {

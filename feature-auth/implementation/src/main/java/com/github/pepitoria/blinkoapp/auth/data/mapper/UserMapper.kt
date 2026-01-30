@@ -1,6 +1,6 @@
-package com.github.pepitoria.blinkoapp.data.mapper
+package com.github.pepitoria.blinkoapp.auth.data.mapper
 
-import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
+import com.github.pepitoria.blinkoapp.auth.data.model.LoginResponse
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoUser
 import javax.inject.Inject
 

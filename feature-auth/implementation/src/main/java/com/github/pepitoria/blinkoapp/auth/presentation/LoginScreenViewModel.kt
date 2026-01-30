@@ -1,10 +1,10 @@
-package com.github.pepitoria.blinkoapp.ui.login
+package com.github.pepitoria.blinkoapp.auth.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.domain.LocalStorageUseCases
-import com.github.pepitoria.blinkoapp.domain.SessionUseCases
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
-import com.github.pepitoria.blinkoapp.presentation.BuildConfig
+import com.github.pepitoria.blinkoapp.auth.api.domain.SessionResult
+import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
+import com.github.pepitoria.blinkoapp.auth.implementation.BuildConfig
+import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
 import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-  private val localStorageUseCases: LocalStorageUseCases,
+  private val localStorage: LocalStorage,
   private val sessionUseCases: SessionUseCases,
 ) : BlinkoViewModel() {
 
@@ -57,7 +57,7 @@ class LoginScreenViewModel @Inject constructor(
       _isLoading.value = true
       val loginResponse = sessionUseCases.login()
 
-      val sessionOk = loginResponse is BlinkoResult.Success
+      val sessionOk = loginResponse is SessionResult.Success
       _isLoading.value = false
       Timber.d("${this::class.java.simpleName}.login() loginOk: $sessionOk")
       _isSessionActive.value = sessionOk
@@ -86,7 +86,7 @@ class LoginScreenViewModel @Inject constructor(
         password = password
       )
 
-      val sessionOk = loginResponse is BlinkoResult.Success
+      val sessionOk = loginResponse is SessionResult.Success
       _isLoading.value = false
       Timber.d("${this::class.java.simpleName}.login() loginOk: $sessionOk")
       _isSessionActive.value = sessionOk
@@ -96,9 +96,9 @@ class LoginScreenViewModel @Inject constructor(
       }
 
       if (sessionOk && BuildConfig.DEBUG) {
-        val user = (loginResponse as BlinkoResult.Success).value
+        val user = loginResponse as SessionResult.Success
         saveUrl(url)
-        saveUserName(user.name)
+        saveUserName(user.userName)
         saveToken(user.token)
       }
     }
@@ -111,27 +111,27 @@ class LoginScreenViewModel @Inject constructor(
   }
 
   fun getStoredUrl(): String? {
-    return localStorageUseCases.getString("getStoredUrl")
+    return localStorage.getString("getStoredUrl")
   }
 
   fun getStoredToken(): String? {
-    return localStorageUseCases.getString("getStoredToken")
+    return localStorage.getString("getStoredToken")
   }
 
   fun getStoredUserName(): String? {
-    return localStorageUseCases.getString("getStoredUserName")
+    return localStorage.getString("getStoredUserName")
   }
 
   private fun saveUrl(url: String) {
-    localStorageUseCases.saveString("getStoredUrl", url)
+    localStorage.saveString("getStoredUrl", url)
   }
 
   private fun saveUserName(userName: String) {
-    localStorageUseCases.saveString("getStoredUserName", userName)
+    localStorage.saveString("getStoredUserName", userName)
   }
 
   private fun saveToken(token: String) {
-    localStorageUseCases.saveString("getStoredToken", token)
+    localStorage.saveString("getStoredToken", token)
   }
 
   private fun triggerEvent(event: Events) {

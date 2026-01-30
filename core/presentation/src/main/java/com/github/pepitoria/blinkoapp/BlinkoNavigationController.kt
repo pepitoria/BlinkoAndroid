@@ -9,11 +9,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.github.pepitoria.blinkoapp.auth.api.AuthFactory
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.search.api.SearchFactory
 import com.github.pepitoria.blinkoapp.settings.api.domain.SettingsEntryPoint
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
-import com.github.pepitoria.blinkoapp.ui.login.LoginWidget
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListScreenComposable
 import com.github.pepitoria.blinkoapp.ui.settings.SettingsScreenComposable
@@ -23,6 +23,7 @@ import dagger.hilt.android.EntryPointAccessors
 fun BlinkoNavigationController(
   navController: NavHostController,
   searchFactory: SearchFactory,
+  authFactory: AuthFactory,
 ) {
 
   val defaultTabRoute = getDefaultTabRoute()
@@ -39,7 +40,7 @@ fun BlinkoNavigationController(
       route = BlinkoNavigationRouter.NavAuth.route,
     ) {
       composable(BlinkoNavigationRouter.NavAuth.Login.route) {
-        LoginNavigator(navController = navController)
+        LoginNavigator(navController = navController, authFactory = authFactory)
       }
     }
 
@@ -116,8 +117,9 @@ private fun getDefaultTabRoute(): String {
 @Composable
 fun LoginNavigator(
   navController: NavHostController,
+  authFactory: AuthFactory,
 ) {
-  LoginWidget (
+  authFactory.LoginScreenComposable(
     goToHome = navController.goToHome(),
   )
 }

@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.ui.login
+package com.github.pepitoria.blinkoapp.auth.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -38,7 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.github.pepitoria.blinkoapp.presentation.R
+import com.github.pepitoria.blinkoapp.auth.implementation.R
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
@@ -209,7 +209,7 @@ fun LoginScreenViewState(
           .focusRequester(second)
       )
       Spacer(modifier = Modifier.height(12.dp))
-      
+
       BlinkoPasswordField(
         username = password,
         label = stringResource(id = R.string.login_password),
@@ -259,7 +259,3 @@ fun LoginButton(
     modifier = modifier
   )
 }
-
-
-
-

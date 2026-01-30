@@ -1,9 +1,9 @@
-package com.github.pepitoria.blinkoapp.data.repository.auth
+package com.github.pepitoria.blinkoapp.auth.data.repository
 
-import com.github.pepitoria.blinkoapp.data.mapper.UserMapper
+import com.github.pepitoria.blinkoapp.auth.data.mapper.UserMapper
+import com.github.pepitoria.blinkoapp.auth.data.net.AuthApiClient
 import com.github.pepitoria.blinkoapp.data.mapper.toBlinkoResult
 import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.data.net.BlinkoApiClient
 import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
 import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
@@ -16,11 +16,11 @@ private const val USERNAME_KEY = "com.github.pepitoria.blinkoapp.data.repository
 private const val PASSWORD_KEY = "com.github.pepitoria.blinkoapp.data.repository.auth.PASSWORD_KEY"
 private const val TOKEN_KEY = "com.github.pepitoria.blinkoapp.data.repository.auth.TOKEN_KEY"
 
-class AuthenticationRepositoryApiImpl @Inject constructor(
+class AuthenticationRepositoryImpl @Inject constructor(
   private val localStorage: LocalStorage,
-  private val api: BlinkoApiClient,
+  private val api: AuthApiClient,
   private val userMapper: UserMapper,
-  ) : AuthenticationRepository {
+) : AuthenticationRepository {
 
   override fun saveSession(url: String, token: String) {
     localStorage.saveString(URL_KEY, url)

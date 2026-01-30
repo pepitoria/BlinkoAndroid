@@ -1,7 +1,5 @@
 package com.github.pepitoria.blinkoapp.data.net
 
-import com.github.pepitoria.blinkoapp.data.model.login.LoginRequest
-import com.github.pepitoria.blinkoapp.data.model.login.LoginResponse
 import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.data.model.notedelete.DeleteNoteResponse
 import com.github.pepitoria.blinkoapp.data.model.notelist.NoteListRequest
@@ -15,12 +13,6 @@ import retrofit2.http.POST
 import retrofit2.http.Url
 
 interface BlinkoApi {
-
-  @POST()
-  suspend fun login(
-    @Body loginRequest: LoginRequest,
-    @Url url: String,
-  ): Response<LoginResponse>
 
   @POST()
   suspend fun noteList(

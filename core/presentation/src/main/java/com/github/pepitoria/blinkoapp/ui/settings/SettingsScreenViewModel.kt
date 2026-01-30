@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.ui.settings
 
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.domain.SessionUseCases
+import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.settings.api.domain.GetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.SetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab

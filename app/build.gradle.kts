@@ -136,6 +136,8 @@ dependencies {
   implementation(project(":feature-tags:implementation"))
   implementation(project(":feature-settings:api"))
   implementation(project(":feature-settings:implementation"))
+  implementation(project(":feature-auth:api"))
+  implementation(project(":feature-auth:implementation"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)

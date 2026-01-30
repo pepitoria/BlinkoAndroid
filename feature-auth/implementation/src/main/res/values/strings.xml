@@ -1,0 +1,17 @@
+<resources>
+  <string name="login_title">Login</string>
+  <string name="login_blinko_url">Blinko url</string>
+  <string name="login_username">Username</string>
+  <string name="login_password">Password</string>
+  <string name="login_button_label">Login</string>
+
+  <string name="login_token_session_active">Session active</string>
+  <string name="login_token_logout">Logout</string>
+  <string name="login_token_login_title_password">Login With your Blinko password</string>
+  <string name="login_token_login_title_token">Login With your Blinko token</string>
+
+  <string name="login_token_label">Token</string>
+  <string name="login_token_login_button">Login</string>
+  <string name="login_token_insecure_url">I understand I am using an insecure connection</string>
+  <string name="login_token_insecure_toast">You are attempting to connect to an insecure server (http). Are you sure?</string>
+</resources>
