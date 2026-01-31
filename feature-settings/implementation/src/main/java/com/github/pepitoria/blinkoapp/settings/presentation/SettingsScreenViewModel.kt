@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.ui.settings
+package com.github.pepitoria.blinkoapp.settings.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases

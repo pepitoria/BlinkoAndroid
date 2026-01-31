@@ -12,11 +12,11 @@ import androidx.navigation.compose.navigation
 import com.github.pepitoria.blinkoapp.auth.api.AuthFactory
 import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.search.api.SearchFactory
+import com.github.pepitoria.blinkoapp.settings.api.SettingsFactory
 import com.github.pepitoria.blinkoapp.settings.api.domain.SettingsEntryPoint
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
 import com.github.pepitoria.blinkoapp.ui.note.edit.NoteEditScreenComposable
 import com.github.pepitoria.blinkoapp.ui.note.list.NoteListScreenComposable
-import com.github.pepitoria.blinkoapp.ui.settings.SettingsScreenComposable
 import dagger.hilt.android.EntryPointAccessors
 
 @Composable
@@ -24,6 +24,7 @@ fun BlinkoNavigationController(
   navController: NavHostController,
   searchFactory: SearchFactory,
   authFactory: AuthFactory,
+  settingsFactory: SettingsFactory,
 ) {
 
   val defaultTabRoute = getDefaultTabRoute()
@@ -83,9 +84,10 @@ fun BlinkoNavigationController(
           id = it.arguments?.getInt(BlinkoNavigationRouter.NavHome.ARG_NOTE_ID) ?: 0)
       }
       composable(route = BlinkoNavigationRouter.NavHome.Settings.route) {
-        SettingsNavigatorNotes(
+        SettingsNavigator(
           navController = navController,
           route = BlinkoNavigationRouter.NavHome.Settings.route,
+          settingsFactory = settingsFactory,
         )
       }
     }
@@ -196,11 +198,12 @@ fun HomeSearchNavigator(
 }
 
 @Composable
-fun SettingsNavigatorNotes(
+fun SettingsNavigator(
   navController: NavHostController,
   route: String,
+  settingsFactory: SettingsFactory,
 ) {
-  SettingsScreenComposable(
+  settingsFactory.SettingsScreenComposable(
     currentRoute = route,
     goToNotes = navController.goToNoteList(),
     goToBlinkos = navController.goToBlinkoList(),

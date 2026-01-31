@@ -56,8 +56,9 @@ android {
 }
 
 dependencies {
-//  implementation(project(":core:presentation"))
+  implementation(project(":core:presentation"))
   implementation(project(":feature-settings:api"))
+  implementation(project(":feature-auth:api"))
   implementation(project(":core:domain"))
 
   implementation(libs.accompanist.flowlayout)

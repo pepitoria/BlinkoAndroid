@@ -1,4 +1,4 @@
-package com.github.pepitoria.blinkoapp.ui.settings
+package com.github.pepitoria.blinkoapp.settings.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,7 @@ import com.github.pepitoria.blinkoapp.ui.theme.getBackgroundColor
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
-fun SettingsScreenComposable(
+fun SettingsScreenComposableInternal(
   viewModel: SettingsScreenViewModel = hiltViewModel(),
   currentRoute: String,
   goToNotes: () -> Unit,

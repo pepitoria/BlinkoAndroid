@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.github.pepitoria.blinkoapp.auth.api.AuthFactory
 import com.github.pepitoria.blinkoapp.search.api.SearchFactory
+import com.github.pepitoria.blinkoapp.settings.api.SettingsFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -18,12 +19,15 @@ class NavigationActivity : ComponentActivity() {
   @Inject
   lateinit var authFactory: AuthFactory
 
+  @Inject
+  lateinit var settingsFactory: SettingsFactory
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     setContent {
       val navController = rememberNavController()
-      BlinkoNavigationController(navController, searchFactory, authFactory)
+      BlinkoNavigationController(navController, searchFactory, authFactory, settingsFactory)
     }
   }
 
