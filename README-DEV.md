@@ -4,11 +4,11 @@ Technical documentation for the Blinko Android client.
 
 ## Architecture
 
-The app follows **MVVM + Clean Architecture** and is **mid-migration** from a monolithic 3-module layout (`core:data`, `core:domain`, `core:presentation`) to a feature-module architecture with `api`/`implementation` splits.
+The app follows **MVVM + Clean Architecture** and is **mid-migration** from a monolithic 3-module layout to a feature-module architecture with `api`/`implementation` splits.
 
-All feature code has been extracted: `feature-auth`, `feature-notes`, `feature-search`, `feature-settings`, `feature-tags`. The `core` modules now contain only shared infrastructure (networking, theme, navigation, base classes) — no feature code remains.
+All feature code has been extracted: `feature-auth`, `feature-notes`, `feature-search`, `feature-settings`, `feature-tags`. The former `core:data` and `core:domain` modules have been replaced by three dedicated shared modules: `shared-domain`, `shared-networking`, and `shared-storage`. Only `core:presentation` remains, containing shared UI components, theme, and navigation.
 
-The end goal is to **eliminate the `core` modules entirely**. All shared infrastructure will be split into purpose-specific `shared-*` modules (e.g. `shared-networking`, `shared-theme`, `shared-navigation`).
+The end goal is to **eliminate `core:presentation` entirely** by splitting it into `shared-theme`, `shared-ui`, and `shared-navigation` modules.
 
 ### Layers
 
@@ -38,9 +38,10 @@ User action → ViewModel calls UseCase
 BlinkoAndroid/
 ├── app/                              # Application entry point, wires all modules
 ├── core/
-│   ├── data/                         # Shared: Retrofit/OkHttp setup, ApiResult, local storage
-│   ├── domain/                       # Shared: BlinkoResult, session models, auth contract
 │   └── presentation/                 # Shared: navigation, theme, base ViewModel, tab bar, common UI
+├── shared-domain/                    # BlinkoResult, BlinkoSession, BlinkoUser, AuthenticationRepository, LocalStorage interfaces
+├── shared-networking/                # RetrofitModule, OkHttp setup, ApiResult, ApiResultExtensions
+├── shared-storage/                   # LocalStorageSharedPreferences, LocalStorageModule
 ├── feature-auth/
 │   ├── api/                          # Public interfaces (AuthFactory, SessionUseCases)
 │   └── implementation/               # Login screen, auth repository, DI module
@@ -60,11 +61,12 @@ BlinkoAndroid/
 
 ### Module dependency rules
 
-- `app` depends on all `core` modules and all `feature` modules
-- `core:presentation` depends on `core:domain` and feature `api` modules (never `implementation`)
-- `core:data` depends on `core:domain`
-- `feature:implementation` modules depend on their own `api`, `core:domain`, `core:data`, and `core:presentation`
-- Feature `api` modules have no dependencies on other feature modules
+- `app` depends on `core:presentation`, all `shared-*` modules, and all `feature` modules
+- `core:presentation` depends on `shared-domain` and feature `api` modules (never `implementation`)
+- `shared-networking` depends on `shared-domain`
+- `shared-storage` depends on `shared-domain`
+- `feature:implementation` modules depend on their own `api`, `shared-domain`, `shared-networking` (if needed), `shared-storage` (if needed), and `core:presentation`
+- Feature `api` modules depend on `shared-domain` (for shared types like `BlinkoResult`) but not on other feature modules
 
 This api/implementation split means feature internals are hidden from the rest of the app. Features expose only factory interfaces and use case contracts through their `api` module.
 
@@ -89,34 +91,39 @@ feature-*/
         └── *Module.kt          # Hilt module binding interfaces to implementations
 ```
 
-## Core Modules (shared infrastructure — being phased out)
+## Shared Modules
 
-The `core` modules are a remnant of the original 3-module architecture. All feature code has been extracted to feature modules. Only shared infrastructure remains in core. The plan is to dismantle them entirely into dedicated `shared-*` modules.
+### shared-domain
 
-### core:domain
+Pure Kotlin module (`com.github.pepitoria.blinkoapp.shared.domain`). Contains shared domain types:
+- `BlinkoResult<T>` — sealed result type (Success/Error)
+- `BlinkoSession`, `BlinkoUser` — auth/session models
+- `AuthenticationRepository` — auth contract interface
+- `LocalStorage` — persistence interface
 
-Pure Kotlin module. Contains shared domain types:
-- `BlinkoResult<T>` — sealed result type (Success/Error) → `shared-domain`
-- `BlinkoSession`, `BlinkoUser` — auth/session models → `shared-domain`
-- `AuthenticationRepository` — auth contract → `shared-domain`
-- `LocalStorage` — persistence interface → `shared-domain`
+### shared-networking
 
-### core:data
+Networking infrastructure (`com.github.pepitoria.blinkoapp.shared.networking`). Depends on `shared-domain`:
+- `RetrofitModule` — Retrofit 3 + OkHttp 5 setup, logging interceptor, 30s timeouts (Hilt singleton)
+- `ApiResult<T>` — generic API response wrapper (ApiSuccess / ApiErrorResponse)
+- `ApiResultExtensions` — `toBlinkoResult()` extension for mapping ApiResult to BlinkoResult
 
-Shared networking and storage infrastructure:
-- `RetrofitModule` — Retrofit 3 + OkHttp 5 setup, logging interceptor, 30s timeouts → `shared-networking`
-- `LocalStorageSharedPreferences` — `LocalStorage` implementation → `shared-storage`
-- `ApiResult<T>` — generic API response wrapper → `shared-networking`
-- `ApiResultExtensions` — shared result mapping → `shared-networking`
+### shared-storage
+
+Local persistence (`com.github.pepitoria.blinkoapp.shared.storage`). Depends on `shared-domain`:
+- `LocalStorageSharedPreferences` — `LocalStorage` implementation using SharedPreferences
+- `LocalStorageModule` — Hilt module binding LocalStorage to SharedPreferences impl
+
+## Core Module (remaining — being phased out)
 
 ### core:presentation
 
-Shared UI components and navigation:
-- `BlinkoNavigationRouter`, `BlinkoNavigationController`, `BlinkoNavigators` → `shared-navigation`
-- `NavigationActivity` (hosts Compose NavHost) → `shared-navigation`
-- `BlinkoViewModel` with lifecycle awareness (`onStart`/`onStop`) → `shared-ui`
-- Material3 colors, typography, custom components (`BlinkoTextField`, `BlinkoPasswordField`, `BlinkoButton`) → `shared-theme`
-- `TabBarComposable`, `Loading` → `shared-ui`
+Shared UI components and navigation. Will be split into `shared-theme`, `shared-ui`, and `shared-navigation`:
+- `BlinkoNavigationRouter`, `BlinkoNavigationController`, `BlinkoNavigators`
+- `NavigationActivity` (hosts Compose NavHost)
+- `BlinkoViewModel` with lifecycle awareness (`onStart`/`onStop`)
+- Material3 colors, typography, custom components (`BlinkoTextField`, `BlinkoPasswordField`, `BlinkoButton`)
+- `TabBarComposable`, `Loading`
 
 ## Navigation
 
@@ -142,7 +149,8 @@ Navigation helpers are defined as extension functions on `NavHostController` in 
 **Hilt 2.57.1** with KSP.
 
 Key modules:
-- `RetrofitModule` (core:data) — provides OkHttpClient and Retrofit instance (singleton scope)
+- `RetrofitModule` (shared-networking) — provides OkHttpClient and Retrofit instance (singleton scope)
+- `LocalStorageModule` (shared-storage) — binds LocalStorage to SharedPreferences implementation
 - `NotesModule` (feature-notes:implementation) — provides NotesApi, NotesApiClient (flavor-aware), binds NoteRepository and NotesFactory
 - `AuthModule` (feature-auth:implementation) — binds auth factory, session use cases, and auth repository
 - `SearchModule` (feature-search:implementation) — binds search factory
@@ -214,37 +222,18 @@ Unit tests exist in `feature-notes:implementation` (e.g., `NoteRepositoryApiImpl
 
 All feature code has been extracted from core. The core modules now contain only shared infrastructure (networking, theme, navigation, base classes).
 
-### Remaining — split core into shared modules
+### Shared module extraction — completed
 
-The `core` modules still need to be decomposed into purpose-specific `shared-*` modules. Once complete, the `core` directory will be deleted entirely.
+`core:data` and `core:domain` have been fully decomposed into:
+- `shared-domain` — domain types and interfaces
+- `shared-networking` — Retrofit/OkHttp setup, API result types
+- `shared-storage` — SharedPreferences-based local storage
 
-### Target module structure
+Both `core:data` and `core:domain` directories have been deleted.
 
-```
-BlinkoAndroid/
-├── app/
-├── shared-domain/                    # BlinkoResult, BlinkoSession, BlinkoUser, repository interfaces
-├── shared-networking/                # RetrofitModule, OkHttp setup, ApiResult, ApiResultExtensions
-├── shared-storage/                   # LocalStorage interface + SharedPreferences implementation
-├── shared-navigation/                # Routes, NavHost, NavigationActivity, navigators
-├── shared-theme/                     # Colors, Typography, Material3 theme
-├── shared-ui/                        # BlinkoViewModel, BlinkoTextField, BlinkoButton, TabBar, Loading
-├── feature-auth/
-│   ├── api/
-│   └── implementation/
-├── feature-notes/
-│   ├── api/
-│   └── implementation/
-├── feature-search/
-│   ├── api/
-│   └── implementation/
-├── feature-settings/
-│   ├── api/
-│   └── implementation/
-└── feature-tags/
-    ├── api/
-    └── implementation/
-```
+### Remaining — split core:presentation into shared modules
+
+`core:presentation` still needs to be decomposed into purpose-specific `shared-*` modules. Once complete, the `core` directory will be deleted entirely.
 
 ## TODO/Roadmap:
 
@@ -271,36 +260,32 @@ BlinkoAndroid/
 - [x] Remove all old note code from core modules
 - [x] Remove `BlinkoApiModule`, `RepositoryModule`, and `provideBlinkoApi` from core:data
 
-### 2. Split `core:data` into shared modules
+### 2. Split `core:data` and `core:domain` into shared modules — DONE
 
-- [ ] Create `shared-networking` module
-  - [ ] Move `RetrofitModule`, `ApiResult`, `ApiResultExtensions`
-- [ ] Create `shared-storage` module
-  - [ ] Move `LocalStorage` interface (from `core:domain`) and `LocalStorageSharedPreferences` + `LocalStorageModule` (from `core:data`)
-- [ ] Update all feature modules to depend on `shared-networking` / `shared-storage` instead of `core:data`
-- [ ] Delete `core:data`
+- [x] Create `shared-domain` module
+  - [x] Move `BlinkoResult`, `BlinkoSession`, `BlinkoUser`, `AuthenticationRepository`, `LocalStorage`
+  - [x] New package: `com.github.pepitoria.blinkoapp.shared.domain`
+- [x] Create `shared-networking` module
+  - [x] Move `RetrofitModule`, `ApiResult`, `ApiResultExtensions`
+  - [x] New package: `com.github.pepitoria.blinkoapp.shared.networking`
+- [x] Create `shared-storage` module
+  - [x] Move `LocalStorageSharedPreferences`, `LocalStorageModule`
+  - [x] New package: `com.github.pepitoria.blinkoapp.shared.storage`
+- [x] Update all feature module `build.gradle.kts` to depend on `shared-*` instead of `core:data`/`core:domain`
+- [x] Update all imports across ~25 consumer `.kt` files
+- [x] Delete `core:data` and `core:domain`
 
-### 3. Split `core:domain` into shared modules
+### 3. Split `core:presentation` into shared modules
 
-- [ ] Create `shared-domain` module
-  - [ ] Move `BlinkoResult`, `BlinkoSession`, `BlinkoUser`, `AuthenticationRepository`
-- [ ] Update all feature modules to depend on `shared-domain` instead of `core:domain`
-- [ ] Delete `core:domain`
-
-### 4. Split `core:presentation` into shared modules
-
-- [ ] Create `shared-theme` module
-  - [ ] Move `Color.kt`, `Type.kt`, `Theme.kt`
-- [ ] Create `shared-ui` module
-  - [ ] Move `BlinkoViewModel`, `BlinkoTextField`, `BlinkoPasswordField`, `BlinkoButton`, `TabBarComposable`, `Loading`
-- [ ] Create `shared-navigation` module
-  - [ ] Move `BlinkoNavigationRouter`, `BlinkoNavigationController`, `BlinkoNavigators`, `NavigationActivity`
+- [ ] Create `shared-theme` module — `Color.kt`, `Type.kt`, `Theme.kt`
+- [ ] Create `shared-ui` module — `BlinkoViewModel`, `BlinkoTextField`, `BlinkoPasswordField`, `BlinkoButton`, `TabBarComposable`, `Loading`
+- [ ] Create `shared-navigation` module — `BlinkoNavigationRouter`, `BlinkoNavigationController`, `BlinkoNavigators`, `NavigationActivity`
 - [ ] Update all feature modules to depend on `shared-theme` / `shared-ui` / `shared-navigation` instead of `core:presentation`
 - [ ] Delete `core:presentation`
 
-### 5. Cleanup
+### 4. Cleanup
 
-- [ ] Remove `core` directory
-- [ ] Update `settings.gradle.kts` to remove all `:core:*` includes
+- [ ] Remove `core` directory (after core:presentation is split)
+- [ ] Update `settings.gradle.kts` to remove `:core:presentation`
 - [ ] Verify build and tests pass across all flavors and build types
 
