@@ -36,13 +36,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.github.pepitoria.blinkoapp.domain.model.note.BlinkoNote
+import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.presentation.R
 import com.github.pepitoria.blinkoapp.tags.api.TagsEntryPoint
 import com.github.pepitoria.blinkoapp.tags.api.TagsFactory
 import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.ui.loading.Loading
-import com.github.pepitoria.blinkoapp.ui.note.list.NoteListItem
+import com.github.pepitoria.blinkoapp.notes.api.presentation.NoteListItem
 import com.github.pepitoria.blinkoapp.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField

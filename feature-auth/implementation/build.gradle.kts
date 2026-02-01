@@ -57,6 +57,7 @@ android {
 
 dependencies {
   implementation(project(":feature-auth:api"))
+  implementation(project(":feature-notes:api"))
   implementation(project(":core:presentation"))
   implementation(project(":core:data"))
   implementation(project(":core:domain"))

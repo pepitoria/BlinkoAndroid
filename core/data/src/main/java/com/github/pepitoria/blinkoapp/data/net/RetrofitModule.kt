@@ -17,11 +17,6 @@ import javax.inject.Singleton
 object RetrofitModule {
  const val TIMEOUT = 30L
 
-  @Provides
-  @Singleton
-  fun provideBlinkoApi(retrofit: Retrofit): BlinkoApi =
-    retrofit.create(BlinkoApi::class.java)
-
   @Singleton
   @Provides
   fun getRetrofit(okHttpClient: OkHttpClient): Retrofit {

@@ -130,6 +130,8 @@ dependencies {
   implementation(project(":core:presentation"))
   implementation(project(":core:domain"))
   implementation(project(":core:data"))
+  implementation(project(":feature-notes:api"))
+  implementation(project(":feature-notes:implementation"))
   implementation(project(":feature-search:api"))
   implementation(project(":feature-search:implementation"))
   implementation(project(":feature-tags:api"))

@@ -1,9 +1,9 @@
 package com.github.pepitoria.blinkoapp
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Intent
 import androidx.navigation.NavHostController
-import com.github.pepitoria.blinkoapp.ui.sharewithblinko.edit.ShareAndEditWithBlinkoActivity
 
 fun NavHostController.goBack(): () -> Unit = {
   this.popBackStack()
@@ -14,11 +14,15 @@ fun NavHostController.exit(): () -> Unit = {
 }
 
 fun NavHostController.goToEditWithBlinko(noteType: Int): () -> Unit = {
-  val intent = Intent(context, ShareAndEditWithBlinkoActivity::class.java)
-  intent.action = Intent.ACTION_SEND
-  intent.type = "text/plain"
-  intent.putExtra(Intent.EXTRA_TEXT, "")
-  intent.putExtra(ShareAndEditWithBlinkoActivity.NOTE_TYPE, noteType)
+  val intent = Intent(Intent.ACTION_SEND).apply {
+    component = ComponentName(
+      context,
+      "com.github.pepitoria.blinkoapp.notes.implementation.presentation.ShareAndEditWithBlinkoActivity"
+    )
+    type = "text/plain"
+    putExtra(Intent.EXTRA_TEXT, "")
+    putExtra("ShareAndEditWithBlinkoActivity.NOTE_TYPE", noteType)
+  }
   context.startActivity(intent)
 }
 
