@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +28,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -106,7 +104,7 @@ private fun SearchScreen(
     modifier = Modifier
       .fillMaxSize()
       .background(
-         color = getBackgroundColor()
+        color = getBackgroundColor()
       )
       .padding(16.dp),
   ) {
@@ -250,7 +248,7 @@ private fun SearchBar(
 
       if (query.isEmpty()) {
         Icon(
-          imageVector = Icons.Default.Search,
+          painter = painterResource(id = com.github.pepitoria.blinkoapp.search.implementation.R.drawable.search_24px),
           tint = Color.Gray,
           contentDescription = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
           modifier = Modifier
@@ -258,7 +256,7 @@ private fun SearchBar(
         )
       } else {
         Icon(
-          imageVector = Icons.Default.Close,
+          painter = painterResource(id = com.github.pepitoria.blinkoapp.search.implementation.R.drawable.close_24px),
           tint = Color.Gray,
           contentDescription = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
           modifier = Modifier
