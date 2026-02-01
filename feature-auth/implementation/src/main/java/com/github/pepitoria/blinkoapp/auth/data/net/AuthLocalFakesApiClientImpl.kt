@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.auth.data.net
 
 import com.github.pepitoria.blinkoapp.auth.data.model.LoginResponse
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import javax.inject.Inject
 
 class AuthLocalFakesApiClientImpl @Inject constructor() : AuthApiClient {

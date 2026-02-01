@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.settings.data
 
-import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
+import com.github.pepitoria.blinkoapp.shared.domain.data.LocalStorage
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
 import javax.inject.Inject
 

@@ -2,8 +2,8 @@ package com.github.pepitoria.blinkoapp.auth.domain
 
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionResult
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
-import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteRepository
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import javax.inject.Inject

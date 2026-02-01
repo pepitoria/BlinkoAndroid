@@ -1,9 +1,9 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.data.repository
 
-import com.github.pepitoria.blinkoapp.data.mapper.toBlinkoResult
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.networking.mapper.toBlinkoResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteRepository
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.implementation.data.mapper.toBlinkoNote

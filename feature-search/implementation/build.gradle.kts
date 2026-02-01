@@ -60,7 +60,7 @@ dependencies {
   implementation(project(":feature-notes:api"))
   implementation(project(":feature-tags:api"))
   implementation(project(":core:presentation"))
-  implementation(project(":core:domain"))
+  implementation(project(":shared-domain"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

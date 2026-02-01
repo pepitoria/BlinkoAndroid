@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.tags.data
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.tags.data.net.TagsApiClient
 import com.github.pepitoria.blinkoapp.tags.domain.BlinkoTag
 import javax.inject.Inject

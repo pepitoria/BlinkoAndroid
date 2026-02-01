@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.notes.api.domain
 
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 
 interface NoteRepository {

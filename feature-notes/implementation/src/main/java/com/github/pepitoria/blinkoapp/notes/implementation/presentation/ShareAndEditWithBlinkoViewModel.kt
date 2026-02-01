@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteUpsertUseCase

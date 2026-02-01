@@ -2,13 +2,13 @@ package com.github.pepitoria.blinkoapp.auth.data.repository
 
 import com.github.pepitoria.blinkoapp.auth.data.mapper.UserMapper
 import com.github.pepitoria.blinkoapp.auth.data.net.AuthApiClient
-import com.github.pepitoria.blinkoapp.data.mapper.toBlinkoResult
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.domain.data.LocalStorage
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoSession
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoUser
+import com.github.pepitoria.blinkoapp.shared.networking.mapper.toBlinkoResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.domain.data.LocalStorage
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoSession
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoUser
 import javax.inject.Inject
 
 private const val URL_KEY = "com.github.pepitoria.blinkoapp.data.repository.auth.URL_KEY"

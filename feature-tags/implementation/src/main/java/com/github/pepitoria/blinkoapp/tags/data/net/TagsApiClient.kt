@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.tags.data.net
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import com.github.pepitoria.blinkoapp.tags.data.ResponseTag
 
 interface TagsApiClient {

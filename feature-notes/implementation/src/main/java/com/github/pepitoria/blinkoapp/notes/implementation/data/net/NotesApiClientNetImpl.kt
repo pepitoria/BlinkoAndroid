@@ -2,7 +2,7 @@ package com.github.pepitoria.blinkoapp.notes.implementation.data.net
 
 import android.content.Context
 import android.net.ConnectivityManager
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notedelete.DeleteNoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteListRequest

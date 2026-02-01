@@ -56,7 +56,7 @@ android {
 }
 
 dependencies {
-  implementation(project(":core:domain"))
+  implementation(project(":shared-domain"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

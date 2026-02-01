@@ -5,7 +5,7 @@ import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.auth.data.repository.AuthenticationRepositoryImpl
 import com.github.pepitoria.blinkoapp.auth.domain.SessionUseCasesImpl
 import com.github.pepitoria.blinkoapp.auth.presentation.AuthFactoryImpl
-import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

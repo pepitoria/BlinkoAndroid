@@ -59,8 +59,9 @@ dependencies {
   implementation(project(":feature-auth:api"))
   implementation(project(":feature-notes:api"))
   implementation(project(":core:presentation"))
-  implementation(project(":core:data"))
-  implementation(project(":core:domain"))
+  implementation(project(":shared-domain"))
+  implementation(project(":shared-networking"))
+  implementation(project(":shared-storage"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

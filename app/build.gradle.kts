@@ -128,8 +128,9 @@ tasks.register("uploadApkToGitHub") {
 dependencies {
 
   implementation(project(":core:presentation"))
-  implementation(project(":core:domain"))
-  implementation(project(":core:data"))
+  implementation(project(":shared-domain"))
+  implementation(project(":shared-networking"))
+  implementation(project(":shared-storage"))
   implementation(project(":feature-notes:api"))
   implementation(project(":feature-notes:implementation"))
   implementation(project(":feature-search:api"))

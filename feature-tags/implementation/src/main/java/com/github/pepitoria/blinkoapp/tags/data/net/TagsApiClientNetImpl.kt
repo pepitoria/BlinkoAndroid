@@ -3,7 +3,7 @@ package com.github.pepitoria.blinkoapp.tags.data.net
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import com.github.pepitoria.blinkoapp.tags.data.ResponseTag
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

@@ -69,7 +69,7 @@ android {
 
 
 dependencies {
-  implementation(project(":core:domain"))
+  implementation(project(":shared-domain"))
   implementation(project(":feature-notes:api"))
   implementation(project(":feature-search:api"))
   implementation(project(":feature-settings:api"))

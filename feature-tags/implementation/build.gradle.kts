@@ -58,8 +58,8 @@ android {
 dependencies {
   implementation(project(":feature-tags:api"))
   implementation(project(":core:presentation"))
-  implementation(project(":core:data"))
-  implementation(project(":core:domain"))
+  implementation(project(":shared-domain"))
+  implementation(project(":shared-networking"))
 
   implementation(libs.accompanist.flowlayout)
 

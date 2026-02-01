@@ -59,7 +59,8 @@ dependencies {
   implementation(project(":core:presentation"))
   implementation(project(":feature-settings:api"))
   implementation(project(":feature-auth:api"))
-  implementation(project(":core:domain"))
+  implementation(project(":shared-domain"))
+  implementation(project(":shared-storage"))
 
   implementation(libs.accompanist.flowlayout)
 

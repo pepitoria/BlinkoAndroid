@@ -1,8 +1,8 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.data.repository
 
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
-import com.github.pepitoria.blinkoapp.domain.data.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
 import io.mockk.coEvery

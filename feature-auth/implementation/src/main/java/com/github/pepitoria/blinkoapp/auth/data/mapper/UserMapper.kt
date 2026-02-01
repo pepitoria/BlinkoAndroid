@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.auth.data.mapper
 
 import com.github.pepitoria.blinkoapp.auth.data.model.LoginResponse
-import com.github.pepitoria.blinkoapp.domain.model.BlinkoUser
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoUser
 import javax.inject.Inject
 
 class UserMapper @Inject constructor() {

@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.github.pepitoria.blinkoapp.auth.data.model.LoginRequest
 import com.github.pepitoria.blinkoapp.auth.data.model.LoginResponse
-import com.github.pepitoria.blinkoapp.data.model.ApiResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
