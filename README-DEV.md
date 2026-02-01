@@ -6,9 +6,9 @@ Technical documentation for the Blinko Android client.
 
 The app follows **MVVM + Clean Architecture** and is **mid-migration** from a monolithic 3-module layout (`core:data`, `core:domain`, `core:presentation`) to a feature-module architecture with `api`/`implementation` splits.
 
-Features already extracted: `feature-auth`, `feature-search`, `feature-settings`, `feature-tags`. The `core` modules still contain note-related feature code (screens, use cases, repositories, API clients) that has not yet been migrated out.
+All feature code has been extracted: `feature-auth`, `feature-notes`, `feature-search`, `feature-settings`, `feature-tags`. The `core` modules now contain only shared infrastructure (networking, theme, navigation, base classes) — no feature code remains.
 
-The end goal is to **eliminate the `core` modules entirely**. All shared infrastructure will be split into purpose-specific `shared-*` modules (e.g. `shared-networking`, `shared-theme`, `shared-navigation`), and all remaining feature code will move into `feature-notes`.
+The end goal is to **eliminate the `core` modules entirely**. All shared infrastructure will be split into purpose-specific `shared-*` modules (e.g. `shared-networking`, `shared-theme`, `shared-navigation`).
 
 ### Layers
 
@@ -24,8 +24,8 @@ UI (Compose) → ViewModel → Use Case → Repository Interface → Repository 
 
 ```
 User action → ViewModel calls UseCase
-  → UseCase calls Repository (interface in :core:domain)
-    → RepositoryImpl (in :core:data) calls BlinkoApiClient
+  → UseCase calls Repository (interface in feature:api)
+    → RepositoryImpl (in feature:implementation) calls ApiClient
       → Retrofit HTTP request
     → Returns ApiResult → mapped to BlinkoResult<T>
   → ViewModel updates StateFlow
@@ -38,12 +38,15 @@ User action → ViewModel calls UseCase
 BlinkoAndroid/
 ├── app/                              # Application entry point, wires all modules
 ├── core/
-│   ├── data/                         # Networking (Retrofit/OkHttp), repositories, local storage
-│   ├── domain/                       # Use cases, domain models, repository interfaces
-│   └── presentation/                 # Shared UI: navigation, theme, base ViewModel, common screens
+│   ├── data/                         # Shared: Retrofit/OkHttp setup, ApiResult, local storage
+│   ├── domain/                       # Shared: BlinkoResult, session models, auth contract
+│   └── presentation/                 # Shared: navigation, theme, base ViewModel, tab bar, common UI
 ├── feature-auth/
 │   ├── api/                          # Public interfaces (AuthFactory, SessionUseCases)
 │   └── implementation/               # Login screen, auth repository, DI module
+├── feature-notes/
+│   ├── api/                          # Public interfaces (NotesFactory, NoteRepository, NoteSearchUseCase, NoteListItem, domain models)
+│   └── implementation/               # Note screens, ViewModels, use cases, API client, repository, DTOs, DI module
 ├── feature-search/
 │   ├── api/                          # Public interfaces (SearchFactory)
 │   └── implementation/               # Search screen, ViewModel, DI module
@@ -86,53 +89,34 @@ feature-*/
         └── *Module.kt          # Hilt module binding interfaces to implementations
 ```
 
-## Core Modules (legacy — being phased out)
+## Core Modules (shared infrastructure — being phased out)
 
-The `core` modules are a remnant of the original 3-module architecture. They currently hold both shared infrastructure and note-related feature code. The plan is to dismantle them entirely: feature code moves to `feature-notes`, and shared infrastructure moves to dedicated `shared-*` modules.
+The `core` modules are a remnant of the original 3-module architecture. All feature code has been extracted to feature modules. Only shared infrastructure remains in core. The plan is to dismantle them entirely into dedicated `shared-*` modules.
 
 ### core:domain
 
-Pure Kotlin module.
-
-**Shared infrastructure** → will move to `shared-*` modules:
+Pure Kotlin module. Contains shared domain types:
 - `BlinkoResult<T>` — sealed result type (Success/Error) → `shared-domain`
 - `BlinkoSession`, `BlinkoUser` — auth/session models → `shared-domain`
 - `AuthenticationRepository` — auth contract → `shared-domain`
 - `LocalStorage` — persistence interface → `shared-domain`
 
-**Feature code** → will move to `feature-notes`:
-- Use cases: `NoteListUseCase`, `NoteSearchUseCase`, `NoteUpsertUseCase`, `NoteDeleteUseCase`, `NoteListByIdsUseCase`
-- `NoteRepository` interface
-- `BlinkoNote`, `BlinkoNoteType` models
-
 ### core:data
 
-**Shared infrastructure** → will move to `shared-*` modules:
+Shared networking and storage infrastructure:
 - `RetrofitModule` — Retrofit 3 + OkHttp 5 setup, logging interceptor, 30s timeouts → `shared-networking`
-- `BlinkoApiModule` — flavor-aware API client selection → `shared-networking`
 - `LocalStorageSharedPreferences` — `LocalStorage` implementation → `shared-storage`
 - `ApiResult<T>` — generic API response wrapper → `shared-networking`
 - `ApiResultExtensions` — shared result mapping → `shared-networking`
 
-**Feature code** → will move to `feature-notes`:
-- `BlinkoApiClient` interface and its implementations (`BlinkoApiClientNetImpl`, `BlinkoLocalFakesApiClientImpl`)
-- `NoteRepositoryApiImpl`
-- Note DTOs: `NoteResponse`, `NoteListRequest`, `NoteListByIdsRequest`, `UpsertRequest`, `DeleteNoteRequest`
-- Note mappers: `NoteExtensions`
-
 ### core:presentation
 
-**Shared infrastructure** → will move to `shared-*` modules:
+Shared UI components and navigation:
 - `BlinkoNavigationRouter`, `BlinkoNavigationController`, `BlinkoNavigators` → `shared-navigation`
 - `NavigationActivity` (hosts Compose NavHost) → `shared-navigation`
 - `BlinkoViewModel` with lifecycle awareness (`onStart`/`onStop`) → `shared-ui`
 - Material3 colors, typography, custom components (`BlinkoTextField`, `BlinkoPasswordField`, `BlinkoButton`) → `shared-theme`
 - `TabBarComposable`, `Loading` → `shared-ui`
-
-**Feature code** → will move to `feature-notes`:
-- `NoteListScreenComposable` + `NoteListScreenViewModel`
-- `NoteEditScreenComposable` + `NoteEditScreenViewModel`
-- `ShareAndEditWithBlinkoActivity` + `ShareAndEditWithBlinkoViewModel`
 
 ## Navigation
 
@@ -158,12 +142,11 @@ Navigation helpers are defined as extension functions on `NavHostController` in 
 **Hilt 2.57.1** with KSP.
 
 Key modules:
-- `RetrofitModule` — provides OkHttpClient and Retrofit instance (singleton scope)
-- `BlinkoApiModule` — provides the correct `BlinkoApiClient` based on build flavor
-- `RepositoryModule` — binds `NoteRepository` to its implementation
-- `AuthModule` — binds auth factory, session use cases, and auth repository
-- `SearchModule` — binds search factory
-- `SettingsModule` — binds settings factory and use cases
+- `RetrofitModule` (core:data) — provides OkHttpClient and Retrofit instance (singleton scope)
+- `NotesModule` (feature-notes:implementation) — provides NotesApi, NotesApiClient (flavor-aware), binds NoteRepository and NotesFactory
+- `AuthModule` (feature-auth:implementation) — binds auth factory, session use cases, and auth repository
+- `SearchModule` (feature-search:implementation) — binds search factory
+- `SettingsModule` (feature-settings:implementation) — binds settings factory and use cases
 
 ViewModels use `@HiltViewModel` with constructor injection.
 
@@ -215,34 +198,25 @@ ViewModels use `@HiltViewModel` with constructor injection.
 - **Coroutine testing**: kotlinx-coroutines-test 1.10.2
 - **UI testing**: Espresso + Compose test utilities
 
-Unit tests exist in `core:data` (e.g., `NoteRepositoryApiImplTest`). Tests use `runTest` for coroutine testing and `coEvery`/`coVerify` from MockK.
+Unit tests exist in `feature-notes:implementation` (e.g., `NoteRepositoryApiImplTest`). Tests use `runTest` for coroutine testing and `coEvery`/`coVerify` from MockK.
 
 ## Migration Status
 
-### Completed
+### Feature extraction — completed
 
 | Feature         | Extracted from core | api/impl split |
 |-----------------|---------------------|----------------|
 | Authentication  | Yes                 | Yes            |
+| Notes           | Yes                 | Yes            |
 | Search          | Yes                 | Yes            |
 | Settings        | Yes                 | Yes            |
 | Tags            | Yes                 | Yes            |
 
-### Pending
+All feature code has been extracted from core. The core modules now contain only shared infrastructure (networking, theme, navigation, base classes).
 
-| Component                        | Current location     | Target                         |
-|----------------------------------|----------------------|--------------------------------|
-| Note list screen + ViewModel     | core:presentation    | feature-notes:implementation   |
-| Note edit screen + ViewModel     | core:presentation    | feature-notes:implementation   |
-| Share-with-Blinko activity + VM  | core:presentation    | feature-notes:implementation   |
-| Note use cases (5)               | core:domain          | feature-notes:implementation   |
-| NoteRepository interface         | core:domain          | feature-notes:api              |
-| BlinkoNote, BlinkoNoteType       | core:domain          | feature-notes:api              |
-| NoteRepositoryApiImpl            | core:data            | feature-notes:implementation   |
-| BlinkoApiClient + impls          | core:data            | feature-notes:implementation   |
-| Note DTOs and mappers            | core:data            | feature-notes:implementation   |
+### Remaining — split core into shared modules
 
-Once all steps are complete, the `core` directory will be deleted entirely.
+The `core` modules still need to be decomposed into purpose-specific `shared-*` modules. Once complete, the `core` directory will be deleted entirely.
 
 ### Target module structure
 
@@ -274,28 +248,33 @@ BlinkoAndroid/
 
 ## TODO/Roadmap:
 
-### 1. Extract `feature-notes` from core
+### 1. Extract `feature-notes` from core — DONE
 
-- [ ] Create `feature-notes/api` module
-  - [ ] Move `NoteRepository` interface, `BlinkoNote`, `BlinkoNoteType`
-  - [ ] Create `NotesFactory` and `NotesEntryPoint` (following existing feature pattern)
-- [ ] Create `feature-notes/implementation` module
-  - [ ] Move note use cases (`NoteListUseCase`, `NoteSearchUseCase`, `NoteUpsertUseCase`, `NoteDeleteUseCase`, `NoteListByIdsUseCase`)
-  - [ ] Move `NoteRepositoryApiImpl`
-  - [ ] Move `BlinkoApiClient` interface + implementations (`BlinkoApiClientNetImpl`, `BlinkoLocalFakesApiClientImpl`)
-  - [ ] Move note DTOs (`NoteResponse`, `NoteListRequest`, `NoteListByIdsRequest`, `UpsertRequest`, `DeleteNoteRequest`)
-  - [ ] Move note mappers (`NoteExtensions`)
-  - [ ] Move `NoteListScreenComposable` + `NoteListScreenViewModel`
-  - [ ] Move `NoteEditScreenComposable` + `NoteEditScreenViewModel`
-  - [ ] Move `ShareAndEditWithBlinkoActivity` + `ShareAndEditWithBlinkoViewModel`
-  - [ ] Create `NotesModule` Hilt DI module
-- [ ] Update `core:presentation` navigation controller to use `NotesFactory`
-- [ ] Move `NoteRepositoryApiImplTest` to `feature-notes`
+- [x] Create `feature-notes/api` module
+  - [x] Move `NoteRepository` interface, `BlinkoNote`, `BlinkoNoteType`
+  - [x] Create `NotesFactory` and `NotesEntryPoint` (following existing feature pattern)
+  - [x] Move `NoteSearchUseCase` (public API used by feature-search)
+  - [x] Move `NoteListItem` composable (shared UI used by feature-search)
+- [x] Create `feature-notes/implementation` module
+  - [x] Move note use cases (`NoteListUseCase`, `NoteUpsertUseCase`, `NoteDeleteUseCase`, `NoteListByIdsUseCase`)
+  - [x] Move `NoteRepositoryApiImpl`
+  - [x] Move `NotesApiClient` interface + implementations (`NotesApiClientNetImpl`, `NotesLocalFakesApiClientImpl`)
+  - [x] Move note DTOs (`NoteResponse`, `NoteListRequest`, `NoteListByIdsRequest`, `UpsertRequest`, `DeleteNoteRequest`)
+  - [x] Move note mappers (`NoteExtensions`)
+  - [x] Move `NoteListScreenComposable` + `NoteListScreenViewModel`
+  - [x] Move `NoteEditScreenComposable` + `NoteEditScreenViewModel`
+  - [x] Move `ShareAndEditWithBlinkoActivity` + `ShareAndEditWithBlinkoViewModel`
+  - [x] Create `NotesModule` Hilt DI module
+- [x] Update `core:presentation` navigation controller to use `NotesFactory`
+- [x] Move `NoteRepositoryApiImplTest` to `feature-notes`
+- [x] Update `feature-search` and `feature-auth` to depend on `feature-notes:api`
+- [x] Remove all old note code from core modules
+- [x] Remove `BlinkoApiModule`, `RepositoryModule`, and `provideBlinkoApi` from core:data
 
 ### 2. Split `core:data` into shared modules
 
 - [ ] Create `shared-networking` module
-  - [ ] Move `RetrofitModule`, `BlinkoApiModule`, `ApiResult`, `ApiResultExtensions`
+  - [ ] Move `RetrofitModule`, `ApiResult`, `ApiResultExtensions`
 - [ ] Create `shared-storage` module
   - [ ] Move `LocalStorage` interface (from `core:domain`) and `LocalStorageSharedPreferences` + `LocalStorageModule` (from `core:data`)
 - [ ] Update all feature modules to depend on `shared-networking` / `shared-storage` instead of `core:data`
