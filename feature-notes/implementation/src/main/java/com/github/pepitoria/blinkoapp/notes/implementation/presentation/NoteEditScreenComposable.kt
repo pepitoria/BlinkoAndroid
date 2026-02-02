@@ -31,12 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
-import com.github.pepitoria.blinkoapp.presentation.R
-import com.github.pepitoria.blinkoapp.ui.base.ComposableLifecycleEvents
-import com.github.pepitoria.blinkoapp.ui.loading.Loading
-import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
-import com.github.pepitoria.blinkoapp.ui.theme.BlinkoButton
-import com.github.pepitoria.blinkoapp.ui.theme.BlinkoTextField
+import com.github.pepitoria.blinkoapp.shared.ui.R
+import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
+import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
+import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoButton
+import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoTextField
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable

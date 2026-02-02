@@ -21,10 +21,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "BlinkoApp"
 include(":app")
-include(":core:presentation")
 include(":shared-domain")
 include(":shared-networking")
 include(":shared-storage")
+include(":shared-theme")
+include(":shared-navigation:api")
+include(":shared-navigation:implementation")
+include(":shared-ui")
 include(":feature-search:api")
 include(":feature-search:implementation")
 include(":feature-tags:api")

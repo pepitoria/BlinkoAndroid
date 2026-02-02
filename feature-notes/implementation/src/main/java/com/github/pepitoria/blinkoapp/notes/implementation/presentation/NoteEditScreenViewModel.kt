@@ -7,7 +7,7 @@ import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteListByIdsUseCase
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteUpsertUseCase
-import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
+import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

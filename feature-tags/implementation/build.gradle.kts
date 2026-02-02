@@ -57,7 +57,7 @@ android {
 
 dependencies {
   implementation(project(":feature-tags:api"))
-  implementation(project(":core:presentation"))
+  implementation(project(":shared-ui"))
   implementation(project(":shared-domain"))
   implementation(project(":shared-networking"))
 

@@ -56,7 +56,8 @@ android {
 }
 
 dependencies {
-  implementation(project(":core:presentation"))
+  implementation(project(":shared-theme"))
+  implementation(project(":shared-ui"))
   implementation(project(":feature-settings:api"))
   implementation(project(":feature-auth:api"))
   implementation(project(":shared-domain"))

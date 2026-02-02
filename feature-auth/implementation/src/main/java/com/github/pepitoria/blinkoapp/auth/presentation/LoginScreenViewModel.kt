@@ -5,7 +5,7 @@ import com.github.pepitoria.blinkoapp.auth.api.domain.SessionResult
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
 import com.github.pepitoria.blinkoapp.auth.implementation.BuildConfig
 import com.github.pepitoria.blinkoapp.shared.domain.data.LocalStorage
-import com.github.pepitoria.blinkoapp.ui.base.BlinkoViewModel
+import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

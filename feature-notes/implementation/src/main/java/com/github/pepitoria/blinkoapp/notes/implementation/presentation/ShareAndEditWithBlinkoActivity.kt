@@ -19,8 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
-import com.github.pepitoria.blinkoapp.presentation.R
-import com.github.pepitoria.blinkoapp.ui.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.shared.ui.R
+import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber

@@ -59,7 +59,8 @@ dependencies {
   implementation(project(":feature-search:api"))
   implementation(project(":feature-notes:api"))
   implementation(project(":feature-tags:api"))
-  implementation(project(":core:presentation"))
+  implementation(project(":shared-theme"))
+  implementation(project(":shared-ui"))
   implementation(project(":shared-domain"))
 
   implementation(libs.androidx.core.ktx)
