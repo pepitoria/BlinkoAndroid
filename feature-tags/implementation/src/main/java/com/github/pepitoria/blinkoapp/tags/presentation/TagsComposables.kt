@@ -11,8 +11,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
-import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoButton
+import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
 
 @Composable
 internal fun TagListComposableInternal(

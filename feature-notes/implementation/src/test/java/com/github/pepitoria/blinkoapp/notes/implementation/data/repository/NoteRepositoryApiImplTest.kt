@@ -1,10 +1,10 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.data.repository
 
-import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
-import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

@@ -1,8 +1,8 @@
 package com.github.pepitoria.blinkoapp.tags.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.github.pepitoria.blinkoapp.tags.domain.GetTagsUseCase
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
+import com.github.pepitoria.blinkoapp.tags.domain.GetTagsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

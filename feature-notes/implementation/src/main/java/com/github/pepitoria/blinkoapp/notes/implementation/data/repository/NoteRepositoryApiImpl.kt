@@ -1,9 +1,5 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.data.repository
 
-import com.github.pepitoria.blinkoapp.shared.networking.mapper.toBlinkoResult
-import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
-import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
-import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteRepository
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.implementation.data.mapper.toBlinkoNote
@@ -13,6 +9,10 @@ import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.N
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelistbyids.NoteListByIdsRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
+import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
+import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
+import com.github.pepitoria.blinkoapp.shared.networking.mapper.toBlinkoResult
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import javax.inject.Inject
 
 class NoteRepositoryApiImpl @Inject constructor(

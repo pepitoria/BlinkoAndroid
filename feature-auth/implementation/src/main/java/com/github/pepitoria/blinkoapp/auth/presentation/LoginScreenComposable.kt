@@ -39,13 +39,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.auth.implementation.R
-import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
-import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
 import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.shared.theme.getBackgroundColor
+import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoButton
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoPasswordField
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoTextField
-import com.github.pepitoria.blinkoapp.shared.theme.getBackgroundColor
+import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable

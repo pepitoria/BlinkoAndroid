@@ -2,13 +2,13 @@ package com.github.pepitoria.blinkoapp.notes.implementation.data.net
 
 import android.content.Context
 import android.net.ConnectivityManager
-import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notedelete.DeleteNoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteListRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelistbyids.NoteListByIdsRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.noteupsert.UpsertRequest
+import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

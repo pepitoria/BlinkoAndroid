@@ -2,13 +2,13 @@ package com.github.pepitoria.blinkoapp.notes.implementation.di
 
 import com.github.pepitoria.blinkoapp.notes.api.NotesFactory
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteRepository
+import com.github.pepitoria.blinkoapp.notes.implementation.BuildConfig
+import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApi
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClientNetImpl
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesLocalFakesApiClientImpl
 import com.github.pepitoria.blinkoapp.notes.implementation.data.repository.NoteRepositoryApiImpl
 import com.github.pepitoria.blinkoapp.notes.implementation.presentation.NotesFactoryImpl
-import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApi
-import com.github.pepitoria.blinkoapp.notes.implementation.BuildConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

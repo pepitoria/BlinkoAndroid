@@ -26,12 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.shared.theme.getBackgroundColor
 import com.github.pepitoria.blinkoapp.shared.ui.R
 import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
-import com.github.pepitoria.blinkoapp.shared.ui.tabbar.TabBar
-import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoButton
-import com.github.pepitoria.blinkoapp.shared.theme.getBackgroundColor
+import com.github.pepitoria.blinkoapp.shared.ui.tabbar.TabBar
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable

@@ -1,6 +1,5 @@
 package com.github.pepitoria.blinkoapp.shared.networking
 
-import com.github.pepitoria.blinkoapp.shared.networking.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
