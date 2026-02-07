@@ -10,16 +10,20 @@ import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelistby
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.noteupsert.UpsertRequest
 import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class NotesApiClientNetImpl @Inject constructor(
   @ApplicationContext private val appContext: Context,
   private val api: NotesApi,
-): NotesApiClient {
+) : NotesApiClient {
 
-  override suspend fun noteList(url: String, token: String, noteListRequest: NoteListRequest): ApiResult<List<NoteResponse>> {
+  override suspend fun noteList(
+    url: String,
+    token: String,
+    noteListRequest: NoteListRequest,
+  ): ApiResult<List<NoteResponse>> {
     if (!isConnected()) {
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
@@ -27,7 +31,7 @@ class NotesApiClientNetImpl @Inject constructor(
     val noteListUrl = if (url.endsWith("/")) {
       "${url}api/v1/note/list"
     } else {
-      "${url}/api/v1/note/list"
+      "$url/api/v1/note/list"
     }
 
     return withContext(Dispatchers.IO) {
@@ -44,9 +48,9 @@ class NotesApiClientNetImpl @Inject constructor(
           apiResult = ApiResult.ApiSuccess(resp)
         }
       } else {
-         apiResult = ApiResult.ApiErrorResponse(
+        apiResult = ApiResult.ApiErrorResponse(
           code = apiResponse.code(),
-          message = apiResponse.message()
+          message = apiResponse.message(),
         )
       }
 
@@ -54,7 +58,11 @@ class NotesApiClientNetImpl @Inject constructor(
     }
   }
 
-  override suspend fun noteListByIds(url: String, token: String, noteListByIdsRequest: NoteListByIdsRequest): ApiResult<List<NoteResponse>> {
+  override suspend fun noteListByIds(
+    url: String,
+    token: String,
+    noteListByIdsRequest: NoteListByIdsRequest,
+  ): ApiResult<List<NoteResponse>> {
     if (!isConnected()) {
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
@@ -62,7 +70,7 @@ class NotesApiClientNetImpl @Inject constructor(
     val noteListUrl = if (url.endsWith("/")) {
       "${url}api/v1/note/list-by-ids"
     } else {
-      "${url}/api/v1/note/list-by-ids"
+      "$url/api/v1/note/list-by-ids"
     }
 
     return withContext(Dispatchers.IO) {
@@ -81,7 +89,7 @@ class NotesApiClientNetImpl @Inject constructor(
       } else {
         apiResult = ApiResult.ApiErrorResponse(
           code = apiResponse.code(),
-          message = apiResponse.message()
+          message = apiResponse.message(),
         )
       }
 
@@ -89,7 +97,11 @@ class NotesApiClientNetImpl @Inject constructor(
     }
   }
 
-  override suspend fun upsertNote(url: String, token: String, upsertNoteRequest: UpsertRequest): ApiResult<NoteResponse> {
+  override suspend fun upsertNote(
+    url: String,
+    token: String,
+    upsertNoteRequest: UpsertRequest,
+  ): ApiResult<NoteResponse> {
     if (!isConnected()) {
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
@@ -97,7 +109,7 @@ class NotesApiClientNetImpl @Inject constructor(
     val upsertNoteUrl = if (url.endsWith("/")) {
       "${url}api/v1/note/upsert"
     } else {
-      "${url}/api/v1/note/upsert"
+      "$url/api/v1/note/upsert"
     }
 
     return withContext(Dispatchers.IO) {
@@ -116,7 +128,7 @@ class NotesApiClientNetImpl @Inject constructor(
       } else {
         apiResult = ApiResult.ApiErrorResponse(
           code = apiResponse.code(),
-          message = apiResponse.message()
+          message = apiResponse.message(),
         )
       }
 
@@ -124,7 +136,11 @@ class NotesApiClientNetImpl @Inject constructor(
     }
   }
 
-  override suspend fun deleteNote(url: String, token: String, deleteNoteRequest: DeleteNoteRequest): ApiResult<DeleteNoteResponse> {
+  override suspend fun deleteNote(
+    url: String,
+    token: String,
+    deleteNoteRequest: DeleteNoteRequest,
+  ): ApiResult<DeleteNoteResponse> {
     if (!isConnected()) {
       return ApiResult.ApiErrorResponse(message = "No internet connection")
     }
@@ -132,7 +148,7 @@ class NotesApiClientNetImpl @Inject constructor(
     val deleteNoteUrl = if (url.endsWith("/")) {
       "${url}api/v1/note/batch-trash"
     } else {
-      "${url}/api/v1/note/batch-trash"
+      "$url/api/v1/note/batch-trash"
     }
 
     return withContext(Dispatchers.IO) {
@@ -151,7 +167,7 @@ class NotesApiClientNetImpl @Inject constructor(
       } else {
         apiResult = ApiResult.ApiErrorResponse(
           code = apiResponse.code(),
-          message = apiResponse.message()
+          message = apiResponse.message(),
         )
       }
 
@@ -165,5 +181,4 @@ class NotesApiClientNetImpl @Inject constructor(
     val netInfo = connectivityManager.activeNetworkInfo
     return netInfo != null && netInfo.isConnected
   }
-
 }

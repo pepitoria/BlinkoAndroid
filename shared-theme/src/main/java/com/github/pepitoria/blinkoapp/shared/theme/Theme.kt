@@ -24,7 +24,7 @@ private val DarkColorScheme = darkColorScheme(
   onPrimary = White,
   onSecondary = Black,
   onSurface = White,
-  )
+)
 
 private val LightColorScheme = lightColorScheme(
   primary = White,
@@ -44,15 +44,15 @@ private val LightColorScheme = lightColorScheme(
   onTertiary = Color.White,
 
   onSurface = Color(0xFF1C1B1F),
-  */
+   */
 )
 
 object BlinkoAppTheme {
 
   @Composable
   fun cardColors(): CardColors = CardDefaults.cardColors(
-      containerColor = MaterialTheme.colorScheme.background,
-    )
+    containerColor = MaterialTheme.colorScheme.background,
+  )
 }
 
 @Composable
@@ -60,7 +60,7 @@ fun BlinkoAppTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   // Dynamic color is available on Android 12+
   dynamicColor: Boolean = true,
-  content: @Composable () -> Unit
+  content: @Composable () -> Unit,
 ) {
   val colorScheme = when {
 //    dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -83,7 +83,7 @@ fun BlinkoAppTheme(
   MaterialTheme(
     colorScheme = colorScheme,
     typography = Typography,
-    content = content
+    content = content,
   )
 }
 

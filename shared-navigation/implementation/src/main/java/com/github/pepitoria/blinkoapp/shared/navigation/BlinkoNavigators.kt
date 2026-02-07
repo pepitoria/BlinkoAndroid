@@ -17,7 +17,7 @@ fun NavHostController.goToEditWithBlinko(noteType: Int): () -> Unit = {
   val intent = Intent(Intent.ACTION_SEND).apply {
     component = ComponentName(
       context,
-      "com.github.pepitoria.blinkoapp.notes.implementation.presentation.ShareAndEditWithBlinkoActivity"
+      "com.github.pepitoria.blinkoapp.notes.implementation.presentation.ShareAndEditWithBlinkoActivity",
     )
     type = "text/plain"
     putExtra(Intent.EXTRA_TEXT, "")
@@ -34,7 +34,7 @@ fun NavHostController.goToHome(): () -> Unit = {
 }
 
 fun NavHostController.goToNoteList(): () -> Unit = {
-  this.navigate(route = BlinkoNavigationRouter.NavHome.NoteList.route){
+  this.navigate(route = BlinkoNavigationRouter.NavHome.NoteList.route) {
     launchSingleTop = true
     popUpTo(0)
   }

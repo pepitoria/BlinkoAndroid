@@ -43,7 +43,7 @@ fun NoteListScreenComposableInternal(
   goToSettings: () -> Unit,
   goToNewNote: () -> Unit,
   goToTodoList: () -> Unit,
-  ) {
+) {
   viewModel.setNoteType(noteType)
   ComposableLifecycleEvents(viewModel = viewModel)
 
@@ -62,7 +62,7 @@ fun NoteListScreenComposableInternal(
       goToSettings = goToSettings,
       floatingActionButton = {
         AddNoteFAB(
-          onClick = goToNewNote
+          onClick = goToNewNote,
         )
       },
     ) { paddingValues ->
@@ -93,7 +93,7 @@ fun NoteListScreenComposableInternal(
 @Composable
 fun AddNoteFAB(onClick: () -> Unit) {
   FloatingActionButton(
-    onClick = { onClick() }
+    onClick = { onClick() },
   ) {
     Icon(Icons.Filled.Add, stringResource(id = R.string.note_list_add_note))
   }
@@ -103,9 +103,6 @@ fun AddNoteFAB(onClick: () -> Unit) {
 private fun EmptyNoteList() {
   Text(text = stringResource(id = R.string.note_list_no_notes_found))
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,21 +116,20 @@ private fun NoteList(
   onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> },
   markAsDone: (BlinkoNote) -> Unit = { _ -> },
 ) {
-
   PullToRefreshBox(
     isRefreshing = isLoading,
     onRefresh = onRefresh,
     modifier = Modifier
       .fillMaxSize()
       .background(color = getBackgroundColor())
-      .padding(16.dp)
+      .padding(16.dp),
   ) {
     LazyColumn(
       modifier = Modifier.fillMaxSize(),
     ) {
       items(
         items = notes,
-        key = { it.id ?: 0 }
+        key = { it.id ?: 0 },
       ) { note ->
         NoteListItem(
           note = note,
@@ -154,7 +150,7 @@ private fun NoteList(
 
         items(
           items = archived,
-          key = { it.id ?: 0 }
+          key = { it.id ?: 0 },
         ) { note ->
           NoteListItem(
             note = note,
@@ -186,10 +182,10 @@ private fun NoteListPreview() {
           content = "This is another note",
           type = BlinkoNoteType.TODO,
           isArchived = false,
-        )
+        ),
       ),
       noteType = BlinkoNoteType.TODO,
-      archived = emptyList()
+      archived = emptyList(),
     )
   }
 }

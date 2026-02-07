@@ -7,9 +7,7 @@ import javax.inject.Inject
 class AuthFactoryImpl @Inject constructor() : AuthFactory {
 
   @Composable
-  override fun LoginScreenComposable(
-    goToHome: () -> Unit,
-  ) {
+  override fun LoginScreenComposable(goToHome: () -> Unit) {
     LoginWidget(
       goToHome = goToHome,
     )

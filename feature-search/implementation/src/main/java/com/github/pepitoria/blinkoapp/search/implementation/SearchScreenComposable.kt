@@ -59,7 +59,7 @@ fun SearchScreenInternalComposable(
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   goToTodoList: () -> Unit,
-  ) {
+) {
   ComposableLifecycleEvents(viewModel = viewModel)
 
   val isLoading = viewModel.isLoading.collectAsState()
@@ -87,7 +87,6 @@ fun SearchScreenInternalComposable(
         onSearch = onSearch,
         noteOnClick = noteOnClick,
       )
-
     }
   }
 }
@@ -99,12 +98,12 @@ private fun SearchScreen(
   query: String,
   onSearch: (String) -> Unit,
   noteOnClick: (Int) -> Unit = {},
-  ) {
+) {
   Column(
     modifier = Modifier
       .fillMaxSize()
       .background(
-        color = getBackgroundColor()
+        color = getBackgroundColor(),
       )
       .padding(16.dp),
   ) {
@@ -142,7 +141,7 @@ private fun SearchResults(
     items(notes) { note ->
       NoteListItem(
         note = note,
-        onClick = noteOnClick
+        onClick = noteOnClick,
       )
       Spacer(modifier = Modifier.height(8.dp))
     }
@@ -183,15 +182,16 @@ private fun EmptySearch(
   )
 }
 
-private fun getTagsFactory(context: Context, isInPreview: Boolean): TagsFactory {
+private fun getTagsFactory(
+  context: Context,
+  isInPreview: Boolean,
+): TagsFactory {
   return if (!isInPreview) {
     EntryPointAccessors.fromActivity(context as Activity, TagsEntryPoint::class.java).getTagsFactory()
   } else {
     object : TagsFactory {
       @Composable
-      override fun TagListComposable(
-        onTagClick: (String) -> Unit,
-      ) {
+      override fun TagListComposable(onTagClick: (String) -> Unit) {
         Text(
           modifier = Modifier
             .fillMaxWidth(),
@@ -222,7 +222,7 @@ private fun SearchBar(
   Box {
     Column(
       modifier = Modifier
-        .height(64.dp)
+        .height(64.dp),
     ) {
       BlinkoTextField(
         label = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
@@ -243,27 +243,30 @@ private fun SearchBar(
 
     Column(
       modifier = Modifier
-        .align(Alignment.CenterEnd)
+        .align(Alignment.CenterEnd),
     ) {
-
       if (query.isEmpty()) {
         Icon(
           painter = painterResource(id = com.github.pepitoria.blinkoapp.search.implementation.R.drawable.search_24px),
           tint = Color.Gray,
-          contentDescription = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
+          contentDescription = stringResource(
+            com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint,
+          ),
           modifier = Modifier
-            .padding(end = 8.dp)
+            .padding(end = 8.dp),
         )
       } else {
         Icon(
           painter = painterResource(id = com.github.pepitoria.blinkoapp.search.implementation.R.drawable.close_24px),
           tint = Color.Gray,
-          contentDescription = stringResource(com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint),
+          contentDescription = stringResource(
+            com.github.pepitoria.blinkoapp.search.implementation.R.string.search_screen_hint,
+          ),
           modifier = Modifier
             .padding(end = 8.dp)
             .clickable {
               onSearch("")
-            }
+            },
         )
       }
 

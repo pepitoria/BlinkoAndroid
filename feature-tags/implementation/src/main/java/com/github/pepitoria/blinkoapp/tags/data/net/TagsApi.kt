@@ -11,7 +11,6 @@ interface TagsApi {
   @GET()
   suspend fun getTags(
     @Url url: String,
-    @Header("Authorization") authorization: String
+    @Header("Authorization") authorization: String,
   ): Response<List<ResponseTag>>
-
 }

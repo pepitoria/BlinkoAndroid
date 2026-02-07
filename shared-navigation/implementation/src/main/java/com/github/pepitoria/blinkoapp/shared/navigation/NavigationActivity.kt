@@ -34,5 +34,4 @@ class NavigationActivity : ComponentActivity() {
       BlinkoNavigationController(navController, searchFactory, authFactory, settingsFactory, notesFactory)
     }
   }
-
 }

@@ -26,7 +26,6 @@ fun BlinkoNavigationController(
   settingsFactory: SettingsFactory,
   notesFactory: NotesFactory,
 ) {
-
   val defaultTabRoute = getDefaultTabRoute()
 
   NavHost(
@@ -35,7 +34,7 @@ fun BlinkoNavigationController(
     modifier = Modifier
       .fillMaxSize(),
   ) {
-    ///// AUTHENTICATION
+    // /// AUTHENTICATION
     navigation(
       startDestination = BlinkoNavigationRouter.NavAuth.Login.route,
       route = BlinkoNavigationRouter.NavAuth.route,
@@ -45,7 +44,7 @@ fun BlinkoNavigationController(
       }
     }
 
-    ///// Home
+    // /// Home
     navigation(
       startDestination = defaultTabRoute,
       route = BlinkoNavigationRouter.NavHome.route,
@@ -85,7 +84,8 @@ fun BlinkoNavigationController(
         HomeNoteEditNavigator(
           navController = navController,
           notesFactory = notesFactory,
-          id = it.arguments?.getInt(BlinkoNavigationRouter.NavHome.ARG_NOTE_ID) ?: 0)
+          id = it.arguments?.getInt(BlinkoNavigationRouter.NavHome.ARG_NOTE_ID) ?: 0,
+        )
       }
       composable(route = BlinkoNavigationRouter.NavHome.Settings.route) {
         SettingsNavigator(
@@ -104,7 +104,7 @@ private fun getDefaultTabRoute(): String {
 
   val getDefaultTabUseCase = EntryPointAccessors.fromActivity(
     activity = activity,
-    entryPoint = SettingsEntryPoint::class.java
+    entryPoint = SettingsEntryPoint::class.java,
   ).getDefaultTabUseCase()
 
   val defaultTab = getDefaultTabUseCase.getDefaultTab()

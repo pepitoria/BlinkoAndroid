@@ -2,7 +2,6 @@ package com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist
 
 import com.google.gson.annotations.SerializedName
 
-
 data class NoteListRequest(
   @SerializedName("tagId") val tagId: Int? = null,
   @SerializedName("page") val page: Int = 1,

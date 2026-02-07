@@ -80,9 +80,9 @@ fun LoginWidget(
             url = url,
             userName = userName,
             password = password,
-            insecureConnectionCheck = insecureConnectionCheck
+            insecureConnectionCheck = insecureConnectionCheck,
           )
-        }
+        },
       )
     }
   }
@@ -93,7 +93,6 @@ private fun ListenForEvents(
   events: SharedFlow<LoginScreenViewModel.Events>,
   goToHome: () -> Unit,
 ) {
-
   val context = LocalContext.current
 
   LaunchedEffect(Unit) {
@@ -112,16 +111,13 @@ private fun ListenForEvents(
 
 @Composable
 @Preview
-private fun SessionActive(
-  logout: () -> Unit = {},
-) {
-
+private fun SessionActive(logout: () -> Unit = {}) {
   Column(
     modifier = Modifier
       .fillMaxSize()
       .background(color = getBackgroundColor()),
     verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Text(
       text = stringResource(id = R.string.login_token_session_active),
@@ -140,8 +136,6 @@ private fun SessionActive(
   }
 }
 
-
-
 @Preview
 @Composable
 fun LoginScreenViewState(
@@ -157,7 +151,7 @@ fun LoginScreenViewState(
       .background(getBackgroundColor())
       .padding(32.dp),
     verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Column(
       verticalArrangement = Arrangement.Center,
@@ -194,7 +188,7 @@ fun LoginScreenViewState(
         imeAction = ImeAction.Next,
         modifier = Modifier
           .fillMaxWidth()
-          .focusRequester(first)
+          .focusRequester(first),
       )
       Spacer(modifier = Modifier.height(12.dp))
 
@@ -206,7 +200,7 @@ fun LoginScreenViewState(
         imeAction = ImeAction.Next,
         modifier = Modifier
           .fillMaxWidth()
-          .focusRequester(second)
+          .focusRequester(second),
       )
       Spacer(modifier = Modifier.height(12.dp))
 
@@ -216,22 +210,22 @@ fun LoginScreenViewState(
         onUsernameChange = { password = it },
         modifier = Modifier
           .fillMaxWidth()
-          .focusRequester(third)
+          .focusRequester(third),
       )
 
       if (url.startsWith("http://")) {
         Spacer(modifier = Modifier.height(12.dp))
         Row(
-          verticalAlignment = Alignment.CenterVertically
+          verticalAlignment = Alignment.CenterVertically,
         ) {
           Switch(
             checked = insecureUrlCheckedState,
-            onCheckedChange = { insecureUrlCheckedState = it }
+            onCheckedChange = { insecureUrlCheckedState = it },
           )
           Text(
             text = stringResource(id = R.string.login_token_insecure_url),
             fontSize = 14.sp,
-            modifier = Modifier.padding(start = 8.dp)
+            modifier = Modifier.padding(start = 8.dp),
           )
         }
       }
@@ -251,11 +245,11 @@ fun LoginScreenViewState(
 @Composable
 fun LoginButton(
   onClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   BlinkoButton(
     text = stringResource(id = R.string.login_token_login_button),
     onClick = onClick,
-    modifier = modifier
+    modifier = modifier,
   )
 }

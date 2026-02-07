@@ -10,13 +10,13 @@ import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltViewModel
 class NoteEditScreenViewModel @Inject constructor(
@@ -42,12 +42,15 @@ class NoteEditScreenViewModel @Inject constructor(
       BlinkoNoteType.BLINKO.value,
       BlinkoNoteType.NOTE.value,
       BlinkoNoteType.TODO.value,
-    )
+    ),
   ).asStateFlow()
 
   private var onNoteUpsert: () -> Unit = {}
 
-  fun onStart(noteId: Int = -1, onNoteUpsert: () -> Unit) {
+  fun onStart(
+    noteId: Int = -1,
+    onNoteUpsert: () -> Unit,
+  ) {
     this.onNoteUpsert = onNoteUpsert
 
     if (noteId == -1 || noteUiModel.value != BlinkoNote.EMPTY) {
@@ -57,7 +60,7 @@ class NoteEditScreenViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
       val noteResponse = noteListByIdsUseCase.getNoteById(
-        id = noteId
+        id = noteId,
       )
       _isLoading.value = false
 
@@ -79,7 +82,6 @@ class NoteEditScreenViewModel @Inject constructor(
     noteType: Int = -1,
     isArchived: Boolean? = null,
   ) {
-
     if (content.isNotEmpty()) {
       _noteUiModel.value = _noteUiModel.value.copy(
         content = content,
@@ -88,13 +90,13 @@ class NoteEditScreenViewModel @Inject constructor(
 
     if (noteType != -1) {
       _noteUiModel.value = _noteUiModel.value.copy(
-        type = BlinkoNoteType.fromResponseType(noteType)
+        type = BlinkoNoteType.fromResponseType(noteType),
       )
     }
 
     if (isArchived != null) {
       _noteUiModel.value = _noteUiModel.value.copy(
-        isArchived = isArchived
+        isArchived = isArchived,
       )
     }
   }
@@ -103,7 +105,7 @@ class NoteEditScreenViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       _noteUpdated.value = false
       val response = noteUpsertUseCase.upsertNote(
-        blinkoNote = noteUiModel.value
+        blinkoNote = noteUiModel.value,
       )
       _noteUpdated.value = true
 

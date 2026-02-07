@@ -7,13 +7,13 @@ import com.github.pepitoria.blinkoapp.settings.data.TabsRepository
 import javax.inject.Inject
 
 class DefaultTabUseCaseImpl @Inject constructor(
-    private val tabsRepository: TabsRepository,
-): GetDefaultTabUseCase, SetDefaultTabUseCase {
-    override fun getDefaultTab(): Tab {
-        return tabsRepository.getDefaultTab()
-    }
+  private val tabsRepository: TabsRepository,
+) : GetDefaultTabUseCase, SetDefaultTabUseCase {
+  override fun getDefaultTab(): Tab {
+    return tabsRepository.getDefaultTab()
+  }
 
-    override fun setDefaultTab(tab: Tab) {
-        tabsRepository.setDefaultTab(tab)
-    }
+  override fun setDefaultTab(tab: Tab) {
+    tabsRepository.setDefaultTab(tab)
+  }
 }

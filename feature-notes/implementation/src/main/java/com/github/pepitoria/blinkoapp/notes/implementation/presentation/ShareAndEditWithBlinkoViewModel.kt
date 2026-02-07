@@ -7,12 +7,12 @@ import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteUpsertUseC
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltViewModel
 class ShareAndEditWithBlinkoViewModel @Inject constructor(
@@ -31,7 +31,7 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
   fun updateLocalNote(
     content: String,
     noteType: Int = BlinkoNoteType.BLINKO.value,
-    ) {
+  ) {
     _noteUiModel.value = _noteUiModel.value.copy(
       content = content,
       type = BlinkoNoteType.fromResponseType(noteType),
@@ -40,7 +40,7 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
 
   fun setNoteType(noteType: Int) {
     _noteUiModel.value = _noteUiModel.value.copy(
-      type = BlinkoNoteType.fromResponseType(noteType)
+      type = BlinkoNoteType.fromResponseType(noteType),
     )
   }
 
@@ -48,7 +48,7 @@ class ShareAndEditWithBlinkoViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       _noteCreated.value = false
       val response = noteUpsertUseCase.upsertNote(
-        blinkoNote = noteUiModel.value
+        blinkoNote = noteUiModel.value,
       )
 
       when (response) {

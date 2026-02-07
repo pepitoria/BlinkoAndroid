@@ -33,15 +33,13 @@ private fun BlinkoButtonPreview() {
     modifier = Modifier
       .fillMaxSize()
       .background(color = White)
-      .padding(8.dp)
+      .padding(8.dp),
 
   ) {
-
     BlinkoButton(
-      text = "Hola"
+      text = "Hola",
     )
   }
-
 }
 
 @Composable
@@ -52,20 +50,20 @@ fun BlinkoButton(
 ) {
   Button(
     onClick = onClick,
-    border = BorderStroke( // This is where you define the border
+    border = BorderStroke(
       width = 0.5.dp,
-      color = MaterialTheme.colorScheme.secondary // Or any color you want
+      color = MaterialTheme.colorScheme.secondary,
     ),
     colors = ButtonDefaults.buttonColors(
-      containerColor = MaterialTheme.colorScheme.background
+      containerColor = MaterialTheme.colorScheme.background,
     ),
     modifier = Modifier
-      .then(modifier)
+      .then(modifier),
 
   ) {
     Text(
       text = text,
-      fontSize = 16.sp
+      fontSize = 16.sp,
     )
   }
 }

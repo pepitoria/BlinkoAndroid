@@ -7,6 +7,7 @@ import com.github.pepitoria.blinkoapp.auth.implementation.BuildConfig
 import com.github.pepitoria.blinkoapp.shared.domain.data.LocalStorage
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
@@ -83,7 +83,7 @@ class LoginScreenViewModel @Inject constructor(
       val loginResponse = sessionUseCases.login(
         url = url,
         userName = userName,
-        password = password
+        password = password,
       )
 
       val sessionOk = loginResponse is SessionResult.Success
@@ -102,7 +102,6 @@ class LoginScreenViewModel @Inject constructor(
         saveToken(user.token)
       }
     }
-
   }
 
   fun logout() {

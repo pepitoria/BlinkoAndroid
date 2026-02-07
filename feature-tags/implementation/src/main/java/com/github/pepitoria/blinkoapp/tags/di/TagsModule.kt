@@ -15,18 +15,11 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class TagsModule {
   @Binds
-  abstract fun bindTagsFactory(
-    tagsFactoryImpl: TagsFactoryImpl
-  ): TagsFactory
+  abstract fun bindTagsFactory(tagsFactoryImpl: TagsFactoryImpl): TagsFactory
 
   @Binds
-  abstract fun bindTagsRepository(
-    tagsRepositoryImpl: TagsRepositoryImpl
-  ): TagsRepository
+  abstract fun bindTagsRepository(tagsRepositoryImpl: TagsRepositoryImpl): TagsRepository
 
   @Binds
-  abstract fun bindTagsApiClient(
-    tagsApiClient: TagsApiClientNetImpl
-  ): TagsApiClient
-
+  abstract fun bindTagsApiClient(tagsApiClient: TagsApiClientNetImpl): TagsApiClient
 }

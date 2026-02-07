@@ -10,9 +10,7 @@ class NoteSearchUseCase @Inject constructor(
   private val authenticationRepository: AuthenticationRepository,
 ) {
 
-  suspend fun searchNotes(
-    searchTerm: String,
-  ): BlinkoResult<List<BlinkoNote>> {
+  suspend fun searchNotes(searchTerm: String): BlinkoResult<List<BlinkoNote>> {
     val session = authenticationRepository.getSession()
 
     val response = noteRepository.search(

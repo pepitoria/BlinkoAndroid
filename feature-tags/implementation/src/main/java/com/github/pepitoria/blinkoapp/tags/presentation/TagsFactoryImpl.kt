@@ -4,15 +4,12 @@ import androidx.compose.runtime.Composable
 import com.github.pepitoria.blinkoapp.tags.api.TagsFactory
 import javax.inject.Inject
 
-class TagsFactoryImpl @Inject constructor(): TagsFactory {
+class TagsFactoryImpl @Inject constructor() : TagsFactory {
 
   @Composable
-  override fun TagListComposable(
-    onTagClick: (String) -> Unit,
-  ) {
+  override fun TagListComposable(onTagClick: (String) -> Unit) {
     TagListComposableInternal(
       onTagClick = onTagClick,
     )
   }
-
 }

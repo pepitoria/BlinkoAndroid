@@ -5,8 +5,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
 import javax.inject.Singleton
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -14,9 +14,7 @@ object TagsRetrofit {
 
   @Singleton
   @Provides
-  fun provideTagsApi(
-    retrofit: Retrofit
-  ): TagsApi {
+  fun provideTagsApi(retrofit: Retrofit): TagsApi {
     return retrofit.create(TagsApi::class.java)
   }
 }

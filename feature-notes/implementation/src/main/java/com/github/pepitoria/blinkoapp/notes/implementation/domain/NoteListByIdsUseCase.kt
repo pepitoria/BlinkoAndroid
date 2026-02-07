@@ -11,9 +11,7 @@ class NoteListByIdsUseCase @Inject constructor(
   private val authenticationRepository: AuthenticationRepository,
 ) {
 
-  suspend fun getNoteById(
-    id: Int,
-  ): BlinkoResult<BlinkoNote> {
+  suspend fun getNoteById(id: Int): BlinkoResult<BlinkoNote> {
     val session = authenticationRepository.getSession()
 
     val response = noteRepository.listByIds(
@@ -35,9 +33,7 @@ class NoteListByIdsUseCase @Inject constructor(
     }
   }
 
-  suspend fun listNotesByIds(
-    ids: List<Int>,
-  ): BlinkoResult<List<BlinkoNote>> {
+  suspend fun listNotesByIds(ids: List<Int>): BlinkoResult<List<BlinkoNote>> {
     val session = authenticationRepository.getSession()
 
     val response = noteRepository.listByIds(

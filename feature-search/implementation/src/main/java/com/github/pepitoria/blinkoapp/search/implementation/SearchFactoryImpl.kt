@@ -4,8 +4,7 @@ import androidx.compose.runtime.Composable
 import com.github.pepitoria.blinkoapp.search.api.SearchFactory
 import javax.inject.Inject
 
-class SearchFactoryImpl @Inject constructor(
-) : SearchFactory {
+class SearchFactoryImpl @Inject constructor() : SearchFactory {
 
   @Composable
   override fun SearchScreenComposable(

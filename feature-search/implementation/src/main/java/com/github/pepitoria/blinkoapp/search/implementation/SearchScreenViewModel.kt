@@ -6,12 +6,12 @@ import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltViewModel
 class SearchScreenViewModel @Inject constructor(
@@ -38,7 +38,7 @@ class SearchScreenViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
       val notesResponse = searchUseCase.searchNotes(
-        searchTerm = query
+        searchTerm = query,
       )
       _isLoading.value = false
 
@@ -51,6 +51,5 @@ class SearchScreenViewModel @Inject constructor(
         }
       }
     }
-
   }
 }

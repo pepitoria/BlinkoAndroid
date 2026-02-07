@@ -78,9 +78,7 @@ fun NoteEditScreenComposableInternal(
 }
 
 @Composable
-private fun ListenForErrors(
-  errors: SharedFlow<String?>,
-  ) {
+private fun ListenForErrors(errors: SharedFlow<String?>) {
   val context = LocalContext.current
   LaunchedEffect(Unit) {
     errors.collect { error ->
@@ -88,7 +86,8 @@ private fun ListenForErrors(
         Toast.makeText(
           context,
           context.getString(R.string.error_toast, it),
-          Toast.LENGTH_LONG).show()
+          Toast.LENGTH_LONG,
+        ).show()
       }
     }
   }
@@ -107,12 +106,12 @@ private fun BlinkoNoteEditorPreview() {
     noteTypes = listOf(
       BlinkoNoteType.BLINKO.value,
       BlinkoNoteType.NOTE.value,
-      BlinkoNoteType.TODO.value
+      BlinkoNoteType.TODO.value,
     ),
     defaultNoteType = BlinkoNoteType.BLINKO,
     updateNote = {},
     sendToBlinko = {},
-    goBack = {}
+    goBack = {},
   )
 }
 
@@ -130,7 +129,7 @@ fun BlinkoNoteEditor(
     modifier = modifier
       .fillMaxWidth()
       .background(MaterialTheme.colorScheme.background)
-      .padding(16.dp)
+      .padding(16.dp),
   ) {
     BlinkoTextField(
       text = uiState.content,
@@ -139,17 +138,16 @@ fun BlinkoNoteEditor(
       minLines = 3,
       singleLine = false,
       modifier = Modifier
-      .fillMaxWidth()
-      .align(Alignment.TopStart)
-      .padding(bottom = 128.dp)
+        .fillMaxWidth()
+        .align(Alignment.TopStart)
+        .padding(bottom = 128.dp),
     )
 
     Column(
       modifier = Modifier
         .fillMaxWidth()
-        .align(Alignment.BottomCenter)
+        .align(Alignment.BottomCenter),
     ) {
-
       val noteType = if (uiState.id == -1) {
         defaultNoteType
       } else {
@@ -161,16 +159,16 @@ fun BlinkoNoteEditor(
         selectedItem = noteType.value,
         onItemSelected = {
           updateNote(uiState.copy(type = BlinkoNoteType.fromResponseType(it)))
-        }
+        },
       )
 
       Row(
         modifier = Modifier
-          .fillMaxWidth()
+          .fillMaxWidth(),
       ) {
         CancelButton(
           modifier = Modifier.weight(1f),
-          onClick = goBack
+          onClick = goBack,
         )
         if (uiState.id != null) {
           if (uiState.type == BlinkoNoteType.TODO) {
@@ -179,7 +177,7 @@ fun BlinkoNoteEditor(
               onClick = {
                 updateNote(uiState.copy(isArchived = true))
                 sendToBlinko()
-              }
+              },
             )
           } else {
             ArchiveButton(
@@ -187,14 +185,14 @@ fun BlinkoNoteEditor(
               onClick = {
                 updateNote(uiState.copy(isArchived = true))
                 sendToBlinko()
-              }
+              },
             )
           }
         }
 
         SaveButton(
           modifier = Modifier.weight(1f),
-          onClick = sendToBlinko
+          onClick = sendToBlinko,
         )
       }
     }
@@ -205,19 +203,19 @@ fun BlinkoNoteEditor(
 fun BlinkoDropDown(
   items: List<Int>,
   selectedItem: Int,
-  onItemSelected: (Int) -> Unit
+  onItemSelected: (Int) -> Unit,
 ) {
   var expanded by remember { mutableStateOf(false) }
 
   Column(modifier = Modifier.fillMaxWidth()) {
     Row(
       modifier = Modifier
-        .fillMaxWidth()
+        .fillMaxWidth(),
     ) {
       NoteIcon(
         selection = items[selectedItem],
         modifier = Modifier
-        .align(Alignment.CenterVertically)
+          .align(Alignment.CenterVertically),
       )
       NoteText(
         selection = selectedItem,
@@ -233,7 +231,7 @@ fun BlinkoDropDown(
         .padding(8.dp)
         .fillMaxWidth(),
       expanded = expanded,
-      onDismissRequest = { expanded = false }
+      onDismissRequest = { expanded = false },
     ) {
       items.forEach { item ->
         DropdownMenuItem(
@@ -246,7 +244,7 @@ fun BlinkoDropDown(
           onClick = {
             onItemSelected(item)
             expanded = false
-          }
+          },
         )
       }
     }
@@ -254,17 +252,39 @@ fun BlinkoDropDown(
 }
 
 @Composable
-private fun NoteIcon(selection: Int, modifier: Modifier = Modifier) {
+private fun NoteIcon(
+  selection: Int,
+  modifier: Modifier = Modifier,
+) {
   when (selection) {
-    0 -> Icon(ImageVector.vectorResource(id = R.drawable.blinko), contentDescription = stringResource(R.string.tab_bar_blinkos), modifier = modifier)
-    1 -> Icon(ImageVector.vectorResource(id = R.drawable.note), contentDescription = stringResource(R.string.tab_bar_notes), modifier = modifier)
-    2 -> Icon(ImageVector.vectorResource(id = R.drawable.todo), contentDescription = stringResource(R.string.tab_bar_todos), modifier = modifier)
-    else -> Icon(ImageVector.vectorResource(id = R.drawable.blinko), contentDescription = stringResource(R.string.tab_bar_blinkos), modifier = modifier)
+    0 -> Icon(
+      ImageVector.vectorResource(id = R.drawable.blinko),
+      contentDescription = stringResource(R.string.tab_bar_blinkos),
+      modifier = modifier,
+    )
+    1 -> Icon(
+      ImageVector.vectorResource(id = R.drawable.note),
+      contentDescription = stringResource(R.string.tab_bar_notes),
+      modifier = modifier,
+    )
+    2 -> Icon(
+      ImageVector.vectorResource(id = R.drawable.todo),
+      contentDescription = stringResource(R.string.tab_bar_todos),
+      modifier = modifier,
+    )
+    else -> Icon(
+      ImageVector.vectorResource(id = R.drawable.blinko),
+      contentDescription = stringResource(R.string.tab_bar_blinkos),
+      modifier = modifier,
+    )
   }
 }
 
 @Composable
-private fun NoteText(selection: Int, modifier: Modifier = Modifier) {
+private fun NoteText(
+  selection: Int,
+  modifier: Modifier = Modifier,
+) {
   val array = LocalContext.current.resources.getStringArray(R.array.blinko_note_types)
   Text(text = array[selection], modifier = modifier.fillMaxWidth())
 }

@@ -6,6 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.compose.compiler)
   alias(libs.plugins.hilt.android)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.ktlint)
 }
 
 android {

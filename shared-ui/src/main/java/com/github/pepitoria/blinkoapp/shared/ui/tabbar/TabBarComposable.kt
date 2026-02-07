@@ -24,43 +24,58 @@ fun TabBar(
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   floatingActionButton: @Composable () -> Unit = {},
-  content: @Composable (PaddingValues) -> Unit
+  content: @Composable (PaddingValues) -> Unit,
 ) {
   Scaffold(
     floatingActionButton = floatingActionButton,
     bottomBar = {
       NavigationBar {
         NavigationBarItem(
-          icon = { Icon(ImageVector.vectorResource(id = R.drawable.blinko), contentDescription = stringResource(R.string.tab_bar_blinkos)) },
+          icon = {
+            Icon(
+              ImageVector.vectorResource(id = R.drawable.blinko),
+              contentDescription = stringResource(R.string.tab_bar_blinkos),
+            )
+          },
           label = { Text(text = stringResource(R.string.tab_bar_blinkos)) },
           selected = currentRoute == BlinkoNavigationRouter.NavHome.BlinkoList.route,
           onClick = {
             if (currentRoute != BlinkoNavigationRouter.NavHome.BlinkoList.route) {
               goToBlinkos()
             }
-          }
+          },
         )
 
         NavigationBarItem(
-          icon = { Icon(ImageVector.vectorResource(id = R.drawable.note), contentDescription = stringResource(R.string.tab_bar_notes)) },
+          icon = {
+            Icon(
+              ImageVector.vectorResource(id = R.drawable.note),
+              contentDescription = stringResource(R.string.tab_bar_notes),
+            )
+          },
           label = { Text(text = stringResource(R.string.tab_bar_notes)) },
           selected = currentRoute == BlinkoNavigationRouter.NavHome.NoteList.route,
           onClick = {
             if (currentRoute != BlinkoNavigationRouter.NavHome.NoteList.route) {
               goToNotes()
             }
-          }
+          },
         )
 
         NavigationBarItem(
-          icon = { Icon(ImageVector.vectorResource(id = R.drawable.todo), contentDescription = stringResource(R.string.tab_bar_todos)) },
+          icon = {
+            Icon(
+              ImageVector.vectorResource(id = R.drawable.todo),
+              contentDescription = stringResource(R.string.tab_bar_todos),
+            )
+          },
           label = { Text(text = stringResource(R.string.tab_bar_todos)) },
           selected = currentRoute == BlinkoNavigationRouter.NavHome.TodoList.route,
           onClick = {
             if (currentRoute != BlinkoNavigationRouter.NavHome.TodoList.route) {
               goToTodoList()
             }
-          }
+          },
         )
 
         NavigationBarItem(
@@ -71,21 +86,26 @@ fun TabBar(
             if (currentRoute != BlinkoNavigationRouter.NavHome.Search.route) {
               goToSearch()
             }
-          }
+          },
         )
 
         NavigationBarItem(
-          icon = { Icon(ImageVector.vectorResource(id = R.drawable.settings), contentDescription = stringResource(R.string.tab_bar_settings)) },
+          icon = {
+            Icon(
+              ImageVector.vectorResource(id = R.drawable.settings),
+              contentDescription = stringResource(R.string.tab_bar_settings),
+            )
+          },
           label = { Text(text = stringResource(R.string.tab_bar_settings)) },
           selected = currentRoute == BlinkoNavigationRouter.NavHome.Settings.route,
           onClick = {
             if (currentRoute != BlinkoNavigationRouter.NavHome.Settings.route) {
               goToSettings()
             }
-          }
+          },
         )
       }
-    }
+    },
   ) { innerPadding ->
     content(innerPadding)
   }

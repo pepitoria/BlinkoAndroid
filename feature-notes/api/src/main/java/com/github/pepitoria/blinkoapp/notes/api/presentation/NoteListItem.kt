@@ -47,15 +47,15 @@ fun NoteListItem(
     },
     confirmValueChange = { newValue ->
       when (newValue) {
-          SwipeToDismissBoxValue.EndToStart -> {
-            onDeleteSwipe(note)
-            false
-          }
-          else -> {
-            false
-          }
+        SwipeToDismissBoxValue.EndToStart -> {
+          onDeleteSwipe(note)
+          false
+        }
+        else -> {
+          false
+        }
       }
-    }
+    },
   )
 
   val modifier = if (note.isArchived) {
@@ -71,18 +71,18 @@ fun NoteListItem(
       Box(
         modifier = Modifier
           .fillMaxSize(),
-        contentAlignment = Alignment.CenterEnd
+        contentAlignment = Alignment.CenterEnd,
       ) {
         Text(
           text = stringResource(R.string.notes_release_to_delete),
           modifier = Modifier
             .padding(4.dp)
-            .align(Alignment.Center)
+            .align(Alignment.Center),
         )
         Icon(
           imageVector = Icons.Filled.Delete,
           contentDescription = stringResource(id = R.string.notes_delete_note),
-          tint = MaterialTheme.colorScheme.tertiary
+          tint = MaterialTheme.colorScheme.tertiary,
         )
       }
     },
@@ -94,7 +94,7 @@ fun NoteListItem(
         containerColor = MaterialTheme.colorScheme.background,
       ),
       elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-      onClick = { note.id?.let(onClick) }
+      onClick = { note.id?.let(onClick) },
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         var isChecked by remember { mutableStateOf(note.isArchived) }
@@ -110,7 +110,7 @@ fun NoteListItem(
               top = 4.dp,
               start = 4.dp,
               bottom = 4.dp,
-              end = 0.dp
+              end = 0.dp,
             ),
           )
         }
@@ -120,8 +120,8 @@ fun NoteListItem(
             top = 16.dp,
             start = if (note.type == BlinkoNoteType.TODO) 4.dp else 16.dp,
             bottom = 16.dp,
-            end = 16.dp
-          )
+            end = 16.dp,
+          ),
         ) {
           Markdown(
             content = note.content.trimIndent(),

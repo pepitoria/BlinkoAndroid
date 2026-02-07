@@ -4,11 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import com.github.pepitoria.blinkoapp.tags.domain.GetTagsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class TagsListViewModel @Inject constructor(
@@ -20,7 +20,6 @@ class TagsListViewModel @Inject constructor(
 
   private val _tags: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
   val tags = _tags.asStateFlow()
-
 
   override fun onStart() {
     super.onStart()

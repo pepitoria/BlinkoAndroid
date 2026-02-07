@@ -75,11 +75,12 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
     lifecycleScope.launch {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         viewModel.onStart(onNoteUpsert = {
-            Toast.makeText(
-              this@ShareAndEditWithBlinkoActivity,
-              getString(R.string.note_created),
-              Toast.LENGTH_SHORT).show()
-            finish()
+          Toast.makeText(
+            this@ShareAndEditWithBlinkoActivity,
+            getString(R.string.note_created),
+            Toast.LENGTH_SHORT,
+          ).show()
+          finish()
         })
       }
     }
@@ -88,8 +89,11 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
       repeatOnLifecycle(Lifecycle.State.STARTED) {
         viewModel.error.collect { error ->
           error?.let {
-            Toast.makeText(this@ShareAndEditWithBlinkoActivity,
-              getString(R.string.error_toast, error), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+              this@ShareAndEditWithBlinkoActivity,
+              getString(R.string.error_toast, error),
+              Toast.LENGTH_SHORT,
+            ).show()
             finish()
           }
         }
@@ -109,7 +113,6 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
         // Handle multiple items being shared
       }
     }
-
   }
 
   private fun handleText(intent: Intent) {
@@ -130,7 +133,6 @@ class ShareAndEditWithBlinkoActivity : ComponentActivity() {
   }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -144,7 +146,7 @@ fun GreetingPreview() {
       noteTypes = listOf(
         BlinkoNoteType.BLINKO.value,
         BlinkoNoteType.NOTE.value,
-        BlinkoNoteType.TODO.value
+        BlinkoNoteType.TODO.value,
       ),
       defaultNoteType = BlinkoNoteType.BLINKO,
       updateNote = {},

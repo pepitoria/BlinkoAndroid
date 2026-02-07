@@ -7,7 +7,7 @@ class TagMapper @Inject constructor() {
 
   fun toBlinkoTag(responseTag: ResponseTag): BlinkoTag {
     return BlinkoTag(
-      name = responseTag.name?: "",
+      name = responseTag.name ?: "",
     )
   }
 }

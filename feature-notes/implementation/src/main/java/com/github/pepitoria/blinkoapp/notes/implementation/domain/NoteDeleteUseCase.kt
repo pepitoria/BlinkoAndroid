@@ -10,9 +10,7 @@ class NoteDeleteUseCase @Inject constructor(
   private val authenticationRepository: AuthenticationRepository,
 ) {
 
-  suspend fun deleteNote(
-    id: Int
-  ): BlinkoResult<Boolean> {
+  suspend fun deleteNote(id: Int): BlinkoResult<Boolean> {
     val session = authenticationRepository.getSession()
 
     val response = noteRepository.delete(

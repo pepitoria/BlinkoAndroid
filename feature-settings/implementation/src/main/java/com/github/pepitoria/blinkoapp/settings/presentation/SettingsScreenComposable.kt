@@ -44,7 +44,7 @@ fun SettingsScreenComposableInternal(
   goToSearch: () -> Unit,
   goToSettings: () -> Unit,
   exit: () -> Unit,
-  ) {
+) {
   ComposableLifecycleEvents(viewModel = viewModel)
   val events = viewModel.events
   ListenForEvents(events, exit)
@@ -67,7 +67,7 @@ fun SettingsScreenComposableInternal(
         },
         getDefaultTab = {
           viewModel.getDefaultTab()
-        }
+        },
 
       )
     }
@@ -102,16 +102,15 @@ private fun ListenForEvents(
 fun SessionActive(
   logout: () -> Unit = {},
   onTabSelected: (String) -> Unit = { _ -> },
-  getDefaultTab: () -> String = { "TODOS" }
+  getDefaultTab: () -> String = { "TODOS" },
 ) {
-
   Column(
     modifier = Modifier
       .background(getBackgroundColor())
       .padding(16.dp)
       .fillMaxSize(),
     verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
+    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Text(
       text = stringResource(id = R.string.login_token_session_active),
@@ -130,7 +129,7 @@ fun SessionActive(
       text = stringResource(id = R.string.login_token_logout),
       onClick = logout,
       modifier = Modifier.fillMaxWidth(),
-      )
+    )
   }
 }
 
@@ -145,7 +144,7 @@ fun PreselectedTabWidget(
     stringResource(R.string.tab_bar_blinkos),
     stringResource(R.string.tab_bar_notes),
     stringResource(R.string.tab_bar_todos),
-    stringResource(R.string.tab_bar_search)
+    stringResource(R.string.tab_bar_search),
   )
 
   var selectedOption by remember { mutableStateOf(getDefaultTab()) }
@@ -154,33 +153,33 @@ fun PreselectedTabWidget(
     expanded = expanded,
     onExpandedChange = { expanded = !expanded },
   ) {
-      TextField(
-        value = selectedOption,
-        onValueChange = {},
-        readOnly = true,
-        modifier = Modifier
-          .menuAnchor()
-          .fillMaxWidth(),
-        label = { Text(stringResource(R.string.settings_preselected_tab)) },
-        trailingIcon = {
-          ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-        },
-        colors = ExposedDropdownMenuDefaults.textFieldColors()
-      )
-      ExposedDropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
-      ) {
-        options.forEach { option ->
-          DropdownMenuItem(
-            text = { Text(option) },
-            onClick = {
-              selectedOption = option
-              expanded = false
-              onTabSelected(option)
-            }
-          )
-        }
+    TextField(
+      value = selectedOption,
+      onValueChange = {},
+      readOnly = true,
+      modifier = Modifier
+        .menuAnchor()
+        .fillMaxWidth(),
+      label = { Text(stringResource(R.string.settings_preselected_tab)) },
+      trailingIcon = {
+        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+      },
+      colors = ExposedDropdownMenuDefaults.textFieldColors(),
+    )
+    ExposedDropdownMenu(
+      expanded = expanded,
+      onDismissRequest = { expanded = false },
+    ) {
+      options.forEach { option ->
+        DropdownMenuItem(
+          text = { Text(option) },
+          onClick = {
+            selectedOption = option
+            expanded = false
+            onTabSelected(option)
+          },
+        )
       }
+    }
   }
 }

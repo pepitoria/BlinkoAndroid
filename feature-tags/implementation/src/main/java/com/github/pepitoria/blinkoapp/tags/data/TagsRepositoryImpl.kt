@@ -7,30 +7,28 @@ import com.github.pepitoria.blinkoapp.tags.domain.BlinkoTag
 import javax.inject.Inject
 
 class TagsRepositoryImpl @Inject constructor(
-    private val api: TagsApiClient,
-    private val tagMapper: TagMapper,
-    private val authenticationRepository: AuthenticationRepository,
+  private val api: TagsApiClient,
+  private val tagMapper: TagMapper,
+  private val authenticationRepository: AuthenticationRepository,
 ) : TagsRepository {
 
-    override suspend fun getTags(): List<BlinkoTag> {
+  override suspend fun getTags(): List<BlinkoTag> {
+    authenticationRepository.getSession()?.let { session ->
 
-        authenticationRepository.getSession()?.let { session ->
+      val token = session.token
+      val url = session.url
 
-            val token = session.token
-            val url = session.url
-
-            return when (val response = api.getTags(url = url, token = token)) {
-                is ApiResult.ApiSuccess -> {
-                    response.value.map { tagMapper.toBlinkoTag(it) }
-                }
-
-                is ApiResult.ApiErrorResponse -> {
-                    // For now, we just return an empty list
-                    emptyList()
-                }
-            }
+      return when (val response = api.getTags(url = url, token = token)) {
+        is ApiResult.ApiSuccess -> {
+          response.value.map { tagMapper.toBlinkoTag(it) }
         }
-        return emptyList()
-    }
-}
 
+        is ApiResult.ApiErrorResponse -> {
+          // For now, we just return an empty list
+          emptyList()
+        }
+      }
+    }
+    return emptyList()
+  }
+}

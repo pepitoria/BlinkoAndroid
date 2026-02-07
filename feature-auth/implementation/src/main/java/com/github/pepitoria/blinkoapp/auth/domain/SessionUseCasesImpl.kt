@@ -24,7 +24,7 @@ class SessionUseCasesImpl @Inject constructor(
       val response = noteRepository.list(
         url = session.url,
         token = session.token,
-        type = BlinkoNoteType.BLINKO.value
+        type = BlinkoNoteType.BLINKO.value,
       )
 
       return response is BlinkoResult.Success
@@ -38,7 +38,7 @@ class SessionUseCasesImpl @Inject constructor(
       val result = authenticationRepository.login(
         url = session.url,
         userName = session.userName,
-        password = session.password
+        password = session.password,
       )
 
       return when (result) {
@@ -63,11 +63,15 @@ class SessionUseCasesImpl @Inject constructor(
     )
   }
 
-  override suspend fun login(url: String, userName: String, password: String): SessionResult {
+  override suspend fun login(
+    url: String,
+    userName: String,
+    password: String,
+  ): SessionResult {
     val response = authenticationRepository.login(
       url = url,
       userName = userName,
-      password = password
+      password = password,
     )
 
     return when (response) {
@@ -76,7 +80,7 @@ class SessionUseCasesImpl @Inject constructor(
           url = url,
           userName = userName,
           password = password,
-          token = response.value.token
+          token = response.value.token,
         )
 
         SessionResult.Success(
@@ -88,7 +92,7 @@ class SessionUseCasesImpl @Inject constructor(
       is BlinkoResult.Error -> {
         SessionResult.Error(
           message = response.message,
-          code = response.code
+          code = response.code,
         )
       }
     }

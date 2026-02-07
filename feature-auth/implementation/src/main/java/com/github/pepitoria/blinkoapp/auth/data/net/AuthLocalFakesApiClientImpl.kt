@@ -9,7 +9,7 @@ class AuthLocalFakesApiClientImpl @Inject constructor() : AuthApiClient {
   override suspend fun login(
     url: String,
     userName: String,
-    password: String
+    password: String,
   ): ApiResult<LoginResponse> {
     return ApiResult.ApiSuccess(
       LoginResponse(
@@ -20,7 +20,7 @@ class AuthLocalFakesApiClientImpl @Inject constructor() : AuthApiClient {
         token = "fake_token",
         image = "",
         loginType = "local",
-      )
+      ),
     )
   }
 

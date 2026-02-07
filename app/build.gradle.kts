@@ -1,16 +1,16 @@
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import java.io.FileInputStream
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.util.Properties
+import java.util.zip.CRC32
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.FileInputStream
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
-import java.util.Properties
-import java.util.zip.CRC32
 
 plugins {
   alias(libs.plugins.androidApplication)
@@ -18,6 +18,7 @@ plugins {
   alias(libs.plugins.kotlin.compose.compiler)
   alias(libs.plugins.hilt.android)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.ktlint)
 }
 
 buildscript {
@@ -73,7 +74,7 @@ android {
       isMinifyEnabled = false
       proguardFiles(
         getDefaultProguardFile("proguard-android-optimize.txt"),
-        "proguard-rules.pro"
+        "proguard-rules.pro",
       )
     }
 
@@ -83,7 +84,6 @@ android {
       isMinifyEnabled = false
       resValue("string", "app_name", "BlinkoApp Debug")
     }
-
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -226,7 +226,7 @@ fun uploadApkToGitHub() {
 
   val releaseResponseJson = JsonParser.parseString(createReleaseResponse.body.string()).asJsonObject
   val encodedFileName = URLEncoder.encode(apkFile.name, StandardCharsets.UTF_8.toString())
-  val uploadUrl =   releaseResponseJson["upload_url"].asString.replace("{?name,label}", "?name=$encodedFileName")
+  val uploadUrl = releaseResponseJson["upload_url"].asString.replace("{?name,label}", "?name=$encodedFileName")
 
   val uploadApkRequest = Request.Builder()
     .url(uploadUrl)
@@ -295,7 +295,9 @@ fun getReleaseDescription(): String {
   val lastTagCommand = Runtime.getRuntime().exec("git describe --tags --abbrev=0")
   val lastTag = lastTagCommand.inputStream.bufferedReader().readText().trim()
 
-  val prevTagCommand = Runtime.getRuntime().exec("git describe --tags --abbrev=0 \$(git rev-list --tags --skip=1 --max-count=1)")
+  val prevTagCommand = Runtime.getRuntime().exec(
+    "git describe --tags --abbrev=0 \$(git rev-list --tags --skip=1 --max-count=1)",
+  )
   val prevTag = prevTagCommand.inputStream.bufferedReader().readText().trim()
 
   val commitsBetweenTagsCommand = Runtime.getRuntime().exec("git log $prevTag..$lastTag --oneline")

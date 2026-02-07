@@ -14,28 +14,23 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
 import javax.inject.Singleton
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class NotesModule {
 
   @Binds
-  abstract fun bindNotesFactory(
-    notesFactoryImpl: NotesFactoryImpl
-  ): NotesFactory
+  abstract fun bindNotesFactory(notesFactoryImpl: NotesFactoryImpl): NotesFactory
 
   @Binds
-  abstract fun bindNoteRepository(
-    noteRepositoryImpl: NoteRepositoryApiImpl
-  ): NoteRepository
+  abstract fun bindNoteRepository(noteRepositoryImpl: NoteRepositoryApiImpl): NoteRepository
 
   companion object {
     @Provides
     @Singleton
-    fun provideNotesApi(retrofit: Retrofit): NotesApi =
-      retrofit.create(NotesApi::class.java)
+    fun provideNotesApi(retrofit: Retrofit): NotesApi = retrofit.create(NotesApi::class.java)
 
     @Provides
     @Singleton

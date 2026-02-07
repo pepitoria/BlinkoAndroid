@@ -5,8 +5,5 @@ import androidx.compose.runtime.Composable
 interface TagsFactory {
 
   @Composable
-  fun TagListComposable(
-    onTagClick: (String) -> Unit,
-  )
-
+  fun TagListComposable(onTagClick: (String) -> Unit)
 }

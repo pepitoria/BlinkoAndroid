@@ -11,7 +11,7 @@ class UserMapper @Inject constructor() {
       id = userResponse.id ?: 0,
       name = userResponse.name ?: "",
       nickname = userResponse.nickname ?: "",
-      token = userResponse.token ?: ""
+      token = userResponse.token ?: "",
     )
   }
 }

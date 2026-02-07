@@ -12,7 +12,7 @@ fun List<NoteResponse>.toBlinkoNotes(): List<BlinkoNote> {
 fun NoteResponse.toBlinkoNote(): BlinkoNote {
   return BlinkoNote(
     id = this.id,
-    content = this.content?:"",
+    content = this.content ?: "",
     type = BlinkoNoteType.fromResponseType(this.type),
     isArchived = this.isArchived ?: false,
   )

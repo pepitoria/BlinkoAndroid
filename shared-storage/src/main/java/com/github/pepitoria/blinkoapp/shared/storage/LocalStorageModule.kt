@@ -11,9 +11,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class LocalStorageModule {
 
-    @Singleton
-    @Binds
-    abstract fun bindLocalStorage(
-        localStorageImplementation: LocalStorageSharedPreferences,
-    ): LocalStorage
+  @Singleton
+  @Binds
+  abstract fun bindLocalStorage(localStorageImplementation: LocalStorageSharedPreferences): LocalStorage
 }

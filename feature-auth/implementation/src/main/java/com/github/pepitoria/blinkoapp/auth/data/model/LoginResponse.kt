@@ -9,5 +9,5 @@ data class LoginResponse(
   @SerializedName("role") var role: String? = null,
   @SerializedName("token") var token: String? = null,
   @SerializedName("image") var image: String? = null,
-  @SerializedName("loginType") var loginType: String? = null
+  @SerializedName("loginType") var loginType: String? = null,
 )

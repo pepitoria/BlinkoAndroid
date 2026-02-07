@@ -9,9 +9,7 @@ class NoteUpsertUseCase @Inject constructor(
   private val noteRepository: NoteRepository,
 ) {
 
-  suspend fun upsertNote(
-    blinkoNote: BlinkoNote,
-  ): BlinkoResult<BlinkoNote> {
+  suspend fun upsertNote(blinkoNote: BlinkoNote): BlinkoResult<BlinkoNote> {
     val response = noteRepository.upsertNote(blinkoNote)
 
     return when (response) {

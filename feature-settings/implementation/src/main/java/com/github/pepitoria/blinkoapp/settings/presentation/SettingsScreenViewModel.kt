@@ -7,18 +7,18 @@ import com.github.pepitoria.blinkoapp.settings.api.domain.SetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Locale
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
-import javax.inject.Inject
 
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor(
   private val sessionUseCases: SessionUseCases,
   private val getDefaultTabUseCase: GetDefaultTabUseCase,
   private val setDefaultTabUseCase: SetDefaultTabUseCase,
-): BlinkoViewModel() {
+) : BlinkoViewModel() {
 
   sealed class Events {
     data object Exit : Events()

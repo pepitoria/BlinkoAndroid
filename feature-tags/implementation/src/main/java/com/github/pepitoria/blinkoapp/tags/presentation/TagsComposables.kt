@@ -29,7 +29,7 @@ internal fun TagListComposableInternal(
   } else {
     FlowRow(
       modifier = Modifier.padding(8.dp),
-      horizontalArrangement = Arrangement.SpaceAround
+      horizontalArrangement = Arrangement.SpaceAround,
     ) {
       tags.value.forEach { tag ->
         Tag(

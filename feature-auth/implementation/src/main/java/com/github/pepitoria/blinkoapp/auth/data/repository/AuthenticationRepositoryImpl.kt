@@ -22,12 +22,20 @@ class AuthenticationRepositoryImpl @Inject constructor(
   private val userMapper: UserMapper,
 ) : AuthenticationRepository {
 
-  override fun saveSession(url: String, token: String) {
+  override fun saveSession(
+    url: String,
+    token: String,
+  ) {
     localStorage.saveString(URL_KEY, url)
     localStorage.saveString(TOKEN_KEY, token)
   }
 
-  override fun saveSession(url: String, userName: String, password: String, token: String) {
+  override fun saveSession(
+    url: String,
+    userName: String,
+    password: String,
+    token: String,
+  ) {
     localStorage.saveString(URL_KEY, url)
     localStorage.saveString(PASSWORD_KEY, password)
 
@@ -38,7 +46,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
     if (token.isNotEmpty()) {
       localStorage.saveString(TOKEN_KEY, token)
     }
-
   }
 
   override fun getSession(): BlinkoSession? {
@@ -68,13 +75,12 @@ class AuthenticationRepositoryImpl @Inject constructor(
   override suspend fun login(
     url: String,
     userName: String,
-    password: String
+    password: String,
   ): BlinkoResult<BlinkoUser> {
-
     val response = api.login(
       url = url,
       userName = userName,
-      password = password
+      password = password,
     )
 
     return when (response) {
@@ -86,7 +92,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
         response.toBlinkoResult()
       }
     }
-
   }
 
   override fun logout() {

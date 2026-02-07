@@ -6,9 +6,9 @@ import com.github.pepitoria.blinkoapp.auth.data.model.LoginRequest
 import com.github.pepitoria.blinkoapp.auth.data.model.LoginResponse
 import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class AuthApiClientNetImpl @Inject constructor(
   @ApplicationContext private val appContext: Context,
@@ -18,7 +18,7 @@ class AuthApiClientNetImpl @Inject constructor(
   override suspend fun login(
     url: String,
     userName: String,
-    password: String
+    password: String,
   ): ApiResult<LoginResponse> {
     if (!isConnected()) {
       return ApiResult.ApiErrorResponse(message = "No internet connection")
@@ -27,7 +27,7 @@ class AuthApiClientNetImpl @Inject constructor(
     val loginUrl = if (url.endsWith("/")) {
       "${url}api/v1/user/login"
     } else {
-      "${url}/api/v1/user/login"
+      "$url/api/v1/user/login"
     }
 
     return withContext(Dispatchers.IO) {
@@ -35,8 +35,8 @@ class AuthApiClientNetImpl @Inject constructor(
         url = loginUrl,
         loginRequest = LoginRequest(
           name = userName,
-          password = password
-        )
+          password = password,
+        ),
       )
 
       var apiResult: ApiResult<LoginResponse> = ApiResult.ApiErrorResponse.UNKNOWN
@@ -48,7 +48,7 @@ class AuthApiClientNetImpl @Inject constructor(
       } else {
         apiResult = ApiResult.ApiErrorResponse(
           code = apiResponse.code(),
-          message = apiResponse.message()
+          message = apiResponse.message(),
         )
       }
 

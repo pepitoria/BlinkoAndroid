@@ -7,11 +7,11 @@ import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 class NoteRepositoryApiImplTest {
 
@@ -30,9 +30,8 @@ class NoteRepositoryApiImplTest {
 
   @Test
   fun testListReturnsBlinkoSuccessWhenApiSuccess() = runTest {
-
     val apiResult: ApiResult<List<NoteResponse>> = ApiResult.ApiSuccess(
-      value = emptyList()
+      value = emptyList(),
     )
 
     coEvery { api.noteList(any(), any(), any()) } returns apiResult
@@ -48,10 +47,9 @@ class NoteRepositoryApiImplTest {
 
   @Test
   fun testListReturnsBlinkoErrorWhenApiError() = runTest {
-
     val apiResult: ApiResult<List<NoteResponse>> = ApiResult.ApiErrorResponse(
       code = 3,
-      message = "error"
+      message = "error",
     )
 
     coEvery { api.noteList(any(), any(), any()) } returns apiResult

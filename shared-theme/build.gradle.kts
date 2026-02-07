@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.androidLibrary)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose.compiler)
+  alias(libs.plugins.ktlint)
 }
 
 android {

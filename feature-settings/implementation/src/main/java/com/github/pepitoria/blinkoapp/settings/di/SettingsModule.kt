@@ -17,22 +17,14 @@ import dagger.hilt.components.SingletonComponent
 abstract class SettingsModule {
 
   @Binds
-  abstract fun bindSettingsFactory(
-    settingsFactoryImpl: SettingsFactoryImpl
-  ): SettingsFactory
+  abstract fun bindSettingsFactory(settingsFactoryImpl: SettingsFactoryImpl): SettingsFactory
 
   @Binds
-  abstract fun bindTabsRepository(
-    tabsRepositoryImpl: TabsRepositoryImpl
-  ): TabsRepository
+  abstract fun bindTabsRepository(tabsRepositoryImpl: TabsRepositoryImpl): TabsRepository
 
   @Binds
-  abstract fun bindSetDefaultTabUseCase(
-    defaultTabUseCaseImpl: DefaultTabUseCaseImpl
-  ): SetDefaultTabUseCase
+  abstract fun bindSetDefaultTabUseCase(defaultTabUseCaseImpl: DefaultTabUseCaseImpl): SetDefaultTabUseCase
 
   @Binds
-  abstract fun bindGetDefaultTabUseCase(
-    defaultTabUseCaseImpl: DefaultTabUseCaseImpl
-  ): GetDefaultTabUseCase
+  abstract fun bindGetDefaultTabUseCase(defaultTabUseCaseImpl: DefaultTabUseCaseImpl): GetDefaultTabUseCase
 }

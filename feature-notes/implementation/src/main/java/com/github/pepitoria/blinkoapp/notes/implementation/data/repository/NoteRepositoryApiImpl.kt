@@ -19,12 +19,16 @@ class NoteRepositoryApiImpl @Inject constructor(
   private val api: NotesApiClient,
   private val authenticationRepository: AuthenticationRepository,
 ) : NoteRepository {
-  override suspend fun list(url: String, token: String, type: Int, archived: Boolean): BlinkoResult<List<BlinkoNote>> {
-
+  override suspend fun list(
+    url: String,
+    token: String,
+    type: Int,
+    archived: Boolean,
+  ): BlinkoResult<List<BlinkoNote>> {
     val response = api.noteList(
       url = url,
       token = token,
-      noteListRequest = NoteListRequest(type = type, isArchived = archived)
+      noteListRequest = NoteListRequest(type = type, isArchived = archived),
     )
 
     return when (response) {
@@ -38,8 +42,11 @@ class NoteRepositoryApiImpl @Inject constructor(
     }
   }
 
-  override suspend fun search(url: String, token: String, searchTerm: String): BlinkoResult<List<BlinkoNote>> {
-
+  override suspend fun search(
+    url: String,
+    token: String,
+    searchTerm: String,
+  ): BlinkoResult<List<BlinkoNote>> {
     val response = api.noteList(
       url = url,
       token = token,
@@ -60,31 +67,37 @@ class NoteRepositoryApiImpl @Inject constructor(
     }
   }
 
-  override suspend fun listByIds(url: String, token: String, id: Int): BlinkoResult<List<BlinkoNote>> {
-
+  override suspend fun listByIds(
+    url: String,
+    token: String,
+    id: Int,
+  ): BlinkoResult<List<BlinkoNote>> {
     val response = api.noteListByIds(
       url = url,
       token = token,
-      noteListByIdsRequest = getNoteListByIdsRequest(id)
+      noteListByIdsRequest = getNoteListByIdsRequest(id),
     )
 
     return mapNoteListByIdsResponseToBlinkoNoteList(response)
   }
 
-  override suspend fun listByIds(url: String, token: String, ids: List<Int>): BlinkoResult<List<BlinkoNote>> {
-
+  override suspend fun listByIds(
+    url: String,
+    token: String,
+    ids: List<Int>,
+  ): BlinkoResult<List<BlinkoNote>> {
     val response = api.noteListByIds(
       url = url,
       token = token,
-      noteListByIdsRequest = getNoteListByIdsRequest(ids)
+      noteListByIdsRequest = getNoteListByIdsRequest(ids),
     )
 
     return mapNoteListByIdsResponseToBlinkoNoteList(response)
   }
 
   private fun mapNoteListByIdsResponseToBlinkoNoteList(
-    response: ApiResult<List<NoteResponse>>
-  ): BlinkoResult<List<BlinkoNote>>  {
+    response: ApiResult<List<NoteResponse>>,
+  ): BlinkoResult<List<BlinkoNote>> {
     return when (response) {
       is ApiResult.ApiSuccess -> {
         response.value.firstOrNull()?.let {
@@ -99,23 +112,22 @@ class NoteRepositoryApiImpl @Inject constructor(
   }
   private fun getNoteListByIdsRequest(ids: List<Int>): NoteListByIdsRequest {
     return NoteListByIdsRequest(
-      ids = ids
+      ids = ids,
     )
   }
 
   private fun getNoteListByIdsRequest(id: Int): NoteListByIdsRequest {
     return NoteListByIdsRequest(
-      ids = listOf(id)
+      ids = listOf(id),
     )
   }
 
   override suspend fun upsertNote(blinkoNote: BlinkoNote): BlinkoResult<BlinkoNote> {
-
     authenticationRepository.getSession()?.let { sessionDto ->
       val response = api.upsertNote(
         url = sessionDto.url,
         token = sessionDto.token,
-        upsertNoteRequest = blinkoNote.toUpsertRequest()
+        upsertNoteRequest = blinkoNote.toUpsertRequest(),
       )
 
       return when (response) {
@@ -131,14 +143,18 @@ class NoteRepositoryApiImpl @Inject constructor(
     return BlinkoResult.Error.NOTFOUND
   }
 
-  override suspend fun delete(url: String, token: String, id: Int): BlinkoResult<Boolean> {
+  override suspend fun delete(
+    url: String,
+    token: String,
+    id: Int,
+  ): BlinkoResult<Boolean> {
     authenticationRepository.getSession()?.let { sessionDto ->
       val response = api.deleteNote(
         url = sessionDto.url,
         token = sessionDto.token,
         deleteNoteRequest = DeleteNoteRequest(
-          ids = listOf(id)
-        )
+          ids = listOf(id),
+        ),
       )
 
       return when (response) {

@@ -16,17 +16,13 @@ import dagger.hilt.components.SingletonComponent
 abstract class AuthModule {
 
   @Binds
-  abstract fun bindAuthFactory(
-    authFactoryImpl: AuthFactoryImpl
-  ): AuthFactory
+  abstract fun bindAuthFactory(authFactoryImpl: AuthFactoryImpl): AuthFactory
 
   @Binds
-  abstract fun bindSessionUseCases(
-    sessionUseCasesImpl: SessionUseCasesImpl
-  ): SessionUseCases
+  abstract fun bindSessionUseCases(sessionUseCasesImpl: SessionUseCasesImpl): SessionUseCases
 
   @Binds
   abstract fun bindAuthenticationRepository(
-    authenticationRepositoryImpl: AuthenticationRepositoryImpl
+    authenticationRepositoryImpl: AuthenticationRepositoryImpl,
   ): AuthenticationRepository
 }

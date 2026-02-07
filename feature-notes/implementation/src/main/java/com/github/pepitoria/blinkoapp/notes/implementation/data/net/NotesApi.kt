@@ -18,27 +18,27 @@ interface NotesApi {
   suspend fun noteList(
     @Body noteListRequest: NoteListRequest,
     @Url url: String,
-    @Header("Authorization") authorization: String
+    @Header("Authorization") authorization: String,
   ): Response<List<NoteResponse>>
 
   @POST()
   suspend fun noteListByIds(
     @Body noteListByIdsRequest: NoteListByIdsRequest,
     @Url url: String,
-    @Header("Authorization") authorization: String
+    @Header("Authorization") authorization: String,
   ): Response<List<NoteResponse>>
 
   @POST()
   suspend fun noteUpsert(
     @Body noteCreateRequest: UpsertRequest,
     @Url url: String,
-    @Header("Authorization") authorization: String
+    @Header("Authorization") authorization: String,
   ): Response<NoteResponse>
 
   @POST()
   suspend fun deleteNote(
     @Body deleteNoteRequest: DeleteNoteRequest,
     @Url url: String,
-    @Header("Authorization") authorization: String
+    @Header("Authorization") authorization: String,
   ): Response<DeleteNoteResponse>
 }

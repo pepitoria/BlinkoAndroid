@@ -20,13 +20,13 @@ fun BlinkoPasswordField(
   username: String,
   label: String,
   onUsernameChange: (String) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   TextField(
     label = {
       Text(
         text = label,
-        fontWeight = FontWeight.Normal
+        fontWeight = FontWeight.Normal,
       )
     },
     value = username,
@@ -34,7 +34,7 @@ fun BlinkoPasswordField(
     onValueChange = onUsernameChange,
     keyboardOptions = KeyboardOptions(
       keyboardType = KeyboardType.Text,
-      imeAction = ImeAction.Next
+      imeAction = ImeAction.Next,
     ),
     visualTransformation = PasswordVisualTransformation(),
     modifier = Modifier
@@ -44,6 +44,6 @@ fun BlinkoPasswordField(
       focusedLabelColor = MaterialTheme.colorScheme.secondary,
       focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
       cursorColor = MaterialTheme.colorScheme.secondary,
-    )
+    ),
   )
 }

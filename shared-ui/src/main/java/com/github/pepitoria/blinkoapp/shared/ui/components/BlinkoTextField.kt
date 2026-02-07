@@ -48,6 +48,6 @@ fun BlinkoTextField(
       focusedLabelColor = MaterialTheme.colorScheme.secondary,
       focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
       cursorColor = MaterialTheme.colorScheme.secondary,
-    )
+    ),
   )
 }
