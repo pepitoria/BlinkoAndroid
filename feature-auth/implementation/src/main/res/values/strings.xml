@@ -14,4 +14,6 @@
   <string name="login_token_login_button">Login</string>
   <string name="login_token_insecure_url">I understand I am using an insecure connection</string>
   <string name="login_token_insecure_toast">You are attempting to connect to an insecure server (http). Are you sure?</string>
+  <string name="login_use_access_token">Access with Access Token</string>
+  <string name="login_access_token">Access Token</string>
 </resources>

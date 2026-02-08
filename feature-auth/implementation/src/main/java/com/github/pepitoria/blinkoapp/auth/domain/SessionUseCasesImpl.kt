@@ -97,4 +97,39 @@ class SessionUseCasesImpl @Inject constructor(
       }
     }
   }
+
+  override suspend fun loginWithAccessToken(
+    url: String,
+    accessToken: String,
+  ): SessionResult {
+    // Save the session with the access token directly
+    authenticationRepository.saveSession(
+      url = url,
+      token = accessToken,
+    )
+
+    // Validate the token by making a test API call
+    val response = noteRepository.list(
+      url = url,
+      token = accessToken,
+      type = BlinkoNoteType.BLINKO.value,
+    )
+
+    return when (response) {
+      is BlinkoResult.Success -> {
+        SessionResult.Success(
+          userName = "",
+          token = accessToken,
+        )
+      }
+      is BlinkoResult.Error -> {
+        // If validation fails, clear the session
+        authenticationRepository.logout()
+        SessionResult.Error(
+          message = response.message,
+          code = response.code,
+        )
+      }
+    }
+  }
 }

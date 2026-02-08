@@ -83,6 +83,13 @@ fun LoginWidget(
             insecureConnectionCheck = insecureConnectionCheck,
           )
         },
+        onAccessTokenLoginClicked = { url, accessToken, insecureConnectionCheck ->
+          viewModel.doLoginWithAccessToken(
+            url = url,
+            accessToken = accessToken,
+            insecureConnectionCheck = insecureConnectionCheck,
+          )
+        },
       )
     }
   }
@@ -140,6 +147,7 @@ private fun SessionActive(logout: () -> Unit = {}) {
 @Composable
 fun LoginScreenViewState(
   onLoginClicked: (String, String, String, Boolean) -> Unit = { _, _, _, _ -> },
+  onAccessTokenLoginClicked: (String, String, Boolean) -> Unit = { _, _, _ -> },
   urlParam: String = "",
   userNameParam: String = "",
   passwordParam: String = "",
@@ -168,16 +176,41 @@ fun LoginScreenViewState(
       var password by rememberSaveable {
         mutableStateOf(passwordParam)
       }
+      var accessToken by rememberSaveable {
+        mutableStateOf("")
+      }
       var insecureUrlCheckedState by remember { mutableStateOf(false) }
+      var useAccessToken by rememberSaveable { mutableStateOf(false) }
 
       val (first, second, third) = remember { FocusRequester.createRefs() }
       Spacer(modifier = Modifier.weight(1f))
 
       Text(
-        text = stringResource(id = R.string.login_token_login_title_password),
+        text = stringResource(
+          id = if (useAccessToken) {
+            R.string.login_token_login_title_token
+          } else {
+            R.string.login_token_login_title_password
+          },
+        ),
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
       )
+      Spacer(modifier = Modifier.height(12.dp))
+
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Switch(
+          checked = useAccessToken,
+          onCheckedChange = { useAccessToken = it },
+        )
+        Text(
+          text = stringResource(id = R.string.login_use_access_token),
+          fontSize = 14.sp,
+          modifier = Modifier.padding(start = 8.dp),
+        )
+      }
       Spacer(modifier = Modifier.height(12.dp))
 
       BlinkoTextField(
@@ -192,26 +225,37 @@ fun LoginScreenViewState(
       )
       Spacer(modifier = Modifier.height(12.dp))
 
-      BlinkoTextField(
-        text = username,
-        label = stringResource(id = R.string.login_username),
-        onTextChanged = { username = it },
-        keyboardType = KeyboardType.Text,
-        imeAction = ImeAction.Next,
-        modifier = Modifier
-          .fillMaxWidth()
-          .focusRequester(second),
-      )
-      Spacer(modifier = Modifier.height(12.dp))
+      if (useAccessToken) {
+        BlinkoPasswordField(
+          username = accessToken,
+          label = stringResource(id = R.string.login_access_token),
+          onUsernameChange = { accessToken = it },
+          modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(second),
+        )
+      } else {
+        BlinkoTextField(
+          text = username,
+          label = stringResource(id = R.string.login_username),
+          onTextChanged = { username = it },
+          keyboardType = KeyboardType.Text,
+          imeAction = ImeAction.Next,
+          modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(second),
+        )
+        Spacer(modifier = Modifier.height(12.dp))
 
-      BlinkoPasswordField(
-        username = password,
-        label = stringResource(id = R.string.login_password),
-        onUsernameChange = { password = it },
-        modifier = Modifier
-          .fillMaxWidth()
-          .focusRequester(third),
-      )
+        BlinkoPasswordField(
+          username = password,
+          label = stringResource(id = R.string.login_password),
+          onUsernameChange = { password = it },
+          modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(third),
+        )
+      }
 
       if (url.startsWith("http://")) {
         Spacer(modifier = Modifier.height(12.dp))
@@ -234,7 +278,11 @@ fun LoginScreenViewState(
 
       LoginButton(
         onClick = {
-          onLoginClicked(url, username, password, insecureUrlCheckedState)
+          if (useAccessToken) {
+            onAccessTokenLoginClicked(url, accessToken, insecureUrlCheckedState)
+          } else {
+            onLoginClicked(url, username, password, insecureUrlCheckedState)
+          }
         },
       )
       Spacer(modifier = Modifier.weight(1f))

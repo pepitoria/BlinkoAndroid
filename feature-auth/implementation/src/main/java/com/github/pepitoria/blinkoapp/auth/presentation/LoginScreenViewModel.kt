@@ -104,6 +104,39 @@ class LoginScreenViewModel @Inject constructor(
     }
   }
 
+  fun doLoginWithAccessToken(
+    url: String,
+    accessToken: String,
+    insecureConnectionCheck: Boolean,
+  ) {
+    if (url.startsWith("http://") && !insecureConnectionCheck) {
+      triggerEvent(Events.InsecureConnection)
+      return
+    }
+
+    viewModelScope.launch(Dispatchers.IO) {
+      _isLoading.value = true
+      val loginResponse = sessionUseCases.loginWithAccessToken(
+        url = url,
+        accessToken = accessToken,
+      )
+
+      val sessionOk = loginResponse is SessionResult.Success
+      _isLoading.value = false
+      Timber.d("${this::class.java.simpleName}.loginWithAccessToken() loginOk: $sessionOk")
+      _isSessionActive.value = sessionOk
+
+      if (sessionOk) {
+        triggerEvent(Events.SessionOk)
+      }
+
+      if (sessionOk && BuildConfig.DEBUG) {
+        saveUrl(url)
+        saveToken(accessToken)
+      }
+    }
+  }
+
   fun logout() {
     sessionUseCases.logout()
     _isSessionActive.value = false

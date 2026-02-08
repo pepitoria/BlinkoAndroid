@@ -51,9 +51,9 @@ class AuthenticationRepositoryImpl @Inject constructor(
   override fun getSession(): BlinkoSession? {
     val url = localStorage.getString(URL_KEY)
     val token = localStorage.getString(TOKEN_KEY)
-    val userName = localStorage.getString(USERNAME_KEY)
-    val password = localStorage.getString(PASSWORD_KEY)
-    return if (url != null && token != null && userName != null && password != null) {
+    val userName = localStorage.getString(USERNAME_KEY) ?: ""
+    val password = localStorage.getString(PASSWORD_KEY) ?: ""
+    return if (url != null && token != null) {
       BlinkoSession(url, token, userName, password)
     } else {
       null
