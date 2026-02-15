@@ -50,6 +50,12 @@ android {
   buildFeatures {
     buildConfig = true
   }
+
+  testOptions {
+    unitTests.all {
+      it.useJUnitPlatform()
+    }
+  }
 }
 
 dependencies {
@@ -70,4 +76,8 @@ dependencies {
   // okhttp
   implementation(libs.okhttp3.okhttp)
   implementation(libs.okhttp3.logging.interceptor)
+
+  // testing
+  testImplementation(libs.junit.jupiter)
+  testImplementation(kotlin("test"))
 }
