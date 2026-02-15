@@ -238,13 +238,19 @@ All testable business logic classes are covered (~100% of target classes):
 ### Running tests
 
 ```bash
-# Unit tests (all modules)
-./gradlew testRemoteDebugUnitTest
+# All unit tests (custom task)
+./gradlew allUnitTests
+
+# All instrumentation tests (requires emulator/device)
+./gradlew allInstrumentationTests
+
+# All tests (unit + instrumentation)
+./gradlew allTests
 
 # Unit tests (specific module)
 ./gradlew :feature-notes:implementation:testRemoteDebugUnitTest
 
-# Instrumentation tests (requires emulator/device)
+# Instrumentation tests (specific module)
 ./gradlew :shared-storage:connectedRemoteDebugAndroidTest
 ```
 
