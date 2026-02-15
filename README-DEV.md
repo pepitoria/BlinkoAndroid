@@ -214,12 +214,62 @@ ViewModels use `@HiltViewModel` with constructor injection.
 
 ## Testing
 
+### Stack
+
 - **Framework**: JUnit Jupiter (JUnit 5)
 - **Mocking**: MockK 1.14.9
 - **Coroutine testing**: kotlinx-coroutines-test 1.10.2
-- **UI testing**: Espresso + Compose test utilities
+- **Android instrumentation**: AndroidJUnit4 + Espresso
 
-Unit tests exist in `feature-notes:implementation` (e.g., `NoteRepositoryApiImplTest`). Tests use `runTest` for coroutine testing and `coEvery`/`coVerify` from MockK.
+### Test coverage
+
+All testable business logic classes are covered (~100% of target classes):
+
+| Module | Test Location | Classes Tested |
+|--------|---------------|----------------|
+| feature-auth | `implementation/src/test/` | SessionUseCasesImpl, AuthenticationRepositoryImpl, LoginScreenViewModel, UserMapper |
+| feature-notes | `implementation/src/test/` | NoteRepositoryApiImpl, NoteListUseCase, NoteDeleteUseCase, NoteUpsertUseCase, NoteListByIdsUseCase, NoteListScreenViewModel, NoteEditScreenViewModel, ShareAndEditWithBlinkoViewModel, NoteExtensions |
+| feature-tags | `implementation/src/test/` | TagsRepositoryImpl, GetTagsUseCase, TagsListViewModel, TagMapper |
+| feature-search | `implementation/src/test/` | SearchScreenViewModel |
+| feature-settings | `implementation/src/test/` | TabsRepositoryImpl, DefaultTabUseCaseImpl, SettingsScreenViewModel |
+| shared-networking | `src/test/` | ApiResultExtensions |
+| shared-storage | `src/androidTest/` | LocalStorageSharedPreferences (instrumentation) |
+
+### Running tests
+
+```bash
+# Unit tests (all modules)
+./gradlew testRemoteDebugUnitTest
+
+# Unit tests (specific module)
+./gradlew :feature-notes:implementation:testRemoteDebugUnitTest
+
+# Instrumentation tests (requires emulator/device)
+./gradlew :shared-storage:connectedRemoteDebugAndroidTest
+```
+
+### Test patterns
+
+Tests follow a consistent pattern using Given/When/Then structure:
+
+```kotlin
+@Test
+fun `method returns success when dependency succeeds`() = testScope.runTest {
+    // Given
+    coEvery { mockDependency.call() } returns Success(data)
+
+    // When
+    val result = sut.method()
+
+    // Then
+    assertIs<BlinkoResult.Success<Data>>(result)
+    assertEquals(expected, result.data)
+}
+```
+
+- **ViewModels**: Use `StandardTestDispatcher` with `Dispatchers.setMain()` for coroutine control
+- **Repositories/UseCases**: Use `runTest` with `coEvery`/`coVerify` for suspend function mocking
+- **Mappers**: Pure function tests with direct assertions
 
 ## Migration Status
 
