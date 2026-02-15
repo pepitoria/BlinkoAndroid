@@ -54,6 +54,12 @@ android {
     compose = true
     buildConfig = true
   }
+
+  testOptions {
+    unitTests.all {
+      it.useJUnitPlatform()
+    }
+  }
 }
 
 dependencies {
@@ -96,6 +102,9 @@ dependencies {
 
   // testing
   testImplementation(libs.junit.jupiter)
+  testImplementation(libs.mockk)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(kotlin("test"))
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
 }
