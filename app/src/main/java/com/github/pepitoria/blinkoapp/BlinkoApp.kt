@@ -3,6 +3,7 @@ package com.github.pepitoria.blinkoapp
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.github.pepitoria.blinkoapp.offline.sync.SyncScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import timber.log.Timber
@@ -15,9 +16,18 @@ class BlinkoApp : Application(), Configuration.Provider {
   @Inject
   lateinit var workerFactory: HiltWorkerFactory
 
+  @Inject
+  lateinit var syncScheduler: SyncScheduler
+
   override fun onCreate() {
     super.onCreate()
     initTimber()
+    initSyncScheduler()
+  }
+
+  private fun initSyncScheduler() {
+    syncScheduler.startObserving()
+    Timber.d("SyncScheduler initialized")
   }
 
   override val workManagerConfiguration: Configuration
