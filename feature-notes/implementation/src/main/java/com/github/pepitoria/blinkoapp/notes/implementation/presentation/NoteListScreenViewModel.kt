@@ -97,11 +97,22 @@ class NoteListScreenViewModel @Inject constructor(
       when (notesResponse) {
         is BlinkoResult.Success -> {
           _notes.value = notesResponse.value
+          fetchAdditionalPagesInBackground()
         }
         is BlinkoResult.Error -> {
           Timber.e("${this::class.java.simpleName}.onStart() error: ${notesResponse.message}")
         }
       }
+    }
+  }
+
+  private fun fetchAdditionalPagesInBackground() {
+    viewModelScope.launch(Dispatchers.IO) {
+      noteListUseCase.fetchAdditionalPages(
+        type = noteType.value.value,
+        archived = false,
+        additionalPages = 5,
+      )
     }
   }
 
@@ -132,11 +143,22 @@ class NoteListScreenViewModel @Inject constructor(
       when (notesResponse) {
         is BlinkoResult.Success -> {
           _archived.value = notesResponse.value
+          fetchAdditionalArchivedPagesInBackground()
         }
         is BlinkoResult.Error -> {
           Timber.e("${this::class.java.simpleName}.onStart() error: ${notesResponse.message}")
         }
       }
+    }
+  }
+
+  private fun fetchAdditionalArchivedPagesInBackground() {
+    viewModelScope.launch(Dispatchers.IO) {
+      noteListUseCase.fetchAdditionalPages(
+        type = noteType.value.value,
+        archived = true,
+        additionalPages = 5,
+      )
     }
   }
 

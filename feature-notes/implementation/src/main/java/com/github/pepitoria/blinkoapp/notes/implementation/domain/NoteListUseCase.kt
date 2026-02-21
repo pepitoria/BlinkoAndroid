@@ -60,6 +60,25 @@ class NoteListUseCase @Inject constructor(
     )
   }
 
+  /**
+   * Fetches additional pages of notes from the server in background.
+   * The UI will be updated via Flow as each page is merged into the local database.
+   */
+  suspend fun fetchAdditionalPages(
+    type: Int,
+    archived: Boolean = false,
+    additionalPages: Int = 5,
+  ) {
+    val session = authenticationRepository.getSession() ?: return
+    noteRepository.fetchAdditionalPages(
+      url = session.url,
+      token = session.token,
+      type = type,
+      archived = archived,
+      additionalPages = additionalPages,
+    )
+  }
+
   suspend fun resolveConflict(
     note: BlinkoNote,
     keepLocal: Boolean,

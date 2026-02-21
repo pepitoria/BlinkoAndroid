@@ -40,8 +40,12 @@ class OfflineFirstNoteRepository @Inject constructor(
     type: Int,
     archived: Boolean,
   ): BlinkoResult<List<BlinkoNote>> {
+    val isConnected = connectivityMonitor.isConnected.value
+    Timber.d("list() called - isConnected: $isConnected, url: $url, type: $type, archived: $archived")
+
     // If online, fetch from server and merge with local
-    if (connectivityMonitor.isConnected.value) {
+    if (isConnected) {
+      Timber.d("Fetching notes from server...")
       val response = api.noteList(
         url = url,
         token = token,
@@ -50,16 +54,20 @@ class OfflineFirstNoteRepository @Inject constructor(
 
       when (response) {
         is ApiResult.ApiSuccess -> {
+          Timber.d("Server returned ${response.value.size} notes")
           mergeServerNotes(response.value)
         }
         is ApiResult.ApiErrorResponse -> {
           Timber.w("Failed to fetch from server, falling back to local: ${response.message}")
         }
       }
+    } else {
+      Timber.d("Offline - skipping server fetch")
     }
 
     // Always return local data
     val localNotes = noteDao.list(type = type, archived = archived)
+    Timber.d("Returning ${localNotes.size} notes from local database")
     return BlinkoResult.Success(localNotes.map { it.toBlinkoNote() })
   }
 
@@ -302,6 +310,54 @@ class OfflineFirstNoteRepository @Inject constructor(
       }
       is ApiResult.ApiErrorResponse -> {
         response.toBlinkoResult()
+      }
+    }
+  }
+
+  override suspend fun fetchAdditionalPages(
+    url: String,
+    token: String,
+    type: Int,
+    archived: Boolean,
+    additionalPages: Int,
+  ) {
+    if (!connectivityMonitor.isConnected.value) {
+      Timber.d("Skipping additional pages fetch - offline")
+      return
+    }
+
+    // Fetch pages 2 through (additionalPages + 1)
+    for (page in 2..(additionalPages + 1)) {
+      if (!connectivityMonitor.isConnected.value) {
+        Timber.d("Stopping additional pages fetch - went offline at page $page")
+        break
+      }
+
+      Timber.d("Fetching page $page of notes")
+      val response = api.noteList(
+        url = url,
+        token = token,
+        noteListRequest = NoteListRequest(
+          type = type,
+          isArchived = archived,
+          page = page,
+        ),
+      )
+
+      when (response) {
+        is ApiResult.ApiSuccess -> {
+          val notes = response.value
+          if (notes.isEmpty()) {
+            Timber.d("Page $page returned empty, stopping pagination")
+            break
+          }
+          mergeServerNotes(notes)
+          Timber.d("Merged ${notes.size} notes from page $page")
+        }
+        is ApiResult.ApiErrorResponse -> {
+          Timber.w("Failed to fetch page $page: ${response.message}")
+          break
+        }
       }
     }
   }

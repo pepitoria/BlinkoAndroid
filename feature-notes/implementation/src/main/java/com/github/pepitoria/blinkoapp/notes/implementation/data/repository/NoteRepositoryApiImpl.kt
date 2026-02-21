@@ -203,6 +203,16 @@ class NoteRepositoryApiImpl @Inject constructor(
     return BlinkoResult.Success(Unit)
   }
 
+  override suspend fun fetchAdditionalPages(
+    url: String,
+    token: String,
+    type: Int,
+    archived: Boolean,
+    additionalPages: Int,
+  ) {
+    // No-op for API-only implementation
+  }
+
   override suspend fun resolveConflict(
     note: BlinkoNote,
     keepLocal: Boolean,

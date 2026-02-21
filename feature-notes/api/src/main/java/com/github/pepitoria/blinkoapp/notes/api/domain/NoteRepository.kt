@@ -56,6 +56,19 @@ interface NoteRepository {
     archived: Boolean = false,
   ): BlinkoResult<Unit>
 
+  /**
+   * Fetches additional pages from the server in background.
+   * The UI will be updated via Flow as each page is merged into the local database.
+   * @param additionalPages Number of additional pages to fetch (e.g., 5 means pages 2-6)
+   */
+  suspend fun fetchAdditionalPages(
+    url: String,
+    token: String,
+    type: Int,
+    archived: Boolean = false,
+    additionalPages: Int = 5,
+  )
+
   suspend fun resolveConflict(
     note: BlinkoNote,
     keepLocal: Boolean,
