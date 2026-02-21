@@ -12,6 +12,7 @@ import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -51,24 +52,43 @@ class NoteListScreenViewModel @Inject constructor(
   private val _conflictToResolve: MutableStateFlow<BlinkoNote?> = MutableStateFlow(null)
   val conflictToResolve = _conflictToResolve.asStateFlow()
 
+  private val _scrollToTop: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val scrollToTop = _scrollToTop.asStateFlow()
+
+  private var notesFlowJob: Job? = null
+  private var archivedFlowJob: Job? = null
+  private var previousNotesCount: Int = 0
+
   init {
     observeNotesFlow()
     observeArchivedFlow()
   }
 
   private fun observeNotesFlow() {
-    viewModelScope.launch(Dispatchers.IO) {
+    notesFlowJob?.cancel()
+    notesFlowJob = viewModelScope.launch(Dispatchers.IO) {
       noteListUseCase.listNotesAsFlow(
         type = noteType.value.value,
         archived = false,
       ).collect { noteList ->
+        // Detect if a new note was added (list grew and first item changed)
+        val newNoteAdded = noteList.size > previousNotesCount &&
+          previousNotesCount > 0 &&
+          noteList.firstOrNull()?.localId != _notes.value.firstOrNull()?.localId
+        previousNotesCount = noteList.size
+
         _notes.value = noteList
+
+        if (newNoteAdded) {
+          _scrollToTop.value = true
+        }
       }
     }
   }
 
   private fun observeArchivedFlow() {
-    viewModelScope.launch(Dispatchers.IO) {
+    archivedFlowJob?.cancel()
+    archivedFlowJob = viewModelScope.launch(Dispatchers.IO) {
       noteListUseCase.listNotesAsFlow(
         type = noteType.value.value,
         archived = true,
@@ -203,6 +223,10 @@ class NoteListScreenViewModel @Inject constructor(
 
   fun dismissConflictDialog() {
     _conflictToResolve.value = null
+  }
+
+  fun onScrolledToTop() {
+    _scrollToTop.value = false
   }
 
   fun resolveConflict(keepLocal: Boolean) {

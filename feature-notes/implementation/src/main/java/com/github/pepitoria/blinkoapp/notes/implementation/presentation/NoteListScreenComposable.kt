@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -58,6 +61,16 @@ fun NoteListScreenComposableInternal(
   val isConnected = viewModel.isConnected.collectAsState()
   val pendingSyncCount = viewModel.pendingSyncCount.collectAsState()
   val conflictToResolve = viewModel.conflictToResolve.collectAsState()
+  val scrollToTop = viewModel.scrollToTop.collectAsState()
+  val listState = rememberLazyListState()
+
+  // Scroll to top when a new note is added
+  LaunchedEffect(scrollToTop.value) {
+    if (scrollToTop.value) {
+      listState.animateScrollToItem(0)
+      viewModel.onScrolledToTop()
+    }
+  }
 
   // Show conflict resolution dialog if needed
   conflictToResolve.value?.let { note ->
@@ -101,6 +114,7 @@ fun NoteListScreenComposableInternal(
             notes = notes.value,
             archived = archived.value,
             noteType = noteType.value,
+            listState = listState,
             noteOnClick = noteOnClick,
             isLoading = isLoading.value,
             onRefresh = { viewModel.refresh() },
@@ -140,6 +154,7 @@ private fun NoteList(
   notes: List<BlinkoNote>,
   archived: List<BlinkoNote>,
   noteType: BlinkoNoteType,
+  listState: LazyListState = rememberLazyListState(),
   noteOnClick: (Int) -> Unit = {},
   isLoading: Boolean = false,
   onRefresh: () -> Unit = {},
@@ -156,6 +171,7 @@ private fun NoteList(
       .padding(16.dp),
   ) {
     LazyColumn(
+      state = listState,
       modifier = Modifier.fillMaxSize(),
     ) {
       items(
@@ -168,6 +184,7 @@ private fun NoteList(
           onDeleteSwipe = onDeleteSwipe,
           markAsDone = markAsDone,
           onConflictClick = onConflictClick,
+          modifier = Modifier.animateItem(),
         )
         Spacer(modifier = Modifier.height(8.dp))
       }
@@ -190,6 +207,7 @@ private fun NoteList(
             onDeleteSwipe = onDeleteSwipe,
             markAsDone = markAsDone,
             onConflictClick = onConflictClick,
+            modifier = Modifier.animateItem(),
           )
           Spacer(modifier = Modifier.height(8.dp))
         }

@@ -43,6 +43,7 @@ fun NoteListItem(
   onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> },
   markAsDone: (BlinkoNote) -> Unit = { _ -> },
   onConflictClick: ((BlinkoNote) -> Unit)? = null,
+  modifier: Modifier = Modifier,
 ) {
   val dismissState = rememberSwipeToDismissBoxState(
     positionalThreshold = { totalDistance ->
@@ -61,14 +62,14 @@ fun NoteListItem(
     },
   )
 
-  val modifier = if (note.isArchived) {
-    Modifier.graphicsLayer(alpha = 0.7f)
+  val archivedModifier = if (note.isArchived) {
+    modifier.graphicsLayer(alpha = 0.7f)
   } else {
-    Modifier
+    modifier
   }
 
   SwipeToDismissBox(
-    modifier = modifier,
+    modifier = archivedModifier,
     state = dismissState,
     backgroundContent = {
       Box(
