@@ -228,7 +228,7 @@ All testable business logic classes are covered (~100% of target classes):
 | Module | Test Location | Classes Tested |
 |--------|---------------|----------------|
 | feature-auth | `implementation/src/test/` | SessionUseCasesImpl, AuthenticationRepositoryImpl, LoginScreenViewModel, UserMapper |
-| feature-notes | `implementation/src/test/` | NoteRepositoryApiImpl, NoteListUseCase, NoteDeleteUseCase, NoteUpsertUseCase, NoteListByIdsUseCase, NoteListScreenViewModel, NoteEditScreenViewModel, ShareAndEditWithBlinkoViewModel, NoteExtensions |
+| feature-notes | `implementation/src/test/` | NoteListUseCase, NoteDeleteUseCase, NoteUpsertUseCase, NoteListByIdsUseCase, NoteListScreenViewModel, NoteEditScreenViewModel, ShareAndEditWithBlinkoViewModel, NoteExtensions |
 | feature-tags | `implementation/src/test/` | TagsRepositoryImpl, GetTagsUseCase, TagsListViewModel, TagMapper |
 | feature-search | `implementation/src/test/` | SearchScreenViewModel |
 | feature-settings | `implementation/src/test/` | TabsRepositoryImpl, DefaultTabUseCaseImpl, SettingsScreenViewModel |
