@@ -20,11 +20,19 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class OfflineFirstNoteRepositoryTest {
 
   private lateinit var api: NotesApiClient
@@ -36,8 +44,12 @@ class OfflineFirstNoteRepositoryTest {
 
   private val isConnectedFlow = MutableStateFlow(true)
 
+  private val testDispatcher = StandardTestDispatcher()
+  private val testScope = TestScope(testDispatcher)
+
   @BeforeEach
   fun setup() {
+    Dispatchers.setMain(testDispatcher)
     api = mockk(relaxed = true)
     authRepository = mockk()
     noteDao = mockk(relaxed = true)
@@ -62,8 +74,13 @@ class OfflineFirstNoteRepositoryTest {
     )
   }
 
+  @AfterEach
+  fun tearDown() {
+    Dispatchers.resetMain()
+  }
+
   @Test
-  fun `list returns local notes when offline`() = runTest {
+  fun `list returns local notes when offline`() = testScope.runTest {
     isConnectedFlow.value = false
     val localNotes = listOf(
       createNoteEntity("local-1", serverId = 1, content = "Note 1"),
@@ -84,7 +101,7 @@ class OfflineFirstNoteRepositoryTest {
   }
 
   @Test
-  fun `list fetches from server when online and merges`() = runTest {
+  fun `list fetches from server when online and merges`() = testScope.runTest {
     isConnectedFlow.value = true
     val serverNotes = listOf(
       NoteResponse(id = 1, content = "Server Note 1", type = 0, isArchived = false),
@@ -106,7 +123,7 @@ class OfflineFirstNoteRepositoryTest {
   }
 
   @Test
-  fun `upsertNote creates local note and queues sync when offline`() = runTest {
+  fun `upsertNote creates local note and queues sync when offline`() = testScope.runTest {
     isConnectedFlow.value = false
     val newNote = BlinkoNote(
       id = null,
@@ -127,7 +144,7 @@ class OfflineFirstNoteRepositoryTest {
   }
 
   @Test
-  fun `upsertNote syncs immediately when online`() = runTest {
+  fun `upsertNote syncs immediately when online`() = testScope.runTest {
     isConnectedFlow.value = true
     val newNote = BlinkoNote(
       id = null,
@@ -152,7 +169,7 @@ class OfflineFirstNoteRepositoryTest {
   }
 
   @Test
-  fun `deleteNote queues delete when offline`() = runTest {
+  fun `deleteNote queues delete when offline`() = testScope.runTest {
     isConnectedFlow.value = false
     val noteEntity = createNoteEntity("local-1", serverId = 100)
     coEvery { noteDao.getByLocalId("local-1") } returns noteEntity
@@ -172,7 +189,7 @@ class OfflineFirstNoteRepositoryTest {
   }
 
   @Test
-  fun `deleteNote syncs immediately when online`() = runTest {
+  fun `deleteNote syncs immediately when online`() = testScope.runTest {
     isConnectedFlow.value = true
     val noteEntity = createNoteEntity("local-1", serverId = 100)
     coEvery { noteDao.getByLocalId("local-1") } returns noteEntity
@@ -194,7 +211,7 @@ class OfflineFirstNoteRepositoryTest {
   }
 
   @Test
-  fun `resolveConflict with keepLocal re-queues update`() = runTest {
+  fun `resolveConflict with keepLocal re-queues update`() = testScope.runTest {
     val noteEntity = createNoteEntity(
       localId = "local-1",
       serverId = 100,

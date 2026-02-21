@@ -1,5 +1,6 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.presentation
 
+import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteDeleteUseCase
@@ -14,6 +15,7 @@ import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -57,6 +59,8 @@ class NoteListScreenViewModelTest {
 
   @AfterEach
   fun tearDown() {
+    // Cancel any running coroutines in the ViewModel's scope
+    viewModel.viewModelScope.cancel()
     Dispatchers.resetMain()
   }
 
