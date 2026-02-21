@@ -1,5 +1,8 @@
 package com.github.pepitoria.blinkoapp.tags.data
 
+import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.data.db.dao.TagDao
+import com.github.pepitoria.blinkoapp.offline.data.db.entity.TagEntity
 import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoSession
 import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
@@ -10,7 +13,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,13 +25,21 @@ class TagsRepositoryImplTest {
   private val api: TagsApiClient = mockk()
   private val tagMapper: TagMapper = mockk()
   private val authenticationRepository: AuthenticationRepository = mockk()
+  private val tagDao: TagDao = mockk(relaxed = true)
+  private val connectivityMonitor: ConnectivityMonitor = mockk()
+  private val isConnectedFlow = MutableStateFlow(true)
 
   @BeforeEach
   fun setUp() {
+    every { connectivityMonitor.isConnected } returns isConnectedFlow
+    isConnectedFlow.value = true
+
     tagsRepository = TagsRepositoryImpl(
       api = api,
       tagMapper = tagMapper,
       authenticationRepository = authenticationRepository,
+      tagDao = tagDao,
+      connectivityMonitor = connectivityMonitor,
     )
   }
 
@@ -62,12 +73,44 @@ class TagsRepositoryImplTest {
   }
 
   @Test
-  fun `getTags returns empty list when api fails`() = runTest {
+  fun `getTags caches tags when api succeeds`() = runTest {
     val session = BlinkoSession(
       url = "https://test.com",
       token = "token123",
       userName = "user",
       password = "pass",
+    )
+    val responseTags = listOf(
+      ResponseTag(id = 1, name = "Tag1"),
+      ResponseTag(id = 2, name = "Tag2"),
+    )
+    val blinkoTags = listOf(
+      BlinkoTag(name = "Tag1"),
+      BlinkoTag(name = "Tag2"),
+    )
+
+    every { authenticationRepository.getSession() } returns session
+    coEvery { api.getTags(url = "https://test.com", token = "token123") } returns ApiResult.ApiSuccess(responseTags)
+    every { tagMapper.toBlinkoTag(responseTags[0]) } returns blinkoTags[0]
+    every { tagMapper.toBlinkoTag(responseTags[1]) } returns blinkoTags[1]
+
+    tagsRepository.getTags()
+
+    coVerify { tagDao.deleteAll() }
+    coVerify { tagDao.insertAll(any()) }
+  }
+
+  @Test
+  fun `getTags returns cached tags when api fails`() = runTest {
+    val session = BlinkoSession(
+      url = "https://test.com",
+      token = "token123",
+      userName = "user",
+      password = "pass",
+    )
+    val cachedTags = listOf(
+      TagEntity(id = 1, name = "CachedTag1"),
+      TagEntity(id = 2, name = "CachedTag2"),
     )
 
     every { authenticationRepository.getSession() } returns session
@@ -75,19 +118,46 @@ class TagsRepositoryImplTest {
       code = 500,
       message = "Server error",
     )
+    coEvery { tagDao.getAll() } returns cachedTags
 
     val result = tagsRepository.getTags()
 
-    assertTrue(result.isEmpty())
+    assertEquals(2, result.size)
+    assertEquals("CachedTag1", result[0].name)
+    assertEquals("CachedTag2", result[1].name)
   }
 
   @Test
-  fun `getTags returns empty list when no session exists`() = runTest {
-    every { authenticationRepository.getSession() } returns null
+  fun `getTags returns cached tags when offline`() = runTest {
+    isConnectedFlow.value = false
+    val cachedTags = listOf(
+      TagEntity(id = 1, name = "OfflineTag1"),
+      TagEntity(id = 2, name = "OfflineTag2"),
+    )
+
+    coEvery { tagDao.getAll() } returns cachedTags
 
     val result = tagsRepository.getTags()
 
-    assertTrue(result.isEmpty())
+    assertEquals(2, result.size)
+    assertEquals("OfflineTag1", result[0].name)
+    assertEquals("OfflineTag2", result[1].name)
+    coVerify(exactly = 0) { api.getTags(any(), any()) }
+  }
+
+  @Test
+  fun `getTags returns cached tags when no session exists`() = runTest {
+    val cachedTags = listOf(
+      TagEntity(id = 1, name = "CachedTag"),
+    )
+
+    every { authenticationRepository.getSession() } returns null
+    coEvery { tagDao.getAll() } returns cachedTags
+
+    val result = tagsRepository.getTags()
+
+    assertEquals(1, result.size)
+    assertEquals("CachedTag", result[0].name)
     coVerify(exactly = 0) { api.getTags(any(), any()) }
   }
 

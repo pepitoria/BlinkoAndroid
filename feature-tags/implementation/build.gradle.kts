@@ -67,6 +67,7 @@ dependencies {
   implementation(project(":shared-ui"))
   implementation(project(":shared-domain"))
   implementation(project(":shared-networking"))
+  implementation(project(":shared-offline"))
 
   implementation(libs.accompanist.flowlayout)
 
