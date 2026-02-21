@@ -33,6 +33,9 @@ timber = "5.0.1"
 mockk = "1.14.9"
 ktlint = "12.1.2"
 
+room = "2.7.1"
+workmanager = "2.9.0"
+
 [libraries]
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "composeAccompanist" }
 
@@ -58,6 +61,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 androidx-material = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-core" }
+compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-hilt-navigation-compose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -70,6 +74,17 @@ okhttp3-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp
 okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtextCommonmark" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
+# Room
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+# WorkManager
+androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
+androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "workmanager" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "androidx-hilt-navigation-compose" }
+androidx-hilt-work-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt-navigation-compose" }
 
 # testing
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }

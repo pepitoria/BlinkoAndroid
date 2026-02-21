@@ -6,13 +6,17 @@ import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteDeleteUseCase
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteListUseCase
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteUpsertUseCase
+import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -21,6 +25,7 @@ class NoteListScreenViewModel @Inject constructor(
   private val noteListUseCase: NoteListUseCase,
   private val noteDeleteUseCase: NoteDeleteUseCase,
   private val noteUpsertUseCase: NoteUpsertUseCase,
+  private val connectivityMonitor: ConnectivityMonitor,
 ) : BlinkoViewModel() {
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -34,6 +39,44 @@ class NoteListScreenViewModel @Inject constructor(
 
   private val _noteType: MutableStateFlow<BlinkoNoteType> = MutableStateFlow(BlinkoNoteType.BLINKO)
   val noteType = _noteType.asStateFlow()
+
+  val isConnected: StateFlow<Boolean> = connectivityMonitor.isConnected
+
+  val pendingSyncCount: StateFlow<Int> = noteListUseCase.pendingSyncCount
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+
+  val conflicts: StateFlow<List<BlinkoNote>> = noteListUseCase.conflicts
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+  private val _conflictToResolve: MutableStateFlow<BlinkoNote?> = MutableStateFlow(null)
+  val conflictToResolve = _conflictToResolve.asStateFlow()
+
+  init {
+    observeNotesFlow()
+    observeArchivedFlow()
+  }
+
+  private fun observeNotesFlow() {
+    viewModelScope.launch(Dispatchers.IO) {
+      noteListUseCase.listNotesAsFlow(
+        type = noteType.value.value,
+        archived = false,
+      ).collect { noteList ->
+        _notes.value = noteList
+      }
+    }
+  }
+
+  private fun observeArchivedFlow() {
+    viewModelScope.launch(Dispatchers.IO) {
+      noteListUseCase.listNotesAsFlow(
+        type = noteType.value.value,
+        archived = true,
+      ).collect { noteList ->
+        _archived.value = noteList
+      }
+    }
+  }
 
   fun refresh() {
     onStart()
@@ -63,7 +106,16 @@ class NoteListScreenViewModel @Inject constructor(
   }
 
   fun setNoteType(noteType: BlinkoNoteType) {
+    val typeChanged = _noteType.value != noteType
     _noteType.value = noteType
+
+    if (typeChanged) {
+      // Re-observe with new type
+      observeNotesFlow()
+      if (noteType == BlinkoNoteType.TODO) {
+        observeArchivedFlow()
+      }
+    }
 
     if (noteType == BlinkoNoteType.TODO) {
       fetchDoneTodos()
@@ -89,18 +141,16 @@ class NoteListScreenViewModel @Inject constructor(
   }
 
   fun deleteNote(note: BlinkoNote) {
-    note.id?.let { noteId ->
-      viewModelScope.launch(Dispatchers.IO) {
-        val deleteResponse = noteDeleteUseCase.deleteNote(noteId)
+    viewModelScope.launch(Dispatchers.IO) {
+      val deleteResponse = noteDeleteUseCase.deleteNote(note)
 
-        when (deleteResponse) {
-          is BlinkoResult.Success -> {
-            Timber.d("Note deleted successfully: $noteId")
-            _notes.value = _notes.value.filter { it.id != noteId }
-          }
-          is BlinkoResult.Error -> {
-            Timber.e("${this::class.java.simpleName}.deleteNote() error: ${deleteResponse.message}")
-          }
+      when (deleteResponse) {
+        is BlinkoResult.Success -> {
+          Timber.d("Note deleted successfully: ${note.id ?: note.localId}")
+          // Notes list will be updated via Flow observation
+        }
+        is BlinkoResult.Error -> {
+          Timber.e("${this::class.java.simpleName}.deleteNote() error: ${deleteResponse.message}")
         }
       }
     }
@@ -115,26 +165,37 @@ class NoteListScreenViewModel @Inject constructor(
       when (response) {
         is BlinkoResult.Success -> {
           Timber.d("${this::class.java.simpleName}.markNoteAsDone() response: ${response.value.content}")
-
-          if (note.isArchived) {
-            _notes.value = _notes.value.filter { it.id != note.id }
-
-            val updatedList = _archived.value.toMutableList()
-            updatedList.add(note)
-            _archived.value = updatedList
-          } else {
-            _archived.value = _archived.value.filter { it.id != note.id }
-
-            val updatedList = _notes.value.toMutableList()
-            updatedList.add(note)
-            _notes.value = updatedList
-          }
+          // Notes list will be updated via Flow observation
         }
 
         is BlinkoResult.Error -> {
           Timber.e("${this::class.java.simpleName}.markNoteAsDone() error: ${response.message}")
         }
       }
+    }
+  }
+
+  fun showConflictDialog(note: BlinkoNote) {
+    _conflictToResolve.value = note
+  }
+
+  fun dismissConflictDialog() {
+    _conflictToResolve.value = null
+  }
+
+  fun resolveConflict(keepLocal: Boolean) {
+    val note = _conflictToResolve.value ?: return
+    viewModelScope.launch(Dispatchers.IO) {
+      val result = noteListUseCase.resolveConflict(note, keepLocal)
+      when (result) {
+        is BlinkoResult.Success -> {
+          Timber.d("Conflict resolved for note: ${note.id ?: note.localId}")
+        }
+        is BlinkoResult.Error -> {
+          Timber.e("Failed to resolve conflict: ${result.message}")
+        }
+      }
+      _conflictToResolve.value = null
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.domain
 
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteRepository
+import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import javax.inject.Inject
@@ -28,5 +29,9 @@ class NoteDeleteUseCase @Inject constructor(
         response
       }
     }
+  }
+
+  suspend fun deleteNote(note: BlinkoNote): BlinkoResult<Boolean> {
+    return noteRepository.deleteNote(note)
   }
 }

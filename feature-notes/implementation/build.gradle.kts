@@ -68,6 +68,7 @@ dependencies {
   implementation(project(":shared-ui"))
   implementation(project(":shared-domain"))
   implementation(project(":shared-networking"))
+  implementation(project(":shared-offline"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
@@ -82,6 +83,7 @@ dependencies {
 
   implementation(libs.androidx.material3)
   implementation(libs.compose.material.icons)
+  implementation(libs.compose.material.icons.extended)
 
   implementation(libs.timber)
 

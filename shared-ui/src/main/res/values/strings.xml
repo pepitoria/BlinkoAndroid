@@ -48,6 +48,15 @@
 
   <string name="settings_preselected_tab">Page to show first</string>
 
+  <string name="sync_conflict_title">Sync Conflict</string>
+  <string name="sync_conflict_description">This note was modified both on this device and on the server. Choose which version to keep.</string>
+  <string name="sync_conflict_local_version">Local Version</string>
+  <string name="sync_conflict_server_version">Server Version</string>
+  <string name="sync_conflict_server_version_hint">The server has a different version of this note. Select \"Keep Server\" to download and view it.</string>
+  <string name="sync_conflict_keep_local">Keep Local</string>
+  <string name="sync_conflict_keep_server">Keep Server</string>
+  <string name="sync_conflict_later">Decide Later</string>
+
   <string-array name="blinko_note_types">
     <item>Blinko</item>
     <item>Note</item>

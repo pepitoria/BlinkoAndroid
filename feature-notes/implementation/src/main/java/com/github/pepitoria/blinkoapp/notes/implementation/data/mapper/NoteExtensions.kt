@@ -15,6 +15,7 @@ fun NoteResponse.toBlinkoNote(): BlinkoNote {
     content = this.content ?: "",
     type = BlinkoNoteType.fromResponseType(this.type),
     isArchived = this.isArchived ?: false,
+    updatedAt = this.updatedAt,
   )
 }
 

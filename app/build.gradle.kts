@@ -134,6 +134,10 @@ dependencies {
   implementation(project(":shared-domain"))
   implementation(project(":shared-networking"))
   implementation(project(":shared-storage"))
+  implementation(project(":shared-offline"))
+
+  // WorkManager
+  implementation(libs.androidx.work.runtime)
   implementation(project(":feature-notes:api"))
   implementation(project(":feature-notes:implementation"))
   implementation(project(":feature-search:api"))
@@ -159,7 +163,9 @@ dependencies {
   // Dagger hilt
   implementation(libs.hilt.android)
   implementation(libs.androidx.hilt.navigation.compose)
+  implementation(libs.androidx.hilt.work)
   ksp(libs.hilt.compiler)
+  ksp(libs.androidx.hilt.work.compiler)
 
   implementation(libs.richtext.commonmark)
 

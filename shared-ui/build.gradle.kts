@@ -66,6 +66,7 @@ dependencies {
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
   implementation(libs.compose.material.icons)
+  implementation(libs.compose.material.icons.extended)
   implementation(libs.timber)
 
   // Dagger hilt

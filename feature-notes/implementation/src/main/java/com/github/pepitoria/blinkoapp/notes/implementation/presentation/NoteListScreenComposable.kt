@@ -1,8 +1,10 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,11 +26,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.api.presentation.NoteListItem
+import com.github.pepitoria.blinkoapp.notes.implementation.presentation.conflict.ConflictResolutionDialog
 import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.shared.theme.getBackgroundColor
 import com.github.pepitoria.blinkoapp.shared.ui.R
 import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
+import com.github.pepitoria.blinkoapp.shared.ui.sync.OfflineBanner
 import com.github.pepitoria.blinkoapp.shared.ui.tabbar.TabBar
 
 @Composable
@@ -51,6 +55,19 @@ fun NoteListScreenComposableInternal(
   val notes = viewModel.notes.collectAsState()
   val noteType = viewModel.noteType.collectAsState()
   val archived = viewModel.archived.collectAsState()
+  val isConnected = viewModel.isConnected.collectAsState()
+  val pendingSyncCount = viewModel.pendingSyncCount.collectAsState()
+  val conflictToResolve = viewModel.conflictToResolve.collectAsState()
+
+  // Show conflict resolution dialog if needed
+  conflictToResolve.value?.let { note ->
+    ConflictResolutionDialog(
+      note = note,
+      onKeepLocal = { viewModel.resolveConflict(keepLocal = true) },
+      onKeepServer = { viewModel.resolveConflict(keepLocal = false) },
+      onDismiss = { viewModel.dismissConflictDialog() },
+    )
+  }
 
   BlinkoAppTheme {
     TabBar(
@@ -66,25 +83,38 @@ fun NoteListScreenComposableInternal(
         )
       },
     ) { paddingValues ->
-      if (isLoading.value) {
-        Loading()
-      } else if (notes.value.isEmpty()) {
-        EmptyNoteList()
-      } else {
-        NoteList(
-          notes = notes.value,
-          archived = archived.value,
-          noteType = noteType.value,
-          noteOnClick = noteOnClick,
-          isLoading = isLoading.value,
-          onRefresh = { viewModel.refresh() },
-          onDeleteSwipe = { note ->
-            viewModel.deleteNote(note)
-          },
-          markAsDone = { note ->
-            viewModel.markNoteAsDone(note)
-          },
-        )
+      Column(modifier = Modifier.fillMaxSize()) {
+        // Show offline banner when not connected
+        if (!isConnected.value) {
+          OfflineBanner(
+            pendingSyncCount = pendingSyncCount.value,
+            modifier = Modifier.fillMaxWidth(),
+          )
+        }
+
+        if (isLoading.value) {
+          Loading()
+        } else if (notes.value.isEmpty()) {
+          EmptyNoteList()
+        } else {
+          NoteList(
+            notes = notes.value,
+            archived = archived.value,
+            noteType = noteType.value,
+            noteOnClick = noteOnClick,
+            isLoading = isLoading.value,
+            onRefresh = { viewModel.refresh() },
+            onDeleteSwipe = { note ->
+              viewModel.deleteNote(note)
+            },
+            markAsDone = { note ->
+              viewModel.markNoteAsDone(note)
+            },
+            onConflictClick = { note ->
+              viewModel.showConflictDialog(note)
+            },
+          )
+        }
       }
     }
   }
@@ -115,6 +145,7 @@ private fun NoteList(
   onRefresh: () -> Unit = {},
   onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> },
   markAsDone: (BlinkoNote) -> Unit = { _ -> },
+  onConflictClick: (BlinkoNote) -> Unit = { _ -> },
 ) {
   PullToRefreshBox(
     isRefreshing = isLoading,
@@ -129,13 +160,14 @@ private fun NoteList(
     ) {
       items(
         items = notes,
-        key = { it.id ?: 0 },
+        key = { it.localId ?: it.id?.toString() ?: "" },
       ) { note ->
         NoteListItem(
           note = note,
           onClick = noteOnClick,
           onDeleteSwipe = onDeleteSwipe,
           markAsDone = markAsDone,
+          onConflictClick = onConflictClick,
         )
         Spacer(modifier = Modifier.height(8.dp))
       }
@@ -150,13 +182,14 @@ private fun NoteList(
 
         items(
           items = archived,
-          key = { it.id ?: 0 },
+          key = { it.localId ?: it.id?.toString() ?: "" },
         ) { note ->
           NoteListItem(
             note = note,
             onClick = noteOnClick,
             onDeleteSwipe = onDeleteSwipe,
             markAsDone = markAsDone,
+            onConflictClick = onConflictClick,
           )
           Spacer(modifier = Modifier.height(8.dp))
         }

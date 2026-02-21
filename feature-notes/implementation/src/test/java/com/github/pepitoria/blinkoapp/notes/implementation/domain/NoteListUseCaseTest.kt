@@ -12,6 +12,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,6 +26,10 @@ class NoteListUseCaseTest {
 
   @BeforeEach
   fun setUp() {
+    every { noteRepository.pendingSyncCount } returns flowOf(0)
+    every { noteRepository.conflicts } returns flowOf(emptyList())
+    every { noteRepository.listAsFlow(any(), any()) } returns flowOf(emptyList())
+
     noteListUseCase = NoteListUseCase(
       noteRepository = noteRepository,
       authenticationRepository = authenticationRepository,

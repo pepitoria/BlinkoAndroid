@@ -14,7 +14,14 @@ import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.networking.mapper.toBlinkoResult
 import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 
+/**
+ * Legacy API-only implementation of NoteRepository.
+ * This is kept for reference but [OfflineFirstNoteRepository] should be used instead.
+ */
 class NoteRepositoryApiImpl @Inject constructor(
   private val api: NotesApiClient,
   private val authenticationRepository: AuthenticationRepository,
@@ -168,5 +175,38 @@ class NoteRepositoryApiImpl @Inject constructor(
     }
 
     return BlinkoResult.Error.NOTFOUND
+  }
+
+  override fun listAsFlow(
+    type: Int,
+    archived: Boolean,
+  ): Flow<List<BlinkoNote>> = emptyFlow()
+
+  override suspend fun deleteNote(note: BlinkoNote): BlinkoResult<Boolean> {
+    return note.id?.let { id ->
+      authenticationRepository.getSession()?.let { session ->
+        delete(session.url, session.token, id)
+      } ?: BlinkoResult.Error.NOTFOUND
+    } ?: BlinkoResult.Error.NOTFOUND
+  }
+
+  override val pendingSyncCount: Flow<Int> = flowOf(0)
+
+  override val conflicts: Flow<List<BlinkoNote>> = flowOf(emptyList())
+
+  override suspend fun refreshFromServer(
+    url: String,
+    token: String,
+    type: Int,
+    archived: Boolean,
+  ): BlinkoResult<Unit> {
+    return BlinkoResult.Success(Unit)
+  }
+
+  override suspend fun resolveConflict(
+    note: BlinkoNote,
+    keepLocal: Boolean,
+  ): BlinkoResult<BlinkoNote> {
+    return BlinkoResult.Success(note)
   }
 }

@@ -1,5 +1,6 @@
 package com.github.pepitoria.blinkoapp.notes.api.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.github.pepitoria.blinkoapp.notes.api.R
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
+import com.github.pepitoria.blinkoapp.shared.ui.sync.NoteSyncStatusIcon
 import com.halilibo.richtext.commonmark.Markdown
 import com.halilibo.richtext.ui.BasicRichText
 
@@ -40,6 +42,7 @@ fun NoteListItem(
   onClick: (Int) -> Unit = { _ -> },
   onDeleteSwipe: (BlinkoNote) -> Unit = { _ -> },
   markAsDone: (BlinkoNote) -> Unit = { _ -> },
+  onConflictClick: ((BlinkoNote) -> Unit)? = null,
 ) {
   val dismissState = rememberSwipeToDismissBoxState(
     positionalThreshold = { totalDistance ->
@@ -94,7 +97,13 @@ fun NoteListItem(
         containerColor = MaterialTheme.colorScheme.background,
       ),
       elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-      onClick = { note.id?.let(onClick) },
+      onClick = {
+        if (note.hasConflict && onConflictClick != null) {
+          onConflictClick(note)
+        } else {
+          note.id?.let(onClick)
+        }
+      },
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         var isChecked by remember { mutableStateOf(note.isArchived) }
@@ -116,16 +125,38 @@ fun NoteListItem(
         }
 
         BasicRichText(
-          modifier = Modifier.padding(
-            top = 16.dp,
-            start = if (note.type == BlinkoNoteType.TODO) 4.dp else 16.dp,
-            bottom = 16.dp,
-            end = 16.dp,
-          ),
+          modifier = Modifier
+            .weight(1f)
+            .padding(
+              top = 16.dp,
+              start = if (note.type == BlinkoNoteType.TODO) 4.dp else 16.dp,
+              bottom = 16.dp,
+              end = 8.dp,
+            ),
         ) {
           Markdown(
             content = note.content.trimIndent(),
           )
+        }
+
+        // Sync status indicator
+        if (note.isPending || note.hasConflict) {
+          Box(
+            modifier = Modifier
+              .padding(end = 12.dp)
+              .then(
+                if (note.hasConflict && onConflictClick != null) {
+                  Modifier.clickable { onConflictClick(note) }
+                } else {
+                  Modifier
+                },
+              ),
+          ) {
+            NoteSyncStatusIcon(
+              isPending = note.isPending,
+              hasConflict = note.hasConflict,
+            )
+          }
         }
       }
     }

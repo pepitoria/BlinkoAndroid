@@ -7,8 +7,10 @@ import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApi
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClientNetImpl
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesLocalFakesApiClientImpl
-import com.github.pepitoria.blinkoapp.notes.implementation.data.repository.NoteRepositoryApiImpl
+import com.github.pepitoria.blinkoapp.notes.implementation.data.repository.OfflineFirstNoteRepository
+import com.github.pepitoria.blinkoapp.notes.implementation.data.sync.NoteSyncExecutor
 import com.github.pepitoria.blinkoapp.notes.implementation.presentation.NotesFactoryImpl
+import com.github.pepitoria.blinkoapp.offline.sync.SyncExecutor
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -25,7 +27,10 @@ abstract class NotesModule {
   abstract fun bindNotesFactory(notesFactoryImpl: NotesFactoryImpl): NotesFactory
 
   @Binds
-  abstract fun bindNoteRepository(noteRepositoryImpl: NoteRepositoryApiImpl): NoteRepository
+  abstract fun bindNoteRepository(noteRepositoryImpl: OfflineFirstNoteRepository): NoteRepository
+
+  @Binds
+  abstract fun bindSyncExecutor(noteSyncExecutor: NoteSyncExecutor): SyncExecutor
 
   companion object {
     @Provides
