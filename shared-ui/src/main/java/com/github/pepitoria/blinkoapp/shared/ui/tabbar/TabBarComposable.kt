@@ -4,15 +4,21 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.github.pepitoria.blinkoapp.shared.navigation.BlinkoNavigationRouter
+import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAccent
+import com.github.pepitoria.blinkoapp.shared.theme.NoteAccent
+import com.github.pepitoria.blinkoapp.shared.theme.TodoAccent
 import com.github.pepitoria.blinkoapp.shared.ui.R
 
 @Composable
@@ -44,6 +50,7 @@ fun TabBar(
               goToBlinkos()
             }
           },
+          colors = accentNavigationBarItemColors(BlinkoAccent),
         )
 
         NavigationBarItem(
@@ -60,6 +67,7 @@ fun TabBar(
               goToNotes()
             }
           },
+          colors = accentNavigationBarItemColors(NoteAccent),
         )
 
         NavigationBarItem(
@@ -76,6 +84,7 @@ fun TabBar(
               goToTodoList()
             }
           },
+          colors = accentNavigationBarItemColors(TodoAccent),
         )
 
         NavigationBarItem(
@@ -110,3 +119,12 @@ fun TabBar(
     content(innerPadding)
   }
 }
+
+@Composable
+private fun accentNavigationBarItemColors(accentColor: Color) = NavigationBarItemDefaults.colors(
+  selectedIconColor = accentColor,
+  selectedTextColor = accentColor,
+  indicatorColor = accentColor.copy(alpha = 0.15f),
+  unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+  unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+)

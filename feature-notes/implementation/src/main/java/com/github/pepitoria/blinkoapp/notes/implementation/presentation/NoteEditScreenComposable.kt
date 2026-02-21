@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
+import com.github.pepitoria.blinkoapp.shared.theme.getNoteTypeAccentColor
 import com.github.pepitoria.blinkoapp.shared.ui.R
 import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoButton
@@ -256,26 +257,31 @@ private fun NoteIcon(
   selection: Int,
   modifier: Modifier = Modifier,
 ) {
+  val accentColor = getNoteTypeAccentColor(selection)
   when (selection) {
     0 -> Icon(
       ImageVector.vectorResource(id = R.drawable.blinko),
       contentDescription = stringResource(R.string.tab_bar_blinkos),
       modifier = modifier,
+      tint = accentColor,
     )
     1 -> Icon(
       ImageVector.vectorResource(id = R.drawable.note),
       contentDescription = stringResource(R.string.tab_bar_notes),
       modifier = modifier,
+      tint = accentColor,
     )
     2 -> Icon(
       ImageVector.vectorResource(id = R.drawable.todo),
       contentDescription = stringResource(R.string.tab_bar_todos),
       modifier = modifier,
+      tint = accentColor,
     )
     else -> Icon(
       ImageVector.vectorResource(id = R.drawable.blinko),
       contentDescription = stringResource(R.string.tab_bar_blinkos),
       modifier = modifier,
+      tint = accentColor,
     )
   }
 }

@@ -59,6 +59,7 @@ android {
 dependencies {
   implementation(project(":shared-domain"))
   implementation(project(":shared-ui"))
+  implementation(project(":shared-theme"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

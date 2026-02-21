@@ -32,6 +32,7 @@ import com.github.pepitoria.blinkoapp.notes.api.presentation.NoteListItem
 import com.github.pepitoria.blinkoapp.notes.implementation.presentation.conflict.ConflictResolutionDialog
 import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAppTheme
 import com.github.pepitoria.blinkoapp.shared.theme.getBackgroundColor
+import com.github.pepitoria.blinkoapp.shared.theme.getNoteTypeAccentColor
 import com.github.pepitoria.blinkoapp.shared.ui.R
 import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
@@ -93,6 +94,7 @@ fun NoteListScreenComposableInternal(
       floatingActionButton = {
         AddNoteFAB(
           onClick = goToNewNote,
+          noteType = noteType.value,
         )
       },
     ) { paddingValues ->
@@ -135,11 +137,20 @@ fun NoteListScreenComposableInternal(
 }
 
 @Composable
-fun AddNoteFAB(onClick: () -> Unit) {
+fun AddNoteFAB(
+  onClick: () -> Unit,
+  noteType: BlinkoNoteType = BlinkoNoteType.BLINKO,
+) {
+  val accentColor = getNoteTypeAccentColor(noteType.value)
   FloatingActionButton(
     onClick = { onClick() },
+    containerColor = accentColor,
   ) {
-    Icon(Icons.Filled.Add, stringResource(id = R.string.note_list_add_note))
+    Icon(
+      Icons.Filled.Add,
+      contentDescription = stringResource(id = R.string.note_list_add_note),
+      tint = androidx.compose.ui.graphics.Color.White,
+    )
   }
 }
 

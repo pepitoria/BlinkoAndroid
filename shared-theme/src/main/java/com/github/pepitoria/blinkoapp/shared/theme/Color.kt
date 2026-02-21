@@ -25,3 +25,8 @@ val RDGreyBackgroundDark = Color(0xFF656565)
 val RDGreyBackgroundDarker = Color(0xFF2A2A2A)
 
 val Red = Color(0xFFD32F2F)
+
+// Note type accent colors
+val BlinkoAccent = Color(0xFFFFD700) // Gold/Yellow for Blinkos
+val NoteAccent = Color(0xFF3B82F6) // Blue for Notes
+val TodoAccent = Color(0xFF10B981) // Green/Teal for Todos

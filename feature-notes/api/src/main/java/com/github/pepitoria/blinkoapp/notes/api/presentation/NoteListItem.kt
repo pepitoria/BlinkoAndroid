@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,12 +27,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.pepitoria.blinkoapp.notes.api.R
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
+import com.github.pepitoria.blinkoapp.shared.theme.getNoteTypeAccentColor
 import com.github.pepitoria.blinkoapp.shared.ui.sync.NoteSyncStatusIcon
 import com.halilibo.richtext.commonmark.Markdown
 import com.halilibo.richtext.ui.BasicRichText
@@ -91,9 +98,12 @@ fun NoteListItem(
       }
     },
   ) {
+    val accentColor = getNoteTypeAccentColor(note.type.value)
+
     Card(
       modifier = Modifier
-        .fillMaxWidth(),
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(12.dp)),
       colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.background,
       ),
@@ -106,7 +116,17 @@ fun NoteListItem(
         }
       },
     ) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
+      Row(
+        modifier = Modifier.drawBehind {
+          // Draw accent stripe on the left
+          drawRect(
+            color = accentColor,
+            topLeft = Offset.Zero,
+            size = Size(4.dp.toPx(), size.height),
+          )
+        },
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
         var isChecked by remember { mutableStateOf(note.isArchived) }
 
         if (note.type == BlinkoNoteType.TODO) {
@@ -116,9 +136,13 @@ fun NoteListItem(
               isChecked = it
               markAsDone(note.copy(isArchived = isChecked))
             },
+            colors = CheckboxDefaults.colors(
+              checkedColor = accentColor,
+              checkmarkColor = MaterialTheme.colorScheme.background,
+            ),
             modifier = Modifier.padding(
               top = 4.dp,
-              start = 4.dp,
+              start = 8.dp,
               bottom = 4.dp,
               end = 0.dp,
             ),
@@ -136,7 +160,7 @@ fun NoteListItem(
             ),
         ) {
           Markdown(
-            content = note.content.trimIndent(),
+            content = note.content.trim(),
           )
         }
 

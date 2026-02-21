@@ -95,3 +95,16 @@ fun getBackgroundColor(): Color {
     RDGreyBackgroundLighter
   }
 }
+
+/**
+ * Returns the accent color for a note type.
+ * @param noteTypeValue 0 = Blinko (gold), 1 = Note (blue), 2 = Todo (green)
+ */
+fun getNoteTypeAccentColor(noteTypeValue: Int): Color {
+  return when (noteTypeValue) {
+    0 -> BlinkoAccent
+    1 -> NoteAccent
+    2 -> TodoAccent
+    else -> BlinkoAccent
+  }
+}
