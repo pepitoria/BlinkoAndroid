@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,8 +80,8 @@ fun SearchScreenInternalComposable(
       goToSearch = goToSearch,
       goToSettings = goToSettings,
     ) { paddingValues ->
-
       SearchScreen(
+        paddingValues = paddingValues,
         isLoading = isLoading.value,
         notes = notes.value,
         query = query.value,
@@ -93,6 +94,7 @@ fun SearchScreenInternalComposable(
 
 @Composable
 private fun SearchScreen(
+  paddingValues: PaddingValues = PaddingValues(),
   isLoading: Boolean,
   notes: List<BlinkoNote>,
   query: String,
@@ -105,6 +107,7 @@ private fun SearchScreen(
       .background(
         color = getBackgroundColor(),
       )
+      .padding(paddingValues)
       .padding(16.dp),
   ) {
     SearchBar(

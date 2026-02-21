@@ -83,7 +83,7 @@ fun NoteListScreenComposableInternal(
         )
       },
     ) { paddingValues ->
-      Column(modifier = Modifier.fillMaxSize()) {
+      Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
         // Show offline banner when not connected
         if (!isConnected.value) {
           OfflineBanner(

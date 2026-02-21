@@ -3,6 +3,7 @@ package com.github.pepitoria.blinkoapp.settings.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,6 +60,7 @@ fun SettingsScreenComposableInternal(
       goToSettings = goToSettings,
     ) { paddingValues ->
       SessionActive(
+        paddingValues = paddingValues,
         logout = {
           viewModel.logout()
         },
@@ -68,7 +70,6 @@ fun SettingsScreenComposableInternal(
         getDefaultTab = {
           viewModel.getDefaultTab()
         },
-
       )
     }
   }
@@ -100,6 +101,7 @@ private fun ListenForEvents(
 
 @Composable
 fun SessionActive(
+  paddingValues: PaddingValues = PaddingValues(),
   logout: () -> Unit = {},
   onTabSelected: (String) -> Unit = { _ -> },
   getDefaultTab: () -> String = { "TODOS" },
@@ -107,6 +109,7 @@ fun SessionActive(
   Column(
     modifier = Modifier
       .background(getBackgroundColor())
+      .padding(paddingValues)
       .padding(16.dp)
       .fillMaxSize(),
     verticalArrangement = Arrangement.Center,
