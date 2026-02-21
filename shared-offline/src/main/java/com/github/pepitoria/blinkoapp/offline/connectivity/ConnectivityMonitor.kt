@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.channels.awaitClose
@@ -40,19 +39,15 @@ class ConnectivityMonitor @Inject constructor(
   }
 
   private fun startMonitoring() {
-    val networkRequest = NetworkRequest.Builder()
-      .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-      .build()
-
     networkCallback = object : ConnectivityManager.NetworkCallback() {
       override fun onAvailable(network: Network) {
-        Timber.d("Network available")
+        Timber.d("Default network available")
         _isConnected.value = true
       }
 
       override fun onLost(network: Network) {
-        Timber.d("Network lost")
-        _isConnected.value = checkCurrentConnectivity()
+        Timber.d("Default network lost")
+        _isConnected.value = false
       }
 
       override fun onCapabilitiesChanged(
@@ -61,20 +56,20 @@ class ConnectivityMonitor @Inject constructor(
       ) {
         val hasInternet = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
           networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-        Timber.d("Network capabilities changed: hasInternet=$hasInternet")
+        Timber.d("Default network capabilities changed: hasInternet=$hasInternet")
         _isConnected.value = hasInternet
       }
 
       override fun onUnavailable() {
-        Timber.d("Network unavailable")
+        Timber.d("Default network unavailable")
         _isConnected.value = false
       }
     }
 
     try {
-      connectivityManager.registerNetworkCallback(networkRequest, networkCallback!!)
+      connectivityManager.registerDefaultNetworkCallback(networkCallback!!)
     } catch (e: Exception) {
-      Timber.e(e, "Error registering network callback")
+      Timber.e(e, "Error registering default network callback")
     }
   }
 
@@ -96,7 +91,8 @@ class ConnectivityMonitor @Inject constructor(
       }
 
       override fun onLost(network: Network) {
-        trySend(checkCurrentConnectivity())
+        // When the default network is lost, we're offline
+        trySend(false)
       }
 
       override fun onCapabilitiesChanged(
@@ -113,16 +109,12 @@ class ConnectivityMonitor @Inject constructor(
       }
     }
 
-    val request = NetworkRequest.Builder()
-      .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-      .build()
-
     trySend(checkCurrentConnectivity())
 
     try {
-      connectivityManager.registerNetworkCallback(request, callback)
+      connectivityManager.registerDefaultNetworkCallback(callback)
     } catch (e: Exception) {
-      Timber.e(e, "Error registering network callback for flow")
+      Timber.e(e, "Error registering default network callback for flow")
     }
 
     awaitClose {
