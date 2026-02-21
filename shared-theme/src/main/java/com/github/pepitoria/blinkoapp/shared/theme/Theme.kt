@@ -97,3 +97,23 @@ fun getNoteTypeAccentColor(noteTypeValue: Int): Color {
     else -> BlinkoAccent
   }
 }
+
+/**
+ * Returns the accent color for a note type, adjusted for the current theme.
+ * Uses darker variants in light mode for better contrast against white backgrounds.
+ * @param noteTypeValue 0 = Blinko (gold), 1 = Note (blue), 2 = Todo (green)
+ */
+@Composable
+fun getNoteTypeAccentColorForTheme(noteTypeValue: Int): Color {
+  val isDarkTheme = isSystemInDarkTheme()
+  return if (isDarkTheme) {
+    getNoteTypeAccentColor(noteTypeValue)
+  } else {
+    when (noteTypeValue) {
+      0 -> BlinkoAccentDark
+      1 -> NoteAccentDark
+      2 -> TodoAccentDark
+      else -> BlinkoAccentDark
+    }
+  }
+}

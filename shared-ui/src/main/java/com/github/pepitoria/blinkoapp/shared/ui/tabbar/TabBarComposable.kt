@@ -16,9 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.github.pepitoria.blinkoapp.shared.navigation.BlinkoNavigationRouter
-import com.github.pepitoria.blinkoapp.shared.theme.BlinkoAccent
-import com.github.pepitoria.blinkoapp.shared.theme.NoteAccent
-import com.github.pepitoria.blinkoapp.shared.theme.TodoAccent
+import com.github.pepitoria.blinkoapp.shared.theme.getNoteTypeAccentColorForTheme
 import com.github.pepitoria.blinkoapp.shared.ui.R
 
 @Composable
@@ -50,7 +48,7 @@ fun TabBar(
               goToBlinkos()
             }
           },
-          colors = accentNavigationBarItemColors(BlinkoAccent),
+          colors = accentNavigationBarItemColors(getNoteTypeAccentColorForTheme(0)),
         )
 
         NavigationBarItem(
@@ -67,7 +65,7 @@ fun TabBar(
               goToNotes()
             }
           },
-          colors = accentNavigationBarItemColors(NoteAccent),
+          colors = accentNavigationBarItemColors(getNoteTypeAccentColorForTheme(1)),
         )
 
         NavigationBarItem(
@@ -84,7 +82,7 @@ fun TabBar(
               goToTodoList()
             }
           },
-          colors = accentNavigationBarItemColors(TodoAccent),
+          colors = accentNavigationBarItemColors(getNoteTypeAccentColorForTheme(2)),
         )
 
         NavigationBarItem(
@@ -124,7 +122,7 @@ fun TabBar(
 private fun accentNavigationBarItemColors(accentColor: Color) = NavigationBarItemDefaults.colors(
   selectedIconColor = accentColor,
   selectedTextColor = accentColor,
-  indicatorColor = accentColor.copy(alpha = 0.15f),
+  indicatorColor = accentColor.copy(alpha = 0.25f),
   unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
   unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
 )

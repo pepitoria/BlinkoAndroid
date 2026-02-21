@@ -30,3 +30,8 @@ val Red = Color(0xFFD32F2F)
 val BlinkoAccent = Color(0xFFFFD700) // Gold/Yellow for Blinkos
 val NoteAccent = Color(0xFF3B82F6) // Blue for Notes
 val TodoAccent = Color(0xFF10B981) // Green/Teal for Todos
+
+// Darker variants for light mode (better contrast against white)
+val BlinkoAccentDark = Color(0xFFB8860B) // Dark Goldenrod - more visible on white
+val NoteAccentDark = Color(0xFF2563EB) // Darker blue
+val TodoAccentDark = Color(0xFF059669) // Darker green/teal
