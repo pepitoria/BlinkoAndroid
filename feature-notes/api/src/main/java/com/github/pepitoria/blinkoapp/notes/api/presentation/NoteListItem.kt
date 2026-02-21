@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -102,10 +101,10 @@ fun NoteListItem(
 
     Card(
       modifier = Modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(12.dp)),
+        .fillMaxWidth(),
+      shape = RoundedCornerShape(12.dp),
       colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.surface,
       ),
       elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
       onClick = {

@@ -18,7 +18,8 @@ private val DarkColorScheme = darkColorScheme(
   primary = Black,
   secondary = White,
   tertiary = GreyBackground,
-  background = RDGreyBackgroundDark,
+  background = RDGreyBackgroundDarker,
+  surface = RDGreyBackgroundDark,
   onBackground = White,
 
   onPrimary = White,
@@ -30,21 +31,13 @@ private val LightColorScheme = lightColorScheme(
   primary = White,
   secondary = Black,
   tertiary = GreyBackground,
-  background = RDGreyBackgroundLighter,
+  background = RDGreyBackgroundLight,
+  surface = White,
   onBackground = Black,
 
   onPrimary = Black,
   onSecondary = White,
   onSurface = Black,
-  /* Other default colors to override
-
-  surface = Color(0xFFFFFBFE),
-  onPrimary = Color.White,
-  onSecondary = Color.White,
-  onTertiary = Color.White,
-
-  onSurface = Color(0xFF1C1B1F),
-   */
 )
 
 object BlinkoAppTheme {
@@ -89,11 +82,7 @@ fun BlinkoAppTheme(
 
 @Composable
 fun getBackgroundColor(): Color {
-  return if (isSystemInDarkTheme()) {
-    RDGreyBackgroundDarker
-  } else {
-    RDGreyBackgroundLighter
-  }
+  return MaterialTheme.colorScheme.background
 }
 
 /**
