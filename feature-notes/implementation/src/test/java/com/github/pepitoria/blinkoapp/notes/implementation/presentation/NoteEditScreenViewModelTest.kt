@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.presentation
 
-import android.content.Context
+import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteListByIdsUseCase
@@ -12,6 +12,7 @@ import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -29,8 +30,6 @@ class NoteEditScreenViewModelTest {
 
   private val noteUpsertUseCase: NoteUpsertUseCase = mockk(relaxed = true)
   private val noteListByIdsUseCase: NoteListByIdsUseCase = mockk(relaxed = true)
-  private val context: Context = mockk(relaxed = true)
-
   private val testDispatcher = StandardTestDispatcher()
   private val testScope = TestScope(testDispatcher)
 
@@ -40,12 +39,16 @@ class NoteEditScreenViewModelTest {
     viewModel = NoteEditScreenViewModel(
       noteUpsertUseCase = noteUpsertUseCase,
       noteListByIdsUseCase = noteListByIdsUseCase,
-      appContext = context,
     )
   }
 
   @AfterEach
   fun tearDown() {
+    // First advance to let any pending work complete
+    testScope.advanceUntilIdle()
+    // Then cancel the viewModelScope
+    viewModel.viewModelScope.cancel()
+    // Finally reset Main
     Dispatchers.resetMain()
   }
 
@@ -104,7 +107,6 @@ class NoteEditScreenViewModelTest {
   fun `onStart with noteId -1 does not fetch note`() = testScope.runTest {
     viewModel.onStart(noteId = -1, onNoteUpsert = {})
     advanceUntilIdle()
-
     coVerify(exactly = 0) { noteListByIdsUseCase.getNoteById(any()) }
   }
 
@@ -144,7 +146,7 @@ class NoteEditScreenViewModelTest {
   // noteTypes tests
 
   @Test
-  fun `noteTypes contains all note types`() {
+  fun `noteTypes contains all note types`() = testScope.runTest {
     val types = viewModel.noteTypes.value
 
     assertEquals(3, types.size)

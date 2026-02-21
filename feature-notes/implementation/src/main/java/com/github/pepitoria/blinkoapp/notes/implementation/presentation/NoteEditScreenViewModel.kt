@@ -1,6 +1,5 @@
 package com.github.pepitoria.blinkoapp.notes.implementation.presentation
 
-import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
@@ -9,20 +8,19 @@ import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteUpsertUseC
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 @HiltViewModel
 class NoteEditScreenViewModel @Inject constructor(
   private val noteUpsertUseCase: NoteUpsertUseCase,
   private val noteListByIdsUseCase: NoteListByIdsUseCase,
-  @ApplicationContext private val appContext: Context,
 ) : BlinkoViewModel() {
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -112,7 +110,7 @@ class NoteEditScreenViewModel @Inject constructor(
       when (response) {
         is BlinkoResult.Success -> {
           Timber.d("${this::class.java.simpleName}.upsertNote() response: ${response.value.content}")
-          viewModelScope.launch(Dispatchers.Main) {
+          withContext(Dispatchers.Main) {
             onNoteUpsert()
           }
         }
