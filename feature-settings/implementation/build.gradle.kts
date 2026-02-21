@@ -69,6 +69,7 @@ dependencies {
   implementation(project(":feature-auth:api"))
   implementation(project(":shared-domain"))
   implementation(project(":shared-storage"))
+  implementation(project(":shared-offline"))
 
   implementation(libs.accompanist.flowlayout)
 

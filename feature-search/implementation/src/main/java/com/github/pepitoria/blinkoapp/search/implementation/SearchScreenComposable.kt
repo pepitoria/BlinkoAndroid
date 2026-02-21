@@ -45,6 +45,7 @@ import com.github.pepitoria.blinkoapp.shared.ui.R
 import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoTextField
 import com.github.pepitoria.blinkoapp.shared.ui.loading.Loading
+import com.github.pepitoria.blinkoapp.shared.ui.sync.OfflineBanner
 import com.github.pepitoria.blinkoapp.shared.ui.tabbar.TabBar
 import com.github.pepitoria.blinkoapp.tags.api.TagsEntryPoint
 import com.github.pepitoria.blinkoapp.tags.api.TagsFactory
@@ -66,6 +67,7 @@ fun SearchScreenInternalComposable(
   val isLoading = viewModel.isLoading.collectAsState()
   val notes = viewModel.notes.collectAsState()
   val query = viewModel.query.collectAsState()
+  val isConnected = viewModel.isConnected.collectAsState()
 
   val onSearch = { querySt: String ->
     viewModel.search(querySt)
@@ -82,6 +84,7 @@ fun SearchScreenInternalComposable(
     ) { paddingValues ->
       SearchScreen(
         paddingValues = paddingValues,
+        isConnected = isConnected.value,
         isLoading = isLoading.value,
         notes = notes.value,
         query = query.value,
@@ -95,6 +98,7 @@ fun SearchScreenInternalComposable(
 @Composable
 private fun SearchScreen(
   paddingValues: PaddingValues = PaddingValues(),
+  isConnected: Boolean = true,
   isLoading: Boolean,
   notes: List<BlinkoNote>,
   query: String,
@@ -107,30 +111,40 @@ private fun SearchScreen(
       .background(
         color = getBackgroundColor(),
       )
-      .padding(paddingValues)
-      .padding(16.dp),
+      .padding(paddingValues),
   ) {
-    SearchBar(
-      onSearch = {
-        onSearch(it)
-      },
-      query = query,
-    )
+    if (!isConnected) {
+      OfflineBanner(
+        pendingSyncCount = 0,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
-    if (isLoading) {
-      Loading()
-    } else if (notes.isEmpty() || query.isEmpty()) {
-      EmptySearch(
-        isSearching = query.isNotEmpty(),
-        onTagClick = { tag ->
-          onSearch(tag)
+    Column(
+      modifier = Modifier.padding(16.dp),
+    ) {
+      SearchBar(
+        onSearch = {
+          onSearch(it)
         },
+        query = query,
       )
-    } else {
-      SearchResults(
-        notes = notes,
-        noteOnClick = noteOnClick,
-      )
+
+      if (isLoading) {
+        Loading()
+      } else if (notes.isEmpty() || query.isEmpty()) {
+        EmptySearch(
+          isSearching = query.isNotEmpty(),
+          onTagClick = { tag ->
+            onSearch(tag)
+          },
+        )
+      } else {
+        SearchResults(
+          notes = notes,
+          noteOnClick = noteOnClick,
+        )
+      }
     }
   }
 }

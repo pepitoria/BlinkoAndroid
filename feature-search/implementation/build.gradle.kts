@@ -69,6 +69,7 @@ dependencies {
   implementation(project(":shared-theme"))
   implementation(project(":shared-ui"))
   implementation(project(":shared-domain"))
+  implementation(project(":shared-offline"))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

@@ -1,6 +1,7 @@
 package com.github.pepitoria.blinkoapp.settings.presentation
 
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
+import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
 import com.github.pepitoria.blinkoapp.settings.api.domain.GetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.SetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
@@ -10,6 +11,7 @@ import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -30,6 +32,8 @@ class SettingsScreenViewModelTest {
   private val sessionUseCases: SessionUseCases = mockk(relaxed = true)
   private val getDefaultTabUseCase: GetDefaultTabUseCase = mockk(relaxed = true)
   private val setDefaultTabUseCase: SetDefaultTabUseCase = mockk(relaxed = true)
+  private val connectivityMonitor: ConnectivityMonitor = mockk()
+  private val isConnectedFlow = MutableStateFlow(true)
 
   private val testDispatcher = StandardTestDispatcher()
   private val testScope = TestScope(testDispatcher)
@@ -37,10 +41,12 @@ class SettingsScreenViewModelTest {
   @BeforeEach
   fun setUp() {
     Dispatchers.setMain(testDispatcher)
+    every { connectivityMonitor.isConnected } returns isConnectedFlow
     viewModel = SettingsScreenViewModel(
       sessionUseCases = sessionUseCases,
       getDefaultTabUseCase = getDefaultTabUseCase,
       setDefaultTabUseCase = setDefaultTabUseCase,
+      connectivityMonitor = connectivityMonitor,
     )
   }
 

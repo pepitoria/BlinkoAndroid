@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import com.github.pepitoria.blinkoapp.shared.theme.getBackgroundColor
 import com.github.pepitoria.blinkoapp.shared.ui.R
 import com.github.pepitoria.blinkoapp.shared.ui.base.ComposableLifecycleEvents
 import com.github.pepitoria.blinkoapp.shared.ui.components.BlinkoButton
+import com.github.pepitoria.blinkoapp.shared.ui.sync.OfflineBanner
 import com.github.pepitoria.blinkoapp.shared.ui.tabbar.TabBar
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -48,6 +50,7 @@ fun SettingsScreenComposableInternal(
 ) {
   ComposableLifecycleEvents(viewModel = viewModel)
   val events = viewModel.events
+  val isConnected = viewModel.isConnected.collectAsState()
   ListenForEvents(events, exit)
 
   BlinkoAppTheme {
@@ -61,6 +64,7 @@ fun SettingsScreenComposableInternal(
     ) { paddingValues ->
       SessionActive(
         paddingValues = paddingValues,
+        isConnected = isConnected.value,
         logout = {
           viewModel.logout()
         },
@@ -102,6 +106,7 @@ private fun ListenForEvents(
 @Composable
 fun SessionActive(
   paddingValues: PaddingValues = PaddingValues(),
+  isConnected: Boolean = true,
   logout: () -> Unit = {},
   onTabSelected: (String) -> Unit = { _ -> },
   getDefaultTab: () -> String = { "TODOS" },
@@ -110,29 +115,42 @@ fun SessionActive(
     modifier = Modifier
       .background(getBackgroundColor())
       .padding(paddingValues)
-      .padding(16.dp)
       .fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    Text(
-      text = stringResource(id = R.string.login_token_session_active),
-    )
+    // Show offline banner when not connected
+    if (!isConnected) {
+      OfflineBanner(
+        pendingSyncCount = 0,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
 
-    Spacer(modifier = Modifier.height(12.dp))
+    Column(
+      modifier = Modifier
+        .padding(16.dp)
+        .fillMaxSize(),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      Text(
+        text = stringResource(id = R.string.login_token_session_active),
+      )
 
-    PreselectedTabWidget(
-      onTabSelected = onTabSelected,
-      getDefaultTab = getDefaultTab,
-    )
+      Spacer(modifier = Modifier.height(12.dp))
 
-    Spacer(modifier = Modifier.height(12.dp))
+      PreselectedTabWidget(
+        onTabSelected = onTabSelected,
+        getDefaultTab = getDefaultTab,
+      )
 
-    BlinkoButton(
-      text = stringResource(id = R.string.login_token_logout),
-      onClick = logout,
-      modifier = Modifier.fillMaxWidth(),
-    )
+      Spacer(modifier = Modifier.height(12.dp))
+
+      BlinkoButton(
+        text = stringResource(id = R.string.login_token_logout),
+        onClick = logout,
+        modifier = Modifier.fillMaxWidth(),
+      )
+    }
   }
 }
 

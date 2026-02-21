@@ -3,12 +3,14 @@ package com.github.pepitoria.blinkoapp.search.implementation
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteSearchUseCase
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
+import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -16,7 +18,10 @@ import timber.log.Timber
 @HiltViewModel
 class SearchScreenViewModel @Inject constructor(
   private val searchUseCase: NoteSearchUseCase,
+  connectivityMonitor: ConnectivityMonitor,
 ) : BlinkoViewModel() {
+
+  val isConnected: StateFlow<Boolean> = connectivityMonitor.isConnected
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val isLoading = _isLoading.asStateFlow()

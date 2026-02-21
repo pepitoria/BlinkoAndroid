@@ -3,14 +3,17 @@ package com.github.pepitoria.blinkoapp.search.implementation
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteSearchUseCase
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
+import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -27,6 +30,8 @@ class SearchScreenViewModelTest {
   private lateinit var viewModel: SearchScreenViewModel
 
   private val searchUseCase: NoteSearchUseCase = mockk(relaxed = true)
+  private val connectivityMonitor: ConnectivityMonitor = mockk()
+  private val isConnectedFlow = MutableStateFlow(true)
 
   private val testDispatcher = StandardTestDispatcher()
   private val testScope = TestScope(testDispatcher)
@@ -34,8 +39,10 @@ class SearchScreenViewModelTest {
   @BeforeEach
   fun setUp() {
     Dispatchers.setMain(testDispatcher)
+    every { connectivityMonitor.isConnected } returns isConnectedFlow
     viewModel = SearchScreenViewModel(
       searchUseCase = searchUseCase,
+      connectivityMonitor = connectivityMonitor,
     )
   }
 

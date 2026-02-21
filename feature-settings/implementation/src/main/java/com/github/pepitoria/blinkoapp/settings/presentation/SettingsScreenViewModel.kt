@@ -2,6 +2,7 @@ package com.github.pepitoria.blinkoapp.settings.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
+import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
 import com.github.pepitoria.blinkoapp.settings.api.domain.GetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.SetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
@@ -18,7 +20,10 @@ class SettingsScreenViewModel @Inject constructor(
   private val sessionUseCases: SessionUseCases,
   private val getDefaultTabUseCase: GetDefaultTabUseCase,
   private val setDefaultTabUseCase: SetDefaultTabUseCase,
+  connectivityMonitor: ConnectivityMonitor,
 ) : BlinkoViewModel() {
+
+  val isConnected: StateFlow<Boolean> = connectivityMonitor.isConnected
 
   sealed class Events {
     data object Exit : Events()
