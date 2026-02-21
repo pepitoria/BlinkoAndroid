@@ -21,6 +21,7 @@ tasks.register("allUnitTests") {
     ":feature-settings:implementation:testRemoteDebugUnitTest",
     ":feature-tags:implementation:testRemoteDebugUnitTest",
     ":shared-networking:testRemoteDebugUnitTest",
+    ":shared-offline:testRemoteDebugUnitTest",
   )
 }
 
