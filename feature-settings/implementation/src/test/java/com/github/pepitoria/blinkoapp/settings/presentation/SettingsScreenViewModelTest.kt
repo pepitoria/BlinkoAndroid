@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.settings.presentation
 
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.settings.api.domain.GetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.SetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
@@ -32,8 +32,8 @@ class SettingsScreenViewModelTest {
   private val sessionUseCases: SessionUseCases = mockk(relaxed = true)
   private val getDefaultTabUseCase: GetDefaultTabUseCase = mockk(relaxed = true)
   private val setDefaultTabUseCase: SetDefaultTabUseCase = mockk(relaxed = true)
-  private val connectivityMonitor: ConnectivityMonitor = mockk()
-  private val isConnectedFlow = MutableStateFlow(true)
+  private val serverReachabilityMonitor: ServerReachabilityMonitor = mockk()
+  private val isOnlineFlow = MutableStateFlow(true)
 
   private val testDispatcher = StandardTestDispatcher()
   private val testScope = TestScope(testDispatcher)
@@ -41,12 +41,12 @@ class SettingsScreenViewModelTest {
   @BeforeEach
   fun setUp() {
     Dispatchers.setMain(testDispatcher)
-    every { connectivityMonitor.isConnected } returns isConnectedFlow
+    every { serverReachabilityMonitor.isOnline } returns isOnlineFlow
     viewModel = SettingsScreenViewModel(
       sessionUseCases = sessionUseCases,
       getDefaultTabUseCase = getDefaultTabUseCase,
       setDefaultTabUseCase = setDefaultTabUseCase,
-      connectivityMonitor = connectivityMonitor,
+      serverReachabilityMonitor = serverReachabilityMonitor,
     )
   }
 

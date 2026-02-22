@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.offline.sync
 
 import android.content.Context
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -17,24 +17,24 @@ import org.junit.jupiter.api.Test
 class SyncSchedulerTest {
 
   private lateinit var context: Context
-  private lateinit var connectivityMonitor: ConnectivityMonitor
+  private lateinit var serverReachabilityMonitor: ServerReachabilityMonitor
   private lateinit var syncQueueManager: SyncQueueManager
   private lateinit var syncScheduler: SyncScheduler
-  private lateinit var isConnectedFlow: MutableStateFlow<Boolean>
+  private lateinit var isOnlineFlow: MutableStateFlow<Boolean>
 
   @BeforeEach
   fun setup() {
     context = mockk(relaxed = true)
-    connectivityMonitor = mockk()
+    serverReachabilityMonitor = mockk()
     syncQueueManager = mockk()
 
-    isConnectedFlow = MutableStateFlow(false)
-    every { connectivityMonitor.isConnected } returns isConnectedFlow
+    isOnlineFlow = MutableStateFlow(false)
+    every { serverReachabilityMonitor.isOnline } returns isOnlineFlow
 
     mockkObject(SyncWorker.Companion)
     every { SyncWorker.enqueue(any()) } returns Unit
 
-    syncScheduler = SyncScheduler(context, connectivityMonitor, syncQueueManager)
+    syncScheduler = SyncScheduler(context, serverReachabilityMonitor, syncQueueManager)
   }
 
   @AfterEach
@@ -43,13 +43,13 @@ class SyncSchedulerTest {
   }
 
   @Test
-  fun `startObserving triggers sync when connectivity restored and has pending operations`() = runBlocking {
+  fun `startObserving triggers sync when server becomes reachable and has pending operations`() = runBlocking {
     coEvery { syncQueueManager.hasPendingOperations() } returns true
 
     syncScheduler.startObserving()
 
-    // Simulate going online
-    isConnectedFlow.value = true
+    // Simulate server becoming reachable
+    isOnlineFlow.value = true
     // Wait for coroutine to process (real time)
     Thread.sleep(200)
 
@@ -63,8 +63,8 @@ class SyncSchedulerTest {
 
     syncScheduler.startObserving()
 
-    // Simulate going online
-    isConnectedFlow.value = true
+    // Simulate server becoming reachable
+    isOnlineFlow.value = true
     Thread.sleep(200)
 
     coVerify { syncQueueManager.hasPendingOperations() }
@@ -113,8 +113,8 @@ class SyncSchedulerTest {
     syncScheduler.startObserving()
     syncScheduler.startObserving() // Second call should be ignored
 
-    // Simulate going online
-    isConnectedFlow.value = true
+    // Simulate server becoming reachable
+    isOnlineFlow.value = true
     Thread.sleep(200)
 
     // Should only trigger once despite multiple startObserving calls

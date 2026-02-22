@@ -3,6 +3,7 @@ package com.github.pepitoria.blinkoapp.notes.implementation.data.sync
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notedelete.DeleteNoteRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.noteupsert.UpsertRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.offline.data.db.dao.NoteDao
 import com.github.pepitoria.blinkoapp.offline.sync.SyncExecutor
 import com.github.pepitoria.blinkoapp.offline.sync.SyncPayload
@@ -16,6 +17,7 @@ class NoteSyncExecutor @Inject constructor(
   private val api: NotesApiClient,
   private val authenticationRepository: AuthenticationRepository,
   private val noteDao: NoteDao,
+  private val serverReachabilityMonitor: ServerReachabilityMonitor,
 ) : SyncExecutor {
 
   override suspend fun executeCreate(
@@ -41,13 +43,17 @@ class NoteSyncExecutor @Inject constructor(
     return when (response) {
       is ApiResult.ApiSuccess -> {
         Timber.d("Note created on server: ${response.value.id}")
+        serverReachabilityMonitor.reportSuccess()
         SyncResult.Success(
           serverId = response.value.id,
           serverUpdatedAt = response.value.updatedAt,
         )
       }
       is ApiResult.ApiErrorResponse -> {
-        Timber.w("Failed to create note: ${response.message}")
+        Timber.w("Failed to create note: ${response.message}, isServerUnreachable=${response.isServerUnreachable}")
+        if (response.isServerUnreachable) {
+          serverReachabilityMonitor.reportUnreachable()
+        }
         SyncResult.Failure(response.message ?: "Unknown error")
       }
     }
@@ -86,13 +92,18 @@ class NoteSyncExecutor @Inject constructor(
     return when (response) {
       is ApiResult.ApiSuccess -> {
         Timber.d("Note updated on server: ${response.value.id}")
+        serverReachabilityMonitor.reportSuccess()
         SyncResult.Success(
           serverId = response.value.id,
           serverUpdatedAt = response.value.updatedAt,
         )
       }
       is ApiResult.ApiErrorResponse -> {
-        if (response.code == 409) {
+        if (response.isServerUnreachable) {
+          Timber.w("Failed to update note: server unreachable")
+          serverReachabilityMonitor.reportUnreachable()
+          SyncResult.Failure(response.message ?: "Server unreachable")
+        } else if (response.code == 409) {
           // Conflict detected
           Timber.w("Conflict detected for note $serverId")
           SyncResult.Conflict(null)
@@ -125,10 +136,15 @@ class NoteSyncExecutor @Inject constructor(
     return when (response) {
       is ApiResult.ApiSuccess -> {
         Timber.d("Note deleted from server: $serverId")
+        serverReachabilityMonitor.reportSuccess()
         SyncResult.Deleted
       }
       is ApiResult.ApiErrorResponse -> {
-        if (response.code == 404) {
+        if (response.isServerUnreachable) {
+          Timber.w("Failed to delete note: server unreachable")
+          serverReachabilityMonitor.reportUnreachable()
+          SyncResult.Failure(response.message ?: "Server unreachable")
+        } else if (response.code == 404) {
           // Already deleted on server
           Timber.d("Note already deleted on server: $serverId")
           SyncResult.Deleted

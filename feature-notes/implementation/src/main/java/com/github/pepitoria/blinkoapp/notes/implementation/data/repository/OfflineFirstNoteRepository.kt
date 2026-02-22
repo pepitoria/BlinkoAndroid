@@ -11,7 +11,7 @@ import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.N
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelistbyids.NoteListByIdsRequest
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.offline.data.db.dao.NoteDao
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.NoteEntity
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.SyncStatus as EntitySyncStatus
@@ -31,7 +31,7 @@ class OfflineFirstNoteRepository @Inject constructor(
   private val authenticationRepository: AuthenticationRepository,
   private val noteDao: NoteDao,
   private val syncQueueManager: SyncQueueManager,
-  private val connectivityMonitor: ConnectivityMonitor,
+  private val serverReachabilityMonitor: ServerReachabilityMonitor,
 ) : NoteRepository {
 
   override suspend fun list(
@@ -40,11 +40,11 @@ class OfflineFirstNoteRepository @Inject constructor(
     type: Int,
     archived: Boolean,
   ): BlinkoResult<List<BlinkoNote>> {
-    val isConnected = connectivityMonitor.isConnected.value
-    Timber.d("list() called - isConnected: $isConnected, url: $url, type: $type, archived: $archived")
+    val shouldAttempt = serverReachabilityMonitor.shouldAttemptServerCall()
+    Timber.d("list() called - shouldAttemptServerCall: $shouldAttempt, url: $url, type: $type, archived: $archived")
 
     // If online, fetch from server and merge with local
-    if (isConnected) {
+    if (shouldAttempt) {
       Timber.d("Fetching notes from server...")
       val response = api.noteList(
         url = url,
@@ -55,14 +55,18 @@ class OfflineFirstNoteRepository @Inject constructor(
       when (response) {
         is ApiResult.ApiSuccess -> {
           Timber.d("Server returned ${response.value.size} notes")
+          serverReachabilityMonitor.reportSuccess()
           mergeServerNotes(response.value)
         }
         is ApiResult.ApiErrorResponse -> {
           Timber.w("Failed to fetch from server, falling back to local: ${response.message}")
+          if (response.isServerUnreachable) {
+            serverReachabilityMonitor.reportUnreachable()
+          }
         }
       }
     } else {
-      Timber.d("Offline - skipping server fetch")
+      Timber.d("Offline or server unreachable - skipping server fetch")
     }
 
     // Always return local data
@@ -89,7 +93,7 @@ class OfflineFirstNoteRepository @Inject constructor(
     val localResults = noteDao.search(searchTerm)
 
     // If online, also search server
-    if (connectivityMonitor.isConnected.value) {
+    if (serverReachabilityMonitor.shouldAttemptServerCall()) {
       val response = api.noteList(
         url = url,
         token = token,
@@ -98,6 +102,7 @@ class OfflineFirstNoteRepository @Inject constructor(
 
       when (response) {
         is ApiResult.ApiSuccess -> {
+          serverReachabilityMonitor.reportSuccess()
           mergeServerNotes(response.value)
           // Re-fetch local results after merge
           val updatedResults = noteDao.search(searchTerm)
@@ -105,6 +110,9 @@ class OfflineFirstNoteRepository @Inject constructor(
         }
         is ApiResult.ApiErrorResponse -> {
           Timber.w("Failed to search server, returning local results: ${response.message}")
+          if (response.isServerUnreachable) {
+            serverReachabilityMonitor.reportUnreachable()
+          }
         }
       }
     }
@@ -126,7 +134,7 @@ class OfflineFirstNoteRepository @Inject constructor(
     // Check local first
     val localNotes = noteDao.getByServerIds(ids)
 
-    if (connectivityMonitor.isConnected.value) {
+    if (serverReachabilityMonitor.shouldAttemptServerCall()) {
       val response = api.noteListByIds(
         url = url,
         token = token,
@@ -135,6 +143,7 @@ class OfflineFirstNoteRepository @Inject constructor(
 
       when (response) {
         is ApiResult.ApiSuccess -> {
+          serverReachabilityMonitor.reportSuccess()
           mergeServerNotes(response.value)
           val updatedNotes = noteDao.getByServerIds(ids)
           return if (updatedNotes.isNotEmpty()) {
@@ -145,6 +154,9 @@ class OfflineFirstNoteRepository @Inject constructor(
         }
         is ApiResult.ApiErrorResponse -> {
           Timber.w("Failed to fetch by IDs from server: ${response.message}")
+          if (response.isServerUnreachable) {
+            serverReachabilityMonitor.reportUnreachable()
+          }
         }
       }
     }
@@ -181,7 +193,7 @@ class OfflineFirstNoteRepository @Inject constructor(
     }
 
     // If online, try to sync immediately
-    if (connectivityMonitor.isConnected.value) {
+    if (serverReachabilityMonitor.shouldAttemptServerCall()) {
       return syncNoteToServer(noteEntity)
     }
 
@@ -190,8 +202,10 @@ class OfflineFirstNoteRepository @Inject constructor(
   }
 
   private suspend fun syncNoteToServer(noteEntity: NoteEntity): BlinkoResult<BlinkoNote> {
+    Timber.d("syncNoteToServer: Starting sync for note ${noteEntity.localId}")
     authenticationRepository.getSession()?.let { session ->
       val blinkoNote = noteEntity.toBlinkoNote()
+      Timber.d("syncNoteToServer: Making API call to ${session.url}")
       val response = api.upsertNote(
         url = session.url,
         token = session.token,
@@ -200,6 +214,8 @@ class OfflineFirstNoteRepository @Inject constructor(
 
       return when (response) {
         is ApiResult.ApiSuccess -> {
+          Timber.d("syncNoteToServer: API call succeeded")
+          serverReachabilityMonitor.reportSuccess()
           val serverNote = response.value
           noteDao.updateAfterSync(
             localId = noteEntity.localId,
@@ -212,13 +228,23 @@ class OfflineFirstNoteRepository @Inject constructor(
           BlinkoResult.Success(serverNote.toBlinkoNote())
         }
         is ApiResult.ApiErrorResponse -> {
-          Timber.w("Failed to sync note to server: ${response.message}")
+          Timber.w(
+            "syncNoteToServer: API call failed - " +
+              "code=${response.code}, " +
+              "message=${response.message}, " +
+              "isServerUnreachable=${response.isServerUnreachable}",
+          )
+          if (response.isServerUnreachable) {
+            Timber.d("syncNoteToServer: Calling reportUnreachable()")
+            serverReachabilityMonitor.reportUnreachable()
+          }
           // Keep as pending, return local note
           BlinkoResult.Success(noteEntity.toBlinkoNote())
         }
       }
     }
 
+    Timber.w("syncNoteToServer: No session available")
     return BlinkoResult.Success(noteEntity.toBlinkoNote())
   }
 
@@ -253,7 +279,7 @@ class OfflineFirstNoteRepository @Inject constructor(
 
     // If online and has server ID, delete immediately
     val entityServerId = noteEntity.serverId
-    if (connectivityMonitor.isConnected.value && entityServerId != null) {
+    if (serverReachabilityMonitor.shouldAttemptServerCall() && entityServerId != null) {
       authenticationRepository.getSession()?.let { session ->
         val response = api.deleteNote(
           url = session.url,
@@ -263,6 +289,7 @@ class OfflineFirstNoteRepository @Inject constructor(
 
         return when (response) {
           is ApiResult.ApiSuccess -> {
+            serverReachabilityMonitor.reportSuccess()
             noteDao.deleteByLocalId(noteEntity.localId)
             syncQueueManager.markOperationComplete(
               syncQueueManager.getNextPendingOperation()?.queueId ?: 0,
@@ -271,6 +298,9 @@ class OfflineFirstNoteRepository @Inject constructor(
           }
           is ApiResult.ApiErrorResponse -> {
             Timber.w("Failed to delete from server: ${response.message}")
+            if (response.isServerUnreachable) {
+              serverReachabilityMonitor.reportUnreachable()
+            }
             // Still marked as pending delete locally
             BlinkoResult.Success(true)
           }
@@ -293,8 +323,8 @@ class OfflineFirstNoteRepository @Inject constructor(
     type: Int,
     archived: Boolean,
   ): BlinkoResult<Unit> {
-    if (!connectivityMonitor.isConnected.value) {
-      return BlinkoResult.Error(-1, "No internet connection")
+    if (!serverReachabilityMonitor.shouldAttemptServerCall()) {
+      return BlinkoResult.Error(-1, "No internet connection or server unreachable")
     }
 
     val response = api.noteList(
@@ -305,10 +335,14 @@ class OfflineFirstNoteRepository @Inject constructor(
 
     return when (response) {
       is ApiResult.ApiSuccess -> {
+        serverReachabilityMonitor.reportSuccess()
         mergeServerNotes(response.value)
         BlinkoResult.Success(Unit)
       }
       is ApiResult.ApiErrorResponse -> {
+        if (response.isServerUnreachable) {
+          serverReachabilityMonitor.reportUnreachable()
+        }
         response.toBlinkoResult()
       }
     }
@@ -321,15 +355,15 @@ class OfflineFirstNoteRepository @Inject constructor(
     archived: Boolean,
     additionalPages: Int,
   ) {
-    if (!connectivityMonitor.isConnected.value) {
-      Timber.d("Skipping additional pages fetch - offline")
+    if (!serverReachabilityMonitor.shouldAttemptServerCall()) {
+      Timber.d("Skipping additional pages fetch - offline or server unreachable")
       return
     }
 
     // Fetch pages 2 through (additionalPages + 1)
     for (page in 2..(additionalPages + 1)) {
-      if (!connectivityMonitor.isConnected.value) {
-        Timber.d("Stopping additional pages fetch - went offline at page $page")
+      if (!serverReachabilityMonitor.shouldAttemptServerCall()) {
+        Timber.d("Stopping additional pages fetch - went offline or server unreachable at page $page")
         break
       }
 
@@ -346,6 +380,7 @@ class OfflineFirstNoteRepository @Inject constructor(
 
       when (response) {
         is ApiResult.ApiSuccess -> {
+          serverReachabilityMonitor.reportSuccess()
           val notes = response.value
           if (notes.isEmpty()) {
             Timber.d("Page $page returned empty, stopping pagination")
@@ -356,6 +391,9 @@ class OfflineFirstNoteRepository @Inject constructor(
         }
         is ApiResult.ApiErrorResponse -> {
           Timber.w("Failed to fetch page $page: ${response.message}")
+          if (response.isServerUnreachable) {
+            serverReachabilityMonitor.reportUnreachable()
+          }
           break
         }
       }
@@ -374,7 +412,7 @@ class OfflineFirstNoteRepository @Inject constructor(
       noteDao.updateSyncStatus(localId, EntitySyncStatus.PENDING_UPDATE.value)
       syncQueueManager.enqueueUpdate(noteEntity)
 
-      if (connectivityMonitor.isConnected.value) {
+      if (serverReachabilityMonitor.shouldAttemptServerCall()) {
         syncNoteToServer(noteEntity)
       } else {
         BlinkoResult.Success(noteEntity.toBlinkoNote())
@@ -382,7 +420,7 @@ class OfflineFirstNoteRepository @Inject constructor(
     } else {
       // Fetch server version and overwrite local
       val noteServerId = note.id
-      if (noteServerId != null && connectivityMonitor.isConnected.value) {
+      if (noteServerId != null && serverReachabilityMonitor.shouldAttemptServerCall()) {
         authenticationRepository.getSession()?.let { session ->
           val response = api.noteListByIds(
             url = session.url,
@@ -392,6 +430,7 @@ class OfflineFirstNoteRepository @Inject constructor(
 
           when (response) {
             is ApiResult.ApiSuccess -> {
+              serverReachabilityMonitor.reportSuccess()
               response.value.firstOrNull()?.let { serverNote ->
                 val updatedEntity = noteEntity.copy(
                   content = serverNote.content ?: noteEntity.content,
@@ -408,6 +447,9 @@ class OfflineFirstNoteRepository @Inject constructor(
               }
             }
             is ApiResult.ApiErrorResponse -> {
+              if (response.isServerUnreachable) {
+                serverReachabilityMonitor.reportUnreachable()
+              }
               return response.toBlinkoResult()
             }
           }

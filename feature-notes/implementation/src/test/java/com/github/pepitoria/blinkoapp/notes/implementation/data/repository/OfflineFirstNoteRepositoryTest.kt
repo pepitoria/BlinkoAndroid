@@ -5,7 +5,7 @@ import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.SyncStatus
 import com.github.pepitoria.blinkoapp.notes.implementation.data.model.notelist.NoteResponse
 import com.github.pepitoria.blinkoapp.notes.implementation.data.net.NotesApiClient
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.offline.data.db.dao.NoteDao
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.NoteEntity
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.SyncStatus as EntitySyncStatus
@@ -22,7 +22,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
@@ -39,10 +38,10 @@ class OfflineFirstNoteRepositoryTest {
   private lateinit var authRepository: AuthenticationRepository
   private lateinit var noteDao: NoteDao
   private lateinit var syncQueueManager: SyncQueueManager
-  private lateinit var connectivityMonitor: ConnectivityMonitor
+  private lateinit var serverReachabilityMonitor: ServerReachabilityMonitor
   private lateinit var repository: OfflineFirstNoteRepository
 
-  private val isConnectedFlow = MutableStateFlow(true)
+  private var shouldAttemptServerCall = true
 
   private val testDispatcher = StandardTestDispatcher()
   private val testScope = TestScope(testDispatcher)
@@ -54,8 +53,11 @@ class OfflineFirstNoteRepositoryTest {
     authRepository = mockk()
     noteDao = mockk(relaxed = true)
     syncQueueManager = mockk(relaxed = true)
-    connectivityMonitor = mockk {
-      every { isConnected } returns isConnectedFlow
+    shouldAttemptServerCall = true
+    serverReachabilityMonitor = mockk {
+      every { shouldAttemptServerCall() } answers { shouldAttemptServerCall }
+      every { reportSuccess() } returns Unit
+      every { reportUnreachable() } returns Unit
     }
 
     coEvery { authRepository.getSession() } returns BlinkoSession(
@@ -70,7 +72,7 @@ class OfflineFirstNoteRepositoryTest {
       authenticationRepository = authRepository,
       noteDao = noteDao,
       syncQueueManager = syncQueueManager,
-      connectivityMonitor = connectivityMonitor,
+      serverReachabilityMonitor = serverReachabilityMonitor,
     )
   }
 
@@ -81,7 +83,7 @@ class OfflineFirstNoteRepositoryTest {
 
   @Test
   fun `list returns local notes when offline`() = testScope.runTest {
-    isConnectedFlow.value = false
+    shouldAttemptServerCall = false
     val localNotes = listOf(
       createNoteEntity("local-1", serverId = 1, content = "Note 1"),
       createNoteEntity("local-2", serverId = 2, content = "Note 2"),
@@ -102,7 +104,7 @@ class OfflineFirstNoteRepositoryTest {
 
   @Test
   fun `list fetches from server when online and merges`() = testScope.runTest {
-    isConnectedFlow.value = true
+    shouldAttemptServerCall = true
     val serverNotes = listOf(
       NoteResponse(id = 1, content = "Server Note 1", type = 0, isArchived = false),
     )
@@ -124,7 +126,7 @@ class OfflineFirstNoteRepositoryTest {
 
   @Test
   fun `upsertNote creates local note and queues sync when offline`() = testScope.runTest {
-    isConnectedFlow.value = false
+    shouldAttemptServerCall = false
     val newNote = BlinkoNote(
       id = null,
       localId = null,
@@ -145,7 +147,7 @@ class OfflineFirstNoteRepositoryTest {
 
   @Test
   fun `upsertNote syncs immediately when online`() = testScope.runTest {
-    isConnectedFlow.value = true
+    shouldAttemptServerCall = true
     val newNote = BlinkoNote(
       id = null,
       localId = null,
@@ -170,7 +172,7 @@ class OfflineFirstNoteRepositoryTest {
 
   @Test
   fun `deleteNote queues delete when offline`() = testScope.runTest {
-    isConnectedFlow.value = false
+    shouldAttemptServerCall = false
     val noteEntity = createNoteEntity("local-1", serverId = 100)
     coEvery { noteDao.getByLocalId("local-1") } returns noteEntity
 
@@ -190,7 +192,7 @@ class OfflineFirstNoteRepositoryTest {
 
   @Test
   fun `deleteNote syncs immediately when online`() = testScope.runTest {
-    isConnectedFlow.value = true
+    shouldAttemptServerCall = true
     val noteEntity = createNoteEntity("local-1", serverId = 100)
     coEvery { noteDao.getByLocalId("local-1") } returns noteEntity
     coEvery { api.deleteNote(any(), any(), any()) } returns ApiResult.ApiSuccess(mockk())
@@ -228,7 +230,7 @@ class OfflineFirstNoteRepositoryTest {
       syncStatus = SyncStatus.CONFLICT,
     )
 
-    isConnectedFlow.value = false
+    shouldAttemptServerCall = false
     val result = repository.resolveConflict(conflictNote, keepLocal = true)
 
     assertIs<BlinkoResult.Success<BlinkoNote>>(result)

@@ -1,7 +1,7 @@
 package com.github.pepitoria.blinkoapp.offline.sync
 
 import android.content.Context
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,7 +15,7 @@ import timber.log.Timber
 @Singleton
 class SyncScheduler @Inject constructor(
   @ApplicationContext private val context: Context,
-  private val connectivityMonitor: ConnectivityMonitor,
+  private val serverReachabilityMonitor: ServerReachabilityMonitor,
   private val syncQueueManager: SyncQueueManager,
 ) {
   private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -25,13 +25,13 @@ class SyncScheduler @Inject constructor(
     if (isObserving) return
     isObserving = true
 
-    Timber.d("SyncScheduler: Starting connectivity observation")
+    Timber.d("SyncScheduler: Starting server reachability observation")
 
     scope.launch {
-      connectivityMonitor.isConnected
-        .collectLatest { isConnected ->
-          Timber.d("SyncScheduler: Connectivity changed to $isConnected")
-          if (isConnected) {
+      serverReachabilityMonitor.isOnline
+        .collectLatest { isOnline ->
+          Timber.d("SyncScheduler: Server reachability changed to $isOnline")
+          if (isOnline) {
             triggerSyncIfNeeded()
           }
         }

@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.tags.data
 
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.offline.data.db.dao.TagDao
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.TagEntity
 import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
@@ -14,12 +14,12 @@ class TagsRepositoryImpl @Inject constructor(
   private val tagMapper: TagMapper,
   private val authenticationRepository: AuthenticationRepository,
   private val tagDao: TagDao,
-  private val connectivityMonitor: ConnectivityMonitor,
+  private val serverReachabilityMonitor: ServerReachabilityMonitor,
 ) : TagsRepository {
 
   override suspend fun getTags(): List<BlinkoTag> {
-    // If offline, return cached tags
-    if (!connectivityMonitor.isConnected.value) {
+    // If offline or server unreachable, return cached tags
+    if (!serverReachabilityMonitor.shouldAttemptServerCall()) {
       return getCachedTags()
     }
 
@@ -30,6 +30,7 @@ class TagsRepositoryImpl @Inject constructor(
 
       return when (val response = api.getTags(url = url, token = token)) {
         is ApiResult.ApiSuccess -> {
+          serverReachabilityMonitor.reportSuccess()
           val responseTags = response.value
           val tags = responseTags.map { tagMapper.toBlinkoTag(it) }
           // Cache the tags
@@ -38,6 +39,9 @@ class TagsRepositoryImpl @Inject constructor(
         }
 
         is ApiResult.ApiErrorResponse -> {
+          if (response.isServerUnreachable) {
+            serverReachabilityMonitor.reportUnreachable()
+          }
           // On error, return cached tags
           getCachedTags()
         }

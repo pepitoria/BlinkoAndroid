@@ -6,7 +6,7 @@ import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteDeleteUseCase
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteListUseCase
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteUpsertUseCase
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import com.github.pepitoria.blinkoapp.shared.ui.base.BlinkoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +26,7 @@ class NoteListScreenViewModel @Inject constructor(
   private val noteListUseCase: NoteListUseCase,
   private val noteDeleteUseCase: NoteDeleteUseCase,
   private val noteUpsertUseCase: NoteUpsertUseCase,
-  private val connectivityMonitor: ConnectivityMonitor,
+  private val serverReachabilityMonitor: ServerReachabilityMonitor,
 ) : BlinkoViewModel() {
 
   private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -41,7 +41,7 @@ class NoteListScreenViewModel @Inject constructor(
   private val _noteType: MutableStateFlow<BlinkoNoteType> = MutableStateFlow(BlinkoNoteType.BLINKO)
   val noteType = _noteType.asStateFlow()
 
-  val isConnected: StateFlow<Boolean> = connectivityMonitor.isConnected
+  val isConnected: StateFlow<Boolean> = serverReachabilityMonitor.isOnline
 
   val pendingSyncCount: StateFlow<Int> = noteListUseCase.pendingSyncCount
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)

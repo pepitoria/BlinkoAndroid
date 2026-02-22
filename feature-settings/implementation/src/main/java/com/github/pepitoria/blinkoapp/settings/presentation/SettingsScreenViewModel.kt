@@ -2,7 +2,7 @@ package com.github.pepitoria.blinkoapp.settings.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.github.pepitoria.blinkoapp.auth.api.domain.SessionUseCases
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.settings.api.domain.GetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.SetDefaultTabUseCase
 import com.github.pepitoria.blinkoapp.settings.api.domain.Tab
@@ -20,10 +20,10 @@ class SettingsScreenViewModel @Inject constructor(
   private val sessionUseCases: SessionUseCases,
   private val getDefaultTabUseCase: GetDefaultTabUseCase,
   private val setDefaultTabUseCase: SetDefaultTabUseCase,
-  connectivityMonitor: ConnectivityMonitor,
+  serverReachabilityMonitor: ServerReachabilityMonitor,
 ) : BlinkoViewModel() {
 
-  val isConnected: StateFlow<Boolean> = connectivityMonitor.isConnected
+  val isConnected: StateFlow<Boolean> = serverReachabilityMonitor.isOnline
 
   sealed class Events {
     data object Exit : Events()

@@ -1,6 +1,6 @@
 package com.github.pepitoria.blinkoapp.tags.data
 
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.offline.data.db.dao.TagDao
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.TagEntity
 import com.github.pepitoria.blinkoapp.shared.domain.data.AuthenticationRepository
@@ -26,20 +26,21 @@ class TagsRepositoryImplTest {
   private val tagMapper: TagMapper = mockk()
   private val authenticationRepository: AuthenticationRepository = mockk()
   private val tagDao: TagDao = mockk(relaxed = true)
-  private val connectivityMonitor: ConnectivityMonitor = mockk()
-  private val isConnectedFlow = MutableStateFlow(true)
+  private val serverReachabilityMonitor: ServerReachabilityMonitor = mockk()
+  private val shouldAttemptFlow = MutableStateFlow(true)
 
   @BeforeEach
   fun setUp() {
-    every { connectivityMonitor.isConnected } returns isConnectedFlow
-    isConnectedFlow.value = true
+    every { serverReachabilityMonitor.shouldAttemptServerCall() } returns true
+    every { serverReachabilityMonitor.reportSuccess() } returns Unit
+    every { serverReachabilityMonitor.reportUnreachable() } returns Unit
 
     tagsRepository = TagsRepositoryImpl(
       api = api,
       tagMapper = tagMapper,
       authenticationRepository = authenticationRepository,
       tagDao = tagDao,
-      connectivityMonitor = connectivityMonitor,
+      serverReachabilityMonitor = serverReachabilityMonitor,
     )
   }
 
@@ -129,7 +130,7 @@ class TagsRepositoryImplTest {
 
   @Test
   fun `getTags returns cached tags when offline`() = runTest {
-    isConnectedFlow.value = false
+    every { serverReachabilityMonitor.shouldAttemptServerCall() } returns false
     val cachedTags = listOf(
       TagEntity(id = 1, name = "OfflineTag1"),
       TagEntity(id = 2, name = "OfflineTag2"),

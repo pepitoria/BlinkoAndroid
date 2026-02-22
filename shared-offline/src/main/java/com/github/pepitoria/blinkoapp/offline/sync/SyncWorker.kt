@@ -10,6 +10,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.offline.data.db.dao.NoteDao
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.SyncOperation
 import com.github.pepitoria.blinkoapp.offline.data.db.entity.SyncStatus
@@ -25,6 +26,7 @@ class SyncWorker @AssistedInject constructor(
   private val syncQueueManager: SyncQueueManager,
   private val noteDao: NoteDao,
   private val syncExecutor: SyncExecutor,
+  private val serverReachabilityMonitor: ServerReachabilityMonitor,
 ) : CoroutineWorker(appContext, workerParams) {
 
   override suspend fun doWork(): Result {
@@ -33,6 +35,11 @@ class SyncWorker @AssistedInject constructor(
     if (!syncQueueManager.hasPendingOperations()) {
       Timber.d("No pending operations, exiting")
       return Result.success()
+    }
+
+    if (!serverReachabilityMonitor.shouldAttemptServerCall()) {
+      Timber.d("Server not reachable, will retry later")
+      return Result.retry()
     }
 
     var hasFailures = false

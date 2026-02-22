@@ -6,7 +6,7 @@ import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteDeleteUseCase
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteListUseCase
 import com.github.pepitoria.blinkoapp.notes.implementation.domain.NoteUpsertUseCase
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -36,7 +36,7 @@ class NoteListScreenViewModelTest {
   private val noteListUseCase: NoteListUseCase = mockk(relaxed = true)
   private val noteDeleteUseCase: NoteDeleteUseCase = mockk(relaxed = true)
   private val noteUpsertUseCase: NoteUpsertUseCase = mockk(relaxed = true)
-  private val connectivityMonitor: ConnectivityMonitor = mockk(relaxed = true)
+  private val serverReachabilityMonitor: ServerReachabilityMonitor = mockk(relaxed = true)
 
   private val testDispatcher = StandardTestDispatcher()
   private val testScope = TestScope(testDispatcher)
@@ -44,7 +44,7 @@ class NoteListScreenViewModelTest {
   @BeforeEach
   fun setUp() {
     Dispatchers.setMain(testDispatcher)
-    every { connectivityMonitor.isConnected } returns MutableStateFlow(true)
+    every { serverReachabilityMonitor.isOnline } returns MutableStateFlow(true)
     every { noteListUseCase.pendingSyncCount } returns flowOf(0)
     every { noteListUseCase.conflicts } returns flowOf(emptyList())
     every { noteListUseCase.listNotesAsFlow(any(), any()) } returns flowOf(emptyList())
@@ -53,7 +53,7 @@ class NoteListScreenViewModelTest {
       noteListUseCase = noteListUseCase,
       noteDeleteUseCase = noteDeleteUseCase,
       noteUpsertUseCase = noteUpsertUseCase,
-      connectivityMonitor = connectivityMonitor,
+      serverReachabilityMonitor = serverReachabilityMonitor,
     )
   }
 

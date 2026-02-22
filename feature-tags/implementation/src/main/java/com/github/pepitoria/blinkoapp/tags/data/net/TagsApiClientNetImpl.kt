@@ -6,9 +6,14 @@ import android.net.ConnectivityManager
 import com.github.pepitoria.blinkoapp.shared.networking.model.ApiResult
 import com.github.pepitoria.blinkoapp.tags.data.ResponseTag
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class TagsApiClientNetImpl @Inject constructor(
   @ApplicationContext private val appContext: Context,
@@ -21,7 +26,7 @@ class TagsApiClientNetImpl @Inject constructor(
     token: String,
   ): ApiResult<List<ResponseTag>> {
     if (!isConnected()) {
-      return ApiResult.ApiErrorResponse(message = "No internet connection")
+      return ApiResult.ApiErrorResponse.SERVER_UNREACHABLE
     }
 
     var tagsUrl = if (url.endsWith("/")) {
@@ -31,25 +36,44 @@ class TagsApiClientNetImpl @Inject constructor(
     }
 
     return withContext(Dispatchers.IO) {
-      val apiResponse = api.getTags(
-        url = tagsUrl,
-        authorization = "Bearer $token",
-      )
-
-      var apiResult: ApiResult<List<ResponseTag>> = ApiResult.ApiErrorResponse.UNKNOWN
-
-      if (apiResponse.isSuccessful) {
-        apiResponse.body()?.let { resp ->
-          apiResult = ApiResult.ApiSuccess(resp)
-        }
-      } else {
-        apiResult = ApiResult.ApiErrorResponse(
-          code = apiResponse.code(),
-          message = apiResponse.message(),
+      try {
+        val apiResponse = api.getTags(
+          url = tagsUrl,
+          authorization = "Bearer $token",
         )
-      }
 
-      apiResult
+        var apiResult: ApiResult<List<ResponseTag>> = ApiResult.ApiErrorResponse.UNKNOWN
+
+        if (apiResponse.isSuccessful) {
+          apiResponse.body()?.let { resp ->
+            apiResult = ApiResult.ApiSuccess(resp)
+          }
+        } else {
+          val code = apiResponse.code()
+          apiResult = if (code in 502..504) {
+            ApiResult.ApiErrorResponse.SERVER_UNREACHABLE
+          } else {
+            ApiResult.ApiErrorResponse(
+              code = code,
+              message = apiResponse.message(),
+            )
+          }
+        }
+
+        apiResult
+      } catch (e: SocketTimeoutException) {
+        Timber.w(e, "Server unreachable: socket timeout")
+        ApiResult.ApiErrorResponse.SERVER_UNREACHABLE
+      } catch (e: ConnectException) {
+        Timber.w(e, "Server unreachable: connection failed")
+        ApiResult.ApiErrorResponse.SERVER_UNREACHABLE
+      } catch (e: UnknownHostException) {
+        Timber.w(e, "Server unreachable: unknown host")
+        ApiResult.ApiErrorResponse.SERVER_UNREACHABLE
+      } catch (e: IOException) {
+        Timber.w(e, "Server unreachable: IO error")
+        ApiResult.ApiErrorResponse.SERVER_UNREACHABLE
+      }
     }
   }
 

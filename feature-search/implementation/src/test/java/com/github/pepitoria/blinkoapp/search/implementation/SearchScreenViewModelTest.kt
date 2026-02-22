@@ -3,7 +3,7 @@ package com.github.pepitoria.blinkoapp.search.implementation
 import com.github.pepitoria.blinkoapp.notes.api.domain.NoteSearchUseCase
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNote
 import com.github.pepitoria.blinkoapp.notes.api.domain.model.BlinkoNoteType
-import com.github.pepitoria.blinkoapp.offline.connectivity.ConnectivityMonitor
+import com.github.pepitoria.blinkoapp.offline.connectivity.ServerReachabilityMonitor
 import com.github.pepitoria.blinkoapp.shared.domain.model.BlinkoResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -30,8 +30,8 @@ class SearchScreenViewModelTest {
   private lateinit var viewModel: SearchScreenViewModel
 
   private val searchUseCase: NoteSearchUseCase = mockk(relaxed = true)
-  private val connectivityMonitor: ConnectivityMonitor = mockk()
-  private val isConnectedFlow = MutableStateFlow(true)
+  private val serverReachabilityMonitor: ServerReachabilityMonitor = mockk()
+  private val isOnlineFlow = MutableStateFlow(true)
 
   private val testDispatcher = StandardTestDispatcher()
   private val testScope = TestScope(testDispatcher)
@@ -39,10 +39,10 @@ class SearchScreenViewModelTest {
   @BeforeEach
   fun setUp() {
     Dispatchers.setMain(testDispatcher)
-    every { connectivityMonitor.isConnected } returns isConnectedFlow
+    every { serverReachabilityMonitor.isOnline } returns isOnlineFlow
     viewModel = SearchScreenViewModel(
       searchUseCase = searchUseCase,
-      connectivityMonitor = connectivityMonitor,
+      serverReachabilityMonitor = serverReachabilityMonitor,
     )
   }
 
