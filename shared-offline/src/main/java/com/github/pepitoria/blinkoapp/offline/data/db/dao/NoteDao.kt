@@ -18,7 +18,10 @@ interface NoteDao {
       "WHERE type = :type " +
       "AND isArchived = :archived " +
       "AND syncStatus != :deletedStatus " +
-      "ORDER BY COALESCE(updatedAt, localUpdatedAt) DESC",
+      "ORDER BY CASE " +
+      "WHEN serverId IS NULL THEN datetime(localUpdatedAt / 1000, 'unixepoch') " +
+      "ELSE COALESCE(serverUpdatedAt, updatedAt) " +
+      "END DESC",
   )
   fun listAsFlow(
     type: Int,
@@ -32,7 +35,10 @@ interface NoteDao {
       "WHERE type = :type " +
       "AND isArchived = :archived " +
       "AND syncStatus != :deletedStatus " +
-      "ORDER BY COALESCE(updatedAt, localUpdatedAt) DESC",
+      "ORDER BY CASE " +
+      "WHEN serverId IS NULL THEN datetime(localUpdatedAt / 1000, 'unixepoch') " +
+      "ELSE COALESCE(serverUpdatedAt, updatedAt) " +
+      "END DESC",
   )
   suspend fun list(
     type: Int,
@@ -54,7 +60,10 @@ interface NoteDao {
       "FROM notes " +
       "WHERE content LIKE '%' || :searchTerm || '%' " +
       "AND syncStatus != :deletedStatus " +
-      "ORDER BY COALESCE(updatedAt, localUpdatedAt) DESC",
+      "ORDER BY CASE " +
+      "WHEN serverId IS NULL THEN datetime(localUpdatedAt / 1000, 'unixepoch') " +
+      "ELSE COALESCE(serverUpdatedAt, updatedAt) " +
+      "END DESC",
   )
   suspend fun search(
     searchTerm: String,
