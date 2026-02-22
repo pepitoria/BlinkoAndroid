@@ -18,7 +18,7 @@ interface NoteDao {
       "WHERE type = :type " +
       "AND isArchived = :archived " +
       "AND syncStatus != :deletedStatus " +
-      "ORDER BY localUpdatedAt DESC",
+      "ORDER BY COALESCE(updatedAt, localUpdatedAt) DESC",
   )
   fun listAsFlow(
     type: Int,
@@ -32,7 +32,7 @@ interface NoteDao {
       "WHERE type = :type " +
       "AND isArchived = :archived " +
       "AND syncStatus != :deletedStatus " +
-      "ORDER BY localUpdatedAt DESC",
+      "ORDER BY COALESCE(updatedAt, localUpdatedAt) DESC",
   )
   suspend fun list(
     type: Int,
@@ -54,7 +54,7 @@ interface NoteDao {
       "FROM notes " +
       "WHERE content LIKE '%' || :searchTerm || '%' " +
       "AND syncStatus != :deletedStatus " +
-      "ORDER BY localUpdatedAt DESC",
+      "ORDER BY COALESCE(updatedAt, localUpdatedAt) DESC",
   )
   suspend fun search(
     searchTerm: String,
