@@ -8,12 +8,22 @@ An unofficial Android client for [Blinko](https://github.com/blinko-space/blinko
 
 ## Screenshots
 
+### Light Theme
 <p align="center">
-  <img src="screenshots/blinkos.jpeg" width="180" alt="Blinkos">
-  <img src="screenshots/notes.jpeg" width="180" alt="Notes">
-  <img src="screenshots/todos.jpeg" width="180" alt="Todos">
-  <img src="screenshots/tags.jpeg" width="180" alt="Tags">
-  <img src="screenshots/settings.jpeg" width="180" alt="Settings">
+  <img src="screenshots/light-blinkos.png" width="180" alt="Blinkos">
+  <img src="screenshots/light-notes.png" width="180" alt="Notes">
+  <img src="screenshots/light-todos.png" width="180" alt="Todos">
+  <img src="screenshots/light-search.png" width="180" alt="Search">
+  <img src="screenshots/light-settings.png" width="180" alt="Settings">
+</p>
+
+### Dark Theme
+<p align="center">
+  <img src="screenshots/dark-blinkos.png" width="180" alt="Blinkos">
+  <img src="screenshots/dark-notes.png" width="180" alt="Notes">
+  <img src="screenshots/dark-todos.png" width="180" alt="Todos">
+  <img src="screenshots/dark-search.png" width="180" alt="Search">
+  <img src="screenshots/dark-settings.png" width="180" alt="Settings">
 </p>
 
 ## Features
@@ -59,11 +69,11 @@ The APK will be in `app/build/outputs/apk/remote/release/`.
 
 ## Roadmap
 
-- [ ] Login with token authentication
+- [x] Login with token authentication
 - [ ] Advanced search (multiple terms/tags)
 - [ ] Tag suggestions while editing
-- [ ] Offline mode with sync
-- [ ] Dark theme improvements
+- [x] Offline mode with sync
+- [x] Dark theme improvements
 
 ## Contributing
 
