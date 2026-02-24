@@ -69,11 +69,11 @@ The APK will be in `app/build/outputs/apk/remote/release/`.
 
 ## Roadmap
 
-- [x] Login with token authentication
+- [ ] Offline mode with sync - In progress
 - [ ] Advanced search (multiple terms/tags)
 - [ ] Tag suggestions while editing
-- [x] Offline mode with sync
 - [x] Dark theme improvements
+- [x] Login with token authentication
 
 ## Contributing
 
